@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>生成式软件工程 · 课堂笔记 | 南京大学 2026 秋</title>
+<meta name="description" content="南京大学《生成式软件工程》(GenSE) 2026 秋季课堂笔记索引，蒋炎岩主讲。">
+<style>
+*,*::before,*::after{box-sizing:border-box}
+:root{
+  --bg:#0d1117;--bg2:#161b22;--bg3:#1b2230;--line:#262d38;
+  --fg:#c9d5e1;--fg2:#8b98a9;--fg3:#69747f;
+  --acc:#ffb454;--acc2:#7ee787;--link:#79c0ff;--violet:#a78bfa;
+  --chip:rgba(255,180,84,.10);
+  --shadow:0 1px 2px rgba(0,0,0,.35),0 8px 24px rgba(0,0,0,.28);
+  --mono:"JetBrains Mono","SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+}
+[data-theme="light"]{
+  --bg:#ffffff;--bg2:#f6f8fa;--bg3:#eceff3;--line:#dde2e8;
+  --fg:#1f2328;--fg2:#545d68;--fg3:#7d8590;
+  --acc:#a85a00;--acc2:#1a7f37;--link:#0969da;--violet:#7c3aed;
+  --chip:rgba(255,180,84,.16);
+  --shadow:0 1px 2px rgba(16,24,40,.06),0 8px 24px rgba(16,24,40,.08);
+}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--bg);color:var(--fg);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB",
+    "Microsoft YaHei","Source Han Sans SC","Noto Sans CJK SC",sans-serif;
+  font-size:16.5px;line-height:1.85;-webkit-font-smoothing:antialiased;
+  transition:background .2s,color .2s;
+}
+a{color:var(--link);text-decoration:none}
+a:hover{text-decoration:underline}
+code{font-family:var(--mono);font-size:.88em;background:var(--bg3);padding:.1em .38em;border-radius:5px}
+
+/* ===== Hero ===== */
+#hero{position:relative;padding:64px 24px 34px;border-bottom:1px solid var(--line);
+  background:
+    radial-gradient(900px 320px at 18% -10%,rgba(255,180,84,.13),transparent 70%),
+    radial-gradient(700px 300px at 85% 0%,rgba(167,139,250,.11),transparent 70%),
+    var(--bg2);}
+.hero-in{max-width:1080px;margin:0 auto}
+.badge{display:inline-flex;align-items:center;gap:.5rem;font-size:.78rem;letter-spacing:.06em;
+  color:var(--acc);background:var(--chip);border:1px solid rgba(255,180,84,.28);
+  padding:.28rem .7rem;border-radius:999px;margin-bottom:1.1rem}
+#hero h1{margin:0 0 .45rem;font-size:2.3rem;line-height:1.28;letter-spacing:-.015em;font-weight:800}
+.hsub{color:var(--fg2);font-size:1rem;margin:0 0 1.5rem;max-width:62ch}
+.meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:.1rem 1.6rem;
+  background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:.9rem 1.15rem}
+.mrow{display:flex;gap:.65rem;padding:.2rem 0;font-size:.9rem;line-height:1.7}
+.mk{flex:0 0 4.4rem;color:var(--acc);font-weight:600;font-size:.85rem}
+.mv{color:var(--fg2);flex:1;min-width:0;word-break:break-all}
+.hero-act{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:1.15rem}
+.btn{font:inherit;font-size:.85rem;color:var(--fg);background:var(--bg);border:1px solid var(--line);
+  border-radius:8px;padding:.42rem .85rem;cursor:pointer;transition:.15s;display:inline-flex;
+  align-items:center;gap:.35rem}
+.btn:hover{border-color:var(--acc);color:var(--acc);text-decoration:none}
+.btn.primary{background:var(--acc);border-color:var(--acc);color:#10151c;font-weight:600}
+.btn.primary:hover{filter:brightness(1.08);color:#10151c}
+#tg{margin-left:auto}
+
+/* ===== 主体 ===== */
+.wrap{max-width:1080px;margin:0 auto;padding:0 24px 90px}
+.bar{display:flex;flex-wrap:wrap;align-items:center;gap:.7rem;padding:26px 0 14px}
+.bar h2{margin:0;font-size:1.05rem;font-weight:700;letter-spacing:.02em}
+.count{font-size:.8rem;color:var(--fg3)}
+#q{flex:0 1 260px;font:inherit;font-size:.85rem;background:var(--bg);color:var(--fg);
+  border:1px solid var(--line);border-radius:8px;padding:.4rem .65rem;outline:none;margin-left:auto}
+#q:focus{border-color:var(--acc)}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
+.card{display:flex;flex-direction:column;gap:.5rem;background:var(--bg2);
+  border:1px solid var(--line);border-radius:14px;padding:1.05rem 1.15rem;
+  transition:transform .16s,border-color .16s,box-shadow .16s}
+.card:hover{transform:translateY(-3px);border-color:var(--acc);box-shadow:var(--shadow);text-decoration:none}
+.card-top{display:flex;align-items:center;gap:.6rem}
+.num{flex:0 0 auto;font-family:var(--mono);font-size:.75rem;font-weight:700;color:var(--acc);
+  background:var(--chip);border:1px solid rgba(255,180,84,.25);border-radius:7px;padding:.1rem .45rem}
+.card h3{margin:0;font-size:1.02rem;line-height:1.45;font-weight:700;color:var(--fg)}
+.card .desc{margin:0;font-size:.85rem;color:var(--fg2);line-height:1.7}
+.card .foot{margin-top:.2rem;font-size:.76rem;color:var(--fg3);display:flex;gap:.9rem;flex-wrap:wrap}
+.card .foot span{display:inline-flex;align-items:center;gap:.3rem}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--acc2);display:inline-block}
+.hide{display:none!important}
+
+.empty{border:1px dashed var(--line);border-radius:14px;padding:2.4rem 1.2rem;text-align:center;
+  color:var(--fg3);font-size:.9rem}
+.status{font-size:.76rem;color:var(--fg3);padding:.9rem 0 0;line-height:1.8}
+
+/* ===== 说明 ===== */
+.note{margin-top:44px;padding-top:26px;border-top:1px solid var(--line)}
+.note h2{font-size:1.15rem;margin:0 0 .8rem;font-weight:750}
+.note h2 .ht{display:inline-block;border-bottom:3px solid var(--acc);padding-bottom:.25rem}
+.note ol,.note ul{padding-left:1.3rem;color:var(--fg2);font-size:.92rem}
+.note li{margin:.35rem 0}
+.note strong{color:var(--fg)}
+pre{background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:.85rem 1rem;
+  overflow-x:auto;font-family:var(--mono);font-size:.82rem;line-height:1.7;color:var(--fg)}
+footer{margin-top:44px;padding-top:20px;border-top:1px solid var(--line);
+  font-size:.8rem;color:var(--fg3);display:flex;flex-wrap:wrap;gap:.6rem 1.2rem}
+
+@media (max-width:640px){
+  #hero{padding:44px 18px 26px}
+  #hero h1{font-size:1.7rem}
+  .wrap{padding:0 18px 60px}
+  #q{margin-left:0;flex:1 1 100%}
+  #tg{margin-left:0}
+}
+</style>
+</head>
+<body>
+
+<header id="hero">
+  <div class="hero-in">
+    <div class="badge">南京大学 · 生成式软件工程 · 2026 秋</div>
+    <h1>生成式软件工程 · 课堂笔记</h1>
+    <p class="hsub">
+      AI 时代还有用的软件工程智慧。这里收录每讲的课堂整理笔记 —— 可搜索、可引用、可修订、可重组。
+    </p>
+    <div class="meta">
+      <div class="mrow"><span class="mk">课程</span><span class="mv">GenSE · 生成式软件工程（选修）</span></div>
+      <div class="mrow"><span class="mk">主讲</span><span class="mv">蒋炎岩（jyy）</span></div>
+      <div class="mrow"><span class="mk">主页</span><span class="mv"><a href="https://jyywiki.cn/GSE/2026/" target="_blank" rel="noopener">jyywiki.cn/GSE/2026/ ↗</a></span></div>
+      <div class="mrow"><span class="mk">仓库</span><span class="mv"><a id="repoLink" href="https://github.com/Wangchenglong-0712/Generative-Software-Engineering" target="_blank" rel="noopener">Wangchenglong-0712/Generative-Software-Engineering ↗</a></span></div>
+    </div>
+    <div class="hero-act">
+      <a class="btn primary" href="#lectures">浏览讲义 ↓</a>
+      <a class="btn" href="https://jyywiki.cn/GSE/2026/" target="_blank" rel="noopener">课程主页 ↗</a>
+      <button class="btn" id="tg" type="button" title="切换深色 / 浅色">◐ 主题</button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="bar" id="lectures">
+    <h2>讲义列表</h2>
+    <span class="count" id="count">加载中…</span>
+    <input id="q" type="search" placeholder="搜索标题 / 关键词…" autocomplete="off">
+  </div>
+
+  <div class="grid" id="grid"></div>
+  <div class="empty hide" id="empty">没有匹配的讲义。</div>
+  <p class="status" id="status"></p>
+
+  <section class="note">
+    <h2><span class="ht">新增一讲</span></h2>
+    <p style="color:var(--fg2);font-size:.92rem;margin-top:.2rem">
+      把写好的 HTML 放进仓库根目录，命名遵循下面的约定，首页会在几分钟内自动收录，无需改动本文件：
+    </p>
+    <pre>NJU-生成式软件工程-第07讲-标题.html</pre>
+    <ul>
+      <li>文件名中的 <code>第NN讲</code> 决定排序与角标编号；两位数字更稳妥（<code>第07讲</code>）。</li>
+      <li>列表通过 GitHub Contents API 实时读取仓库根目录；<code>index.html</code> 自身会被跳过。</li>
+      <li>若 API 不可达（离线、限流），会自动回退到本文件内置的静态清单。</li>
+    </ul>
+  </section>
+
+  <footer>
+    <span>静态站点 · GitHub Pages</span>
+    <span>笔记为课堂整理，非官方教材</span>
+    <span><a href="https://jyywiki.cn/GSE/2026/" target="_blank" rel="noopener">课程主页 ↗</a></span>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var OWNER='Wangchenglong-0712', REPO='Generative-Software-Engineering', BRANCH='main';
+
+  /* 静态兜底清单：API 不可用时使用。新增讲义后建议同步这里。 */
+  var FALLBACK=[
+    {file:'NJU-生成式软件工程-第01讲-欢迎来到未来.html',
+     title:'欢迎来到未来',
+     desc:'为什么需要一门实验性的课程：当“实现软件”的成本数量级坍塌，什么能力还值得训练？课程定位、上课方式与两条 Policy。',
+     video:'https://www.bilibili.com/video/BV1pb8o6yE8f'}
+  ];
+
+  var grid=document.getElementById('grid'), countEl=document.getElementById('count'),
+      emptyEl=document.getElementById('empty'), statusEl=document.getElementById('status'),
+      q=document.getElementById('q');
+  var items=[];
+
+  document.getElementById('repoLink').href='https://github.com/'+OWNER+'/'+REPO;
+
+  /* ---- 主题 ---- */
+  var TH='gse-theme';
+  try{var s=localStorage.getItem(TH); if(s) document.documentElement.dataset.theme=s;}catch(e){}
+  document.getElementById('tg').addEventListener('click',function(){
+    var n=document.documentElement.dataset.theme==='dark'?'light':'dark';
+    document.documentElement.dataset.theme=n;
+    try{localStorage.setItem(TH,n);}catch(e){}
+  });
+
+  /* ---- 工具 ---- */
+  function numOf(name){
+    var m=name.match(/第\s*(\d+)\s*讲/);
+    return m?parseInt(m[1],10):9999;
+  }
+  function titleOf(name){
+    var base=name.replace(/\.html?$/i,'');
+    var m=base.match(/第\s*\d+\s*讲\s*[-–—_·\s]*(.+)$/);
+    if(m) return m[1].trim();
+    m=base.match(/[-–—]\s*([^-–—]+)$/);
+    return m?m[1].trim():base;
+  }
+  function hrefOf(f){ return './'+encodeURIComponent(f); }
+
+  /* ---- 渲染 ---- */
+  function render(){
+    var kw=(q.value||'').trim().toLowerCase();
+    var shown=0;
+    Array.prototype.forEach.call(grid.children,function(c){c.classList.add('hide');});
+    items.forEach(function(it){
+      var hit=!kw||(it.title+' '+it.file+' '+(it.desc||'')).toLowerCase().indexOf(kw)>=0;
+      if(!hit) return;
+      shown++;
+      var el=document.getElementById('c-'+it.id);
+      if(!el){
+        el=document.createElement('a');
+        el.className='card'; el.id='c-'+it.id;
+        el.href=hrefOf(it.file);
+        var n=numOf(it.file);
+        el.innerHTML=
+          '<div class="card-top"><span class="num">'+(n===9999?'讲义':'第 '+n+' 讲')+'</span></div>'+
+          '<h3></h3>'+
+          (it.desc?'<p class="desc"></p>':'')+
+          '<div class="foot"><span><i class="dot"></i>HTML 笔记</span>'+
+          (it.video?'<span><a href="'+it.video+'" target="_blank" rel="noopener">课堂视频 ↗</a></span>':'')+
+          '<span class="fn"></span></div>';
+        el.querySelector('h3').textContent=it.title;
+        if(it.desc) el.querySelector('.desc').textContent=it.desc;
+        el.querySelector('.fn').textContent=it.file;
+        grid.appendChild(el);
+      }
+      el.classList.remove('hide');
+    });
+    countEl.textContent=kw?('匹配 '+shown+' / '+items.length+' 讲'):('共 '+items.length+' 讲');
+    emptyEl.classList.toggle('hide', shown>0);
+  }
+
+  function use(list,src){
+    items=list.slice().sort(function(a,b){return numOf(a.file)-numOf(b.file)||a.file.localeCompare(b.file,'zh');});
+    items.forEach(function(it,i){it.id=i;});
+    render();
+    statusEl.textContent=src;
+  }
+
+  q.addEventListener('input',render);
+
+  /* ---- 拉取仓库目录 ---- */
+  var url='https://api.github.com/repos/'+OWNER+'/'+REPO+'/contents/?ref='+BRANCH;
+  fetch(url,{headers:{'Accept':'application/vnd.github+json'}})
+    .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+    .then(function(list){
+      if(!Array.isArray(list)) throw new Error('bad response');
+      var files=list.filter(function(x){
+        return x.type==='file' && /\.html?$/i.test(x.name) &&
+               x.name.toLowerCase()!=='index.html' && x.name.toLowerCase()!=='404.html';
+      }).map(function(x){
+        var fb=FALLBACK.filter(function(f){return f.file===x.name;})[0]||{};
+        return {file:x.name, title:fb.title||titleOf(x.name), desc:fb.desc||'', video:fb.video||''};
+      });
+      if(!files.length) throw new Error('empty');
+      use(files,'列表来源：GitHub 仓库目录（实时）。');
+    })
+    .catch(function(e){
+      use(FALLBACK,'列表来源：内置静态清单（GitHub API 不可用：'+e.message+'）。');
+    });
+})();
+</script>
+</body>
+</html>
