@@ -262,8 +262,10 @@ footer{margin-top:44px;padding-top:20px;border-top:1px solid var(--line);
     .then(function(list){
       if(!Array.isArray(list)) throw new Error('bad response');
       var files=list.filter(function(x){
+        // 习题页不进索引：只能从对应讲义内部进入
         return x.type==='file' && /\.html?$/i.test(x.name) &&
-               x.name.toLowerCase()!=='index.html' && x.name.toLowerCase()!=='404.html';
+               x.name.toLowerCase()!=='index.html' && x.name.toLowerCase()!=='404.html' &&
+               !/习题|exercise/i.test(x.name);
       }).map(function(x){
         var fb=FALLBACK.filter(function(f){return f.file===x.name;})[0]||{};
         return {file:x.name, title:fb.title||titleOf(x.name), desc:fb.desc||'', video:fb.video||''};
