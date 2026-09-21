@@ -90,13 +90,11 @@ code{font-family:var(--mono);font-size:.88em;background:var(--bg3);padding:.1em 
 
 /* ===== 说明 ===== */
 .note{margin-top:44px;padding-top:26px;border-top:1px solid var(--line)}
+.note + .note{margin-top:10px;border-top:0;padding-top:0}
 .note h2{font-size:1.15rem;margin:0 0 .8rem;font-weight:750}
 .note h2 .ht{display:inline-block;border-bottom:3px solid var(--acc);padding-bottom:.25rem}
 .note ol,.note ul{padding-left:1.3rem;color:var(--fg2);font-size:.92rem}
 .note li{margin:.35rem 0}
-.note strong{color:var(--fg)}
-pre{background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:.85rem 1rem;
-  overflow-x:auto;font-family:var(--mono);font-size:.82rem;line-height:1.7;color:var(--fg)}
 footer{margin-top:44px;padding-top:20px;border-top:1px solid var(--line);
   font-size:.8rem;color:var(--fg3);display:flex;flex-wrap:wrap;gap:.6rem 1.2rem}
 
@@ -143,17 +141,27 @@ footer{margin-top:44px;padding-top:20px;border-top:1px solid var(--line);
   <div class="empty hide" id="empty">没有匹配的讲义。</div>
   <p class="status" id="status"></p>
 
-  <section class="note">
-    <h2><span class="ht">新增一讲</span></h2>
+  <section class="note" id="about">
+    <h2><span class="ht">课程简介</span></h2>
     <p style="color:var(--fg2);font-size:.92rem;margin-top:.2rem">
-      把写好的 HTML 放进仓库根目录，命名遵循下面的约定，首页会在几分钟内自动收录，无需改动本文件：
+      《生成式软件工程》（GenSE）是南京大学 2026 秋季开设的一门<strong style="color:var(--fg)">实验性课程</strong>，由蒋炎岩主讲，
+      副标题是「AI 时代还有用的软件工程智慧」。它不打算教你某个新框架，而是回答一个更老的问题：<strong style="color:var(--fg)">怎么让工程不失败</strong>。
+      课程以案例和自由讨论为主，课堂完整记录、课后重新整理，以切片形式公开 —— 让讨论可搜索、可引用、可修订、可重组。
     </p>
-    <pre>NJU-生成式软件工程-第07讲-标题.html</pre>
-    <ul>
-      <li>文件名中的 <code>第NN讲</code> 决定排序与角标编号；两位数字更稳妥（<code>第07讲</code>）。</li>
-      <li>列表通过 GitHub Contents API 实时读取仓库根目录；<code>index.html</code> 自身会被跳过。</li>
-      <li>若 API 不可达（离线、限流），会自动回退到本文件内置的静态清单。</li>
-    </ul>
+  </section>
+
+  <section class="note" id="why">
+    <h2><span class="ht">为什么在 AI 时代学软件工程</span></h2>
+    <p style="color:var(--fg2);font-size:.92rem;margin-top:.2rem">
+      今天正在急剧变便宜的，是「<strong style="color:var(--fg)">把一个想法变成能运行的软件</strong>」这件事本身。
+      当实现不再是门槛，把亲手敲出每一行代码当作学习成果的习惯就需要被打破：实现可以交给 Agent，
+      人的注意力应当留给<strong style="color:var(--fg)">问题、设计与检验</strong>。
+      但让一个演示跑起来只是开始 —— 一个系统还要承受需求变化、真实用户、错误输入，以及人与人之间的协作；
+      AI 可以加速实现，这些问题却不会随着代码自动生成而自动消失。
+      这门课要训练的，正是在实现成本数量级坍塌之后依然稀缺的能力：知道计算机世界里有什么（信息差），
+      做了决定敢承担后果（能坐牢），最终能把人、工具和反馈组织起来做成一件事（能驾驭）。
+      最终的证据不是分数，而是别人可以打开、运行、质疑并继续使用的<strong style="color:var(--fg)">作品</strong>。
+    </p>
   </section>
 
   <footer>
