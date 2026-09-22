@@ -77,6 +77,11 @@ strong{color:var(--fg)}
 .tag{font-size:.72rem;font-weight:700;border-radius:6px;padding:.12rem .45rem;border:1px solid}
 .tag.e{color:var(--acc);background:var(--chip);border-color:rgba(255,180,84,.3)}
 .tag.s{color:var(--acc2);background:rgba(126,231,135,.10);border-color:rgba(126,231,135,.28)}
+.tag.p{color:var(--violet);background:rgba(167,139,250,.12);border-color:rgba(167,139,250,.3)}
+.ask{background:var(--bg);border:1px dashed var(--line);border-radius:10px;padding:.7rem .95rem;margin-top:.7rem}
+.ask b{color:var(--acc);font-size:.85rem}
+.ask ul{padding-left:1.2rem;margin:.4rem 0;color:var(--fg2);font-size:.93rem}
+.ask li{margin:.3rem 0}
 .no{font-family:var(--mono);font-size:.8rem;color:var(--fg);font-weight:700}
 .ref{font-size:.75rem;color:var(--fg3)}
 .stem{margin:0}
@@ -135,12 +140,12 @@ footer{margin-top:44px;padding-top:20px;border-top:1px solid var(--line);
     <h1>《欢迎来到未来》习题</h1>
     <p class="hsub">
       本页习题对应第 1 讲全部内容：交叉路口、LLM 与 Agent、qrgen 暴毙、Intent/Spec/Impl、成本结构、古法编程之死。
-      只有论述题与解答题 —— 没有标准答案的题目，才配得上这门课。
+      论述题没有标准答案，实践题没有终点——它们要的不是复述，而是你自己的判断。
     </p>
     <div class="meta">
       <div class="mrow"><span class="mk">范围</span><span class="mv">第 1 讲（讲义 §1–§15，含课堂现场）</span></div>
-      <div class="mrow"><span class="mk">题型</span><span class="mv">论述题 6 道 · 解答题 5 道 · 共 100 分</span></div>
-      <div class="mrow"><span class="mk">建议</span><span class="mv">90 分钟；论述题先写提纲再展开</span></div>
+      <div class="mrow"><span class="mk">题型</span><span class="mv">论述题 6 · 解答题 5（100 分）· 实践题 5（建议本周完成）</span></div>
+      <div class="mrow"><span class="mk">建议</span><span class="mv">论述 90 分钟；实践题做一件是一件</span></div>
       <div class="mrow"><span class="mk">作答</span><span class="mv">输入框内容自动保存在本机浏览器</span></div>
     </div>
     <div class="act">
@@ -157,12 +162,16 @@ footer{margin-top:44px;padding-top:20px;border-top:1px solid var(--line);
 <div class="wrap">
   <div class="bar">
     <span><b>第一部分</b> 论述题（E1–E6，各 10 分）</span>
-    <span><b>第二部分</b> 解答题（S1–S5，各 8 分）</span>
-    <span class="prog" id="prog">已作答 0 / 11</span>
+    <span><b>第二部分</b> 实践题（P1–P5，建议完成）</span>
+    <span><b>第三部分</b> 解答题（S1–S5，各 8 分）</span>
+    <span class="prog" id="prog">已作答 0 / 16</span>
   </div>
   <p class="tip">
-    建议顺序：先独立写完「我的作答」，再展开要点对照。论述题给的是<strong>判分要点</strong>而非标准答案——
-    能举出讲义之外的例子、能把两个小节连起来说，通常比复述原句得分更高。
+    <strong>怎么用这一页。</strong>论述题给的是<strong>判分要点</strong>而非标准答案——
+    能举出讲义之外的例子、能把两个小节连起来说，通常比复述原句得分更高；
+    每题最后那句「想一想」才是真正要你写的东西，它要求你<strong>表态</strong>，而不是总结。<br>
+    实践题不设标准答案，也没有终点：做一件是一件，做完请回到「做完再想」，那几问往往比任务本身更难。
+    可以先做 P1（最小实验），它会直接检验你在论述题里写下的判断。
   </p>
 
   <h2 class="part"><span class="ht">第一部分 · 论述题</span><small>60 分</small></h2>
@@ -180,6 +189,10 @@ footer{margin-top:44px;padding-top:20px;border-top:1px solid var(--line);
         <li>既然我们编程的对象是 context，那么在使用 Agent 时，应当建立哪些具体的检验习惯？（请至少给出三条可执行的做法）</li>
       </ul>
     </div>
+    
+      <div class="ask"><b>想一想</b>
+        <ul><li>如果模型明天变得更强、更流畅，你上面写的检验习惯里，哪一条会失效、哪一条依然有效？为什么？</li></ul>
+      </div>
     <details class="sol"><summary>作答要点</summary><div class="sol-body">
       <ul>
         <li><span class="key">训练接口 ≠ 能力上限</span>：要同时预测代码、证明、对话和故事，模型被迫压缩语言背后的世界规律；目标函数简单，不代表由此习得的表示简单。</li>
@@ -204,6 +217,10 @@ footer{margin-top:44px;padding-top:20px;border-top:1px solid var(--line);
         <li>「禁止古法编程」是否等于「禁止理解程序」？请给出你的判断与理由。</li>
       </ul>
     </div>
+    
+      <div class="ask"><b>想一想</b>
+        <ul><li>设想团队里有 50 个 Agent 在写代码、只有 3 个工程师。请具体说出这 3 个人每天该做什么——如果答不出来，说明「方向 × 验证 × 责任」对你还只是口号。</li></ul>
+      </div>
     <details class="sol"><summary>作答要点</summary><div class="sol-body">
       <ul>
         <li><span class="key">分界线</span>：边界清楚（可完整描述）、上下文装得下（信息可进入 context）、结果能低成本验收（有便宜的 oracle）——三条同时满足，任务就落入机器领地。缺任何一条，人的判断仍然必要。</li>
@@ -230,6 +247,10 @@ footer{margin-top:44px;padding-top:20px;border-top:1px solid var(--line);
         <li>「少量 prompt 换一个架构」为什么能成功？请说明从「生成一个能跑的文件」到「设计一个可复用的计算结构」之间的差别。</li>
       </ul>
     </div>
+    
+      <div class="ask"><b>想一想</b>
+        <ul><li>「演示成功」与「满足需求」在你的课程 / 实习评价体系里各占多少权重？如果前者更高，你会怎么设计，才能让后者也被看见？</li></ul>
+      </div>
     <details class="sol"><summary>作答要点</summary><div class="sol-body">
       <ul>
         <li><span class="key">隐藏的规格分支</span>：字符串编码（UTF-8？字节序？）、每帧容量与分片策略、输入变化时公式/工作表是否重建、「F9 刷新」与「1 秒一帧」如何配合、以及最关键的——验收是「文件能打开」还是「每帧可被真实解码器读取、拼接后还原原文」。</li>
@@ -256,6 +277,10 @@ footer{margin-top:44px;padding-top:20px;border-top:1px solid var(--line);
         <li>模型靠「猜」来补 gap。既然猜不可避免，目标应如何调整？请结合决策不等式 <code>P(猜错) × C(返工) &gt; C(澄清)</code> 说明。</li>
       </ul>
     </div>
+    
+      <div class="ask"><b>想一想</b>
+        <ul><li>如果有一天 AI 连 spec 也写得很好（老师说的「大力出奇迹」），人类还剩下什么？给出你的答案，并说明你凭什么相信它。</li></ul>
+      </div>
     <details class="sol"><summary>作答要点</summary><div class="sol-body">
       <ul>
         <li><span class="key">三层</span>：Intent 是你真正想达成的目标（提出者自己往往也不 100% 确定）；Spec 是具体化后能描述行为与约束的规格；Impl 是程序实际执行的计算——计算机只接受 100% 无歧义的指令，不能留一句「到时候看着办」。</li>
@@ -282,6 +307,10 @@ footer{margin-top:44px;padding-top:20px;border-top:1px solid var(--line);
         <li>如果 AI 连「品味」也学会，人的稀缺性继续向上游迁移。请讨论：那时真正困难的问题会变成什么？（提示：为何做、为谁做、后果由谁承担）</li>
       </ul>
     </div>
+    
+      <div class="ask"><b>想一想</b>
+        <ul><li>假设验证能力本身也被 AI 规模化（AI 写 oracle、AI 做 review），瓶颈会转移到哪里？请往后推演两步。</li></ul>
+      </div>
     <details class="sol"><summary>作答要点</summary><div class="sol-body">
       <ul>
         <li><span class="key">错误率 vs 维护负担</span>：错误率是按件计的比率，维护负担是按量计的绝对数；产量放大 1000× 后，即便 1% 也是旧时代全部产量的 10 倍。<span class="key">99% 正确，在规模面前仍然是灾难。</span></li>
@@ -307,6 +336,10 @@ footer{margin-top:44px;padding-top:20px;border-top:1px solid var(--line);
           请写一段 30 秒的回答，并批判性地讨论其中「可以坐牢」这个说法——在什么条件下，责任才不是 <em>moral crumple zone</em>（道德缓冲垫）？</li>
       </ul>
     </div>
+    
+      <div class="ask"><b>想一想</b>
+        <ul><li>如果雇主只买一个 $200 的 Claude Max 而不招你，说明你此前提供的价值属于哪一类？你打算如何让自己在本学期内离开那一类？</li></ul>
+      </div>
     <details class="sol"><summary>作答要点</summary><div class="sol-body">
       <ul>
         <li><span class="key">重解释</span>：不要只按应用程序的名字想象它的用途，要看它<span class="key">实际上提供了什么输入、计算和输出能力</span>。安全边界限制了「文件」，却没有限制信息——只要像素仍可被观察，出口容量就不为零。</li>
@@ -320,7 +353,205 @@ footer{margin-top:44px;padding-top:20px;border-top:1px solid var(--line);
       <div class="saved">已保存到本机</div></div>
   </article>
 
-  <h2 class="part"><span class="ht">第二部分 · 解答题</span><small>40 分</small></h2>
+  <h2 class="part"><span class="ht">第二部分 · 实践题</span><small>不计分，建议本周完成</small></h2>
+  <p class="tip">
+    这一讲的每一个判断都可以被亲手检验。实践题的共同结构：<strong>任务 → 交付物（验收）→ 做完再想</strong>。
+    前两问考验你的手，最后一问考验你的判断——跳过它，就只是又做了一次「古法编程」。
+  </p>
+
+  <article class="q" id="P1">
+    <div class="qhd"><span class="tag p">实践</span><span class="no">P1</span>
+      <span class="ref">§9.4 / §15 最小实验 · 建议最先做</span></div>
+    <div class="stem">
+      <p class="lead">把同一个需求交给 Agent 两次，比较两版产物的<strong>改动局部性</strong>。这是本讲最核心、也最便宜的一次实验。</p>
+      <p><strong>任务</strong></p>
+      <ol>
+        <li>挑一个小而真实的需求（推荐：把任意字符串编码成二维码；或你自己项目里的一个小工具）。</li>
+        <li><strong>A 轮</strong>：新开会话，直接说「给我做出来」，中途不给任何额外约束，直到它交付。</li>
+        <li><strong>B 轮</strong>：再开一个全新会话，先写下 <strong>invariants</strong>（什么算「对」、什么必须保持不变），
+          再让它先写独立的 <strong>oracle</strong>（验证脚本），最后才动手实现。</li>
+        <li>两版都交付后，<strong>改一个需求</strong>（例如输入长度 ×10、换一种编码），记录各要改动多少。</li>
+      </ol>
+      <p><strong>交付物（验收）</strong></p>
+      <ul>
+        <li>两份产物 + 一份 oracle 脚本；</li>
+        <li>改需求后的记录：改了几个文件 / 多少行 / 是否被迫整份重新生成；</li>
+        <li>一段不超过 100 字的结论。</li>
+      </ul>
+      <div class="ask"><b>做完再想</b>
+        <ul>
+          <li>哪一版的改动更「局部」？如果两版都得重写，那说明你的 invariants 里<strong>漏掉了哪一条</strong>？</li>
+          <li>把「改一个需求要动多少地方」当作可维护性指标，你给自己正在做的项目打几分？依据是什么？</li>
+          <li>B 轮明显更慢、更啰嗦。你愿意用它换取一个能扛住三次需求变化的产物吗？<strong>为什么现实中大多数团队还是选 A？</strong>
+            （提示：想想「演示成功」与「满足需求」在考核里的权重）</li>
+        </ul>
+      </div>
+    </div>
+    <details class="sol"><summary>导师提示 / 常见坑</summary><div class="sol-body">
+      <ul>
+        <li>常见坑一：<span class="key">oracle 写成实现的复述</span>——那就失去了独立性，等于自己给自己判卷。oracle 应当用另一条路径算出答案（例如用真实解码库，而不是再读一遍自己的公式）。</li>
+        <li>常见坑二：invariants 写成「要好用」「要快」——不可判定。应当写成可以被脚本判真伪的陈述，如「工作表单元格数不随输入长度增长」。</li>
+        <li>预期结果：A 轮通常在改需求时整份重生成；B 轮只有数据与帧数按 <span class="key">O(n)</span> 增长，公式与结构保持 <span class="key">O(1)</span>。</li>
+        <li>时间预算：两轮各 30–60 分钟。如果 A 轮一次就成功且改需求也只动一小块，那也是一个值得写下来的结论——去查你的需求是不是太简单了。</li>
+      </ul>
+    </div></details>
+    <div class="ans"><label>我的记录（做了什么 / 观察到什么 / 结论）</label><textarea data-k="P1" placeholder="A 轮… B 轮… 改需求后… 我的结论…"></textarea>
+      <div class="saved">已保存到本机</div></div>
+  </article>
+
+  <article class="q" id="P2">
+    <div class="qhd"><span class="tag p">实践</span><span class="no">P2</span>
+      <span class="ref">§4 课程 Policy / §5.3 / §10 成本结构</span></div>
+    <div class="stem">
+      <p class="lead">课程要求 <strong>token 自费</strong>，却不鼓励 tokenmaxxing。这条 Policy 只有在你亲手花过钱之后才成立——去建立你自己的成本直觉。</p>
+      <p><strong>任务</strong></p>
+      <ol>
+        <li>注册并充值一个 LLM API（课程课堂全程用 deepseek-v4-flash），亲手跑通一次调用。</li>
+        <li>挑一个<strong>真实任务</strong>，做两遍：① 短 prompt 直接要结果；② 让它先写计划、再自我检查（明显更长的 token）。</li>
+        <li>记录每一次的：token 数、费用、延迟、质量自评（1–5）、<strong>以及你人工返工了几次</strong>。</li>
+      </ol>
+      <p><strong>交付物（验收）</strong></p>
+      <ul>
+        <li>一张对比表（两遍 × 上述五个字段）；</li>
+        <li>一句话：「下一次面对同类任务，我会怎么做，为什么。」</li>
+      </ul>
+      <div class="ask"><b>做完再想</b>
+        <ul>
+          <li>什么时候「多想一会儿」值回票价，什么时候它只是<strong>把错误说得更长</strong>？你的判据是什么？（提示：看这次尝试能不能拿到<strong>有效反馈</strong>）</li>
+          <li>把你现在的「成本—质量—延迟」直觉写成一句可验证的规则，本学期用它对照每一次决策。</li>
+          <li>如果 token 便宜 100 倍，你的工作方式会变吗？<strong>会变的和不会变的分别是什么</strong>——后者才是这门课关心的东西。</li>
+          <li>为什么课程要求自费，却不鼓励以烧更多 token 为目标的攀比？两者矛盾吗？</li>
+        </ul>
+      </div>
+    </div>
+    <details class="sol"><summary>导师提示 / 常见坑</summary><div class="sol-body">
+      <ul>
+        <li>不要用 hello world 做实验：太简单的任务看不出质量差异，成本差异也失真。</li>
+        <li><span class="key">务必把「人工返工次数」记进去</span>——那才是真实成本的大头，也是这门课反复强调的「验证成为瓶颈」。</li>
+        <li>记录延迟时区分「首字延迟」与「总耗时」；长思考给你的是总耗时。</li>
+        <li>判断「多想一会儿」是否值得的经验法则：这个任务有没有便宜的 oracle？有，则思考时间通常值得；没有，则多半只是更长的错觉。</li>
+      </ul>
+    </div></details>
+    <div class="ans"><label>我的记录（数据 / 规则 / 判断）</label><textarea data-k="P2" placeholder="…"></textarea>
+      <div class="saved">已保存到本机</div></div>
+  </article>
+
+  <article class="q" id="P3">
+    <div class="qhd"><span class="tag p">实践</span><span class="no">P3</span>
+      <span class="ref">§6.4 / §8.1–§8.2 从操作到资产</span></div>
+    <div class="stem">
+      <p class="lead">Agent 的真正杠杆不是替你交作业，而是<strong>现场制造工具</strong>：把一次性的自然语言需求，变成可重复执行的闭环。</p>
+      <p><strong>任务</strong></p>
+      <ol>
+        <li>挑一件你每周都在重复的数字任务（整理文件、批量改名、抓数据、填表、汇总邮件…）。</li>
+        <li><strong>第一轮让它「探路」</strong>：你在旁边观察每一步，随时纠偏——不要一次把完整需求写完。</li>
+        <li>跑通之后，再让它把过程<strong>沉淀成可重放的脚本 / skill</strong>，明确写出输入、输出，以及<strong>失败时怎么办</strong>。</li>
+        <li>故意喂一个异常输入（空文件、乱码、超大文件），看它怎么失败。</li>
+      </ol>
+      <p><strong>交付物（验收）</strong></p>
+      <ul>
+        <li>一个可重复运行的脚本；</li>
+        <li>一份使用说明：输入 / 输出 / 失败行为；</li>
+        <li>一次失败记录：它是怎么失败的——报错、静默出错，还是自信地给出了错误结果？</li>
+      </ul>
+      <div class="ask"><b>做完再想</b>
+        <ul>
+          <li>它的 <strong>oracle</strong> 是什么？如果它<strong>静默出错</strong>，你多久能发现、凭什么发现？</li>
+          <li>从「一次操作」到「一份资产」，你保留了什么、丢掉了什么？（提示：老师的邮件 skill 里，真正的资产不是「会写一封信」，而是<strong>历史上所有的回复</strong>）</li>
+          <li>这个脚本值得长期维护吗？你的判断标准是什么——使用频次、出错代价，还是别的？</li>
+          <li>把「探路 → 沉淀」这个顺序反过来（先写完整需求再一次性生成），会损失什么？</li>
+        </ul>
+      </div>
+    </div>
+    <details class="sol"><summary>导师提示 / 常见坑</summary><div class="sol-body">
+      <ul>
+        <li>可编程性的边界不在「有没有 API」，而在：<span class="key">能否找到可控输入、可观测输出、可判定的完成条件</span>。先检查这三条再动手。</li>
+        <li>让它写「失败时怎么办」往往比写主流程更有价值——那正是人该驻守的最窄的高风险接口。</li>
+        <li>参考课堂的考试统分流水线：照片是原始凭证，小分是中间表示，总分是派生结果；再用<span class="key">「反序 + 报算式」</span>做一次 readback。你能给自己的脚本设计类似的冗余吗？</li>
+        <li>如果它静默出错，先别急着改模型，先问：为什么这个错误没有被任何一道门拦住？</li>
+      </ul>
+    </div></details>
+    <div class="ans"><label>我的记录（任务 / 脚本 / 失败 / 判断）</label><textarea data-k="P3" placeholder="…"></textarea>
+      <div class="saved">已保存到本机</div></div>
+  </article>
+
+  <article class="q" id="P4">
+    <div class="qhd"><span class="tag p">实践</span><span class="no">P4</span>
+      <span class="ref">§8.3–§8.4 重解释 / Everything Is Code</span></div>
+    <div class="stem">
+      <p class="lead">课堂 Quiz：一台「文件只进不出」的机器，怎么把文件偷出来？答案是——鼠标当接收端，Excel 里的二维码当发送端。
+        关键动作不是聪明，而是<strong>重解释</strong>：不看它叫什么，只看它实际提供了什么能力。</p>
+      <p><strong>任务</strong></p>
+      <ol>
+        <li>挑一个你天天用的应用或设备（浏览器、Excel、输入法、手机传感器、打印机、游戏手柄…）。</li>
+        <li><strong>不看它的名字与用途</strong>，列出它实际提供的：输入通道、计算能力、输出通道。</li>
+        <li>设计一种「把它当成别的东西用」的方案，画出数据流：Rx 用什么、Tx 用什么、用什么做同步与纠错。</li>
+      </ol>
+      <p><strong>交付物（验收）</strong></p>
+      <ul>
+        <li>一份能力清单（输入 / 计算 / 输出，各至少一条）；</li>
+        <li>一段文字版方案草图（不必能跑，但要自洽）；</li>
+        <li>一句话说明：它<strong>凭什么成立</strong>（依赖了哪些真实存在的能力）。</li>
+      </ul>
+      <div class="ask"><b>做完再想</b>
+        <ul>
+          <li>这个练习和 <strong>Everything Is Code</strong> 有什么关系？哪个「后端」可以兑现你的中间表示？</li>
+          <li>课堂的边界是：<span class="key">安全边界限制了「文件」，却没有限制「信息」</span>。你设计的方案如果用在受限环境里，
+            <strong>算不算绕过安全？你打算把这条线划在哪里，谁来决定？</strong></li>
+          <li>把「重解释」用在你的学习上：你现在用的某个工具，是不是也只发挥了它名字所暗示的那一小部分？</li>
+        </ul>
+      </div>
+    </div>
+    <details class="sol"><summary>导师提示 / 常见坑</summary><div class="sol-body">
+      <ul>
+        <li>参考课堂解法：Rx = 鼠标（鼠标也是输入线路），Tx = 二维码（<span class="key">Excel 是可编程显示设备</span>）；
+          QR Code 自带同步与 <span class="key">Reed–Solomon 纠错</span>，再加帧号、校验和、ACK/NAK 与重传，就能在一条 Raw Socket 上自建协议栈。</li>
+        <li>核心命题：协议只需要一种「能承载符号的媒介」——<strong>「网卡」只是网络的一种实现</strong>。</li>
+        <li>常见坑：把「重解释」写成脑洞而<code>不验证能力是否真实存在</code>。请为每一条能力给出可观察的证据。</li>
+        <li>第三问没有标准答案，但请给出你的立场和理由——这正是「为何做、为谁做、后果由谁承担」。</li>
+      </ul>
+    </div></details>
+    <div class="ans"><label>我的记录（能力清单 / 方案 / 我的立场）</label><textarea data-k="P4" placeholder="…"></textarea>
+      <div class="saved">已保存到本机</div></div>
+  </article>
+
+  <article class="q" id="P5">
+    <div class="qhd"><span class="tag p">实践</span><span class="no">P5</span>
+      <span class="ref">§6.5 AI 辅助深度阅读</span></div>
+    <div class="stem">
+      <p class="lead">Agent 可以把视频转成讲义、把论文压成摘要，但<strong>一份漂亮的摘要，不能证明阅读已经发生</strong>。这题练习的是「让阅读真的发生」。</p>
+      <p><strong>任务</strong>：选一篇论文（或一份长文档），严格按四步走一遍。</p>
+      <ol>
+        <li><strong>追踪论证</strong>：结论是什么？证据在哪？每个回答都能跳回原文。</li>
+        <li><strong>对抗阅读</strong>：让 Agent 提出反例、遗漏的前提，以及<strong>作者最强的反驳</strong>。</li>
+        <li><strong>主动回忆</strong>：合上原文接受「口试」，再对照原文纠错——把错的地方记下来。</li>
+        <li><strong>重新组织</strong>：把新观点改写、归类，连到你自己的旧笔记与真实问题。</li>
+      </ol>
+      <p><strong>交付物（验收）</strong></p>
+      <ul>
+        <li>一页笔记：结论 / 证据 / 反例 / 我错在哪 / 我把它连到了什么问题。</li>
+      </ul>
+      <div class="ask"><b>做完再想</b>
+        <ul>
+          <li>为什么一份漂亮的摘要<strong>不能证明阅读已经发生</strong>？这四步里，哪一步最容易被跳过？为什么?</li>
+          <li>把「主动回忆的纠错记录」给别人看——它能证明你读过吗？你的<strong>证据链</strong>到底是什么？</li>
+          <li>把第④步的成果连到你本学期要解决的问题上：它改变了你要做的哪件事？如果没改变，这次阅读的价值在哪？</li>
+        </ul>
+      </div>
+    </div>
+    <details class="sol"><summary>导师提示 / 常见坑</summary><div class="sol-body">
+      <ul>
+        <li>最容易跳过的永远是<span class="key">主动回忆</span>——因为它不舒服。恰恰是它证明了理解发生过。</li>
+        <li>「作者最强的反驳」要自己先想一遍再让 Agent 补充，否则你得到的是一份听起来合理的清单。</li>
+        <li>第④步的产物应当能被你三个月后检索到：连到旧笔记，而不是新建一个孤岛。</li>
+        <li>把这题和 P3 连起来：能不能把你这套阅读流程沉淀成一个可重放的脚本？</li>
+      </ul>
+    </div></details>
+    <div class="ans"><label>我的记录（笔记 / 纠错记录 / 连接）</label><textarea data-k="P5" placeholder="…"></textarea>
+      <div class="saved">已保存到本机</div></div>
+  </article>
+
+  <h2 class="part"><span class="ht">第三部分 · 解答题</span><small>40 分</small></h2>
 
   <article class="q" id="S1">
     <div class="qhd"><span class="tag s">解答</span><span class="no">S1</span>
