@@ -200,6 +200,14 @@ footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--line);
 #top:hover{color:var(--acc);border-color:var(--acc)}
 #menu{display:none}
 
+/* 返回主页 */
+#home{position:fixed;right:76px;bottom:22px;height:42px;display:flex;align-items:center;gap:.35rem;
+  padding:0 .9rem;border-radius:21px;background:var(--bg2);border:1px solid var(--line);
+  color:var(--fg2);font-size:.84rem;cursor:pointer;box-shadow:var(--shadow);z-index:50;
+  transition:.2s;text-decoration:none;white-space:nowrap}
+#home:hover{color:var(--acc);border-color:var(--acc);text-decoration:none}
+@media (max-width:640px){#home{right:70px;padding:0 .7rem;font-size:.78rem}}
+
 @media (max-width:1000px){
   .layout{padding:0 16px;gap:0}
   #sidebar{position:fixed;left:0;top:0;bottom:0;width:290px;background:var(--bg2);
@@ -215,7 +223,7 @@ footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--line);
   .ha{display:none}
 }
 @media print{
-  #sidebar,#top,#menu,#prog,.hero-act{display:none!important}
+  #sidebar,#top,#menu,#prog,#home,.hero-act{display:none!important}
   details.appx{border:0}
   .appx-body{display:block!important}
   details.appx[open]>summary h2{font-size:1.2rem}
@@ -343,7 +351,8 @@ footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--line);
   <div class="side-ft">
     正文字数 <span>约 4.7 万字</span><br>
     <span id="tk">自测进度 0 / 0</span><br>
-    勾选状态保存在本地浏览器
+    勾选状态保存在本地浏览器<br>
+    按 <span>Esc</span> 返回主页
   </div>
 </aside>
 <main>
@@ -949,6 +958,7 @@ footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--line);
 </div>
 <button id="menu" title="目录">☰</button>
 <button id="top" title="回到顶部">↑</button>
+<a id="home" href="index.html" title="返回主页（快捷键 Esc）">← 主页</a>
 <script>
 
 (function(){
@@ -999,9 +1009,17 @@ footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--line);
       if(hit && v){ var s=a.parentNode.parentNode; }
     });
   });
+  function typing(){
+    var a=document.activeElement;
+    return !!a && (a.tagName==='INPUT'||a.tagName==='TEXTAREA'||a.tagName==='SELECT'||a.isContentEditable);
+  }
   document.addEventListener('keydown',function(e){
     if(e.key==='/'&&document.activeElement!==q){e.preventDefault();q.focus();}
-    if(e.key==='Escape'&&document.activeElement===q){q.value='';q.dispatchEvent(new Event('input'));q.blur();}
+    if(e.key==='Escape'&&document.activeElement===q){q.value='';q.dispatchEvent(new Event('input'));q.blur();return;}
+    // Esc：回到主页（输入框内不触发，避免打断搜索与勾选）
+    if(e.key==='Escape'&&!typing()&&!e.metaKey&&!e.ctrlKey&&!e.altKey){
+      e.preventDefault(); location.href='index.html';
+    }
   });
 
   // 内部链接：自动展开所在附录
