@@ -202,10 +202,10 @@ footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--line);
 
 /* 返回主页 */
 #home{position:fixed;right:76px;bottom:22px;height:42px;display:flex;align-items:center;gap:.35rem;
-  padding:0 .9rem;border-radius:21px;background:var(--bg2);border:1px solid var(--line);
-  color:var(--fg2);font-size:.84rem;cursor:pointer;box-shadow:var(--shadow);z-index:50;
+  padding:0 .9rem;border-radius:21px;background:var(--bg2);border:1px solid rgba(255,180,84,.45);
+  color:var(--acc);font-size:.84rem;cursor:pointer;box-shadow:var(--shadow);z-index:50;
   transition:.2s;text-decoration:none;white-space:nowrap}
-#home:hover{color:var(--acc);border-color:var(--acc);text-decoration:none}
+#home:hover{color:var(--acc);border-color:var(--acc);text-decoration:none;filter:brightness(1.1)}
 @media (max-width:640px){#home{right:70px;padding:0 .7rem;font-size:.78rem}}
 
 @media (max-width:1000px){
@@ -241,6 +241,7 @@ footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--line);
 <div class="hsub">课堂笔记 · 以官方讲义与 44 页幻灯片为主体，附课堂现场与术语索引</div>
 <div class="meta"><div class="mrow"><span class="mk">视频</span><span class="mv"><a href="https://www.bilibili.com/video/BV1pb8o6yE8f" target="_blank" rel="noopener">BV1pb8o6yE8f</a></span></div><div class="mrow"><span class="mk">主讲</span><span class="mv">蒋炎岩（南京大学计算机学院，“绿导师”）</span></div><div class="mrow"><span class="mk">课程</span><span class="mv">2026 秋季学期《生成式软件工程》(GenSE)，面向大三，选修，新开课</span></div><div class="mrow"><span class="mk">时长</span><span class="mv">100 分钟（Raw 课堂实录）</span></div><div class="mrow"><span class="mk">配套资料</span><span class="mv"><a href="https://jyywiki.cn/GSE/2026/" target="_blank" rel="noopener">课程主页 jyywiki.cn/GSE/2026</a> ｜ <a href="https://jyywiki.cn/GSE/2026/lect1.md" target="_blank" rel="noopener">讲义 lect1</a> ｜ <a href="https://jyywiki.cn/GSE/2026/slides1.html" target="_blank" rel="noopener">幻灯片 slides1</a></span></div><div class="mrow"><span class="mk">整理说明</span><span class="mv">本笔记以官方讲义与 44 页幻灯片原文为主体，把课堂录像与现场讨论<strong>转写为连贯的文字解读</strong>，不按视频时间轴切分节点；讲义为课程方整理后的文本，与录像中的口语表述可能有细微差别。</span></div></div><hr>
 <div class="hero-act">
+  <a class="btn" href="index.html" title="返回课程笔记主页（快捷键 Esc）">← 返回主页</a>
   <button class="btn" id="appx">展开全部附录</button>
   <button class="btn" id="theme">☾ 深色</button>
   <a class="btn" href="https://jyywiki.cn/GSE/2026/" target="_blank" rel="noopener">课程主页 ↗</a>
