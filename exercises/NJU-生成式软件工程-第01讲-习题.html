@@ -1,0 +1,509 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>第 1 讲习题 —— 南京大学《生成式软件工程》2026 秋</title>
+<meta name="description" content="第 1 讲《欢迎来到未来》习题：6 道论述题 + 5 道解答题，附作答要点与参考答案。">
+<style>
+*,*::before,*::after{box-sizing:border-box}
+:root{
+  --bg:#0d1117;--bg2:#161b22;--bg3:#1b2230;--line:#262d38;
+  --fg:#c9d5e1;--fg2:#8b98a9;--fg3:#69747f;
+  --acc:#ffb454;--acc2:#7ee787;--link:#79c0ff;--violet:#a78bfa;
+  --chip:rgba(255,180,84,.10);
+  --shadow:0 1px 2px rgba(0,0,0,.35),0 8px 24px rgba(0,0,0,.28);
+  --mono:"JetBrains Mono","SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+}
+[data-theme="light"]{
+  --bg:#ffffff;--bg2:#f6f8fa;--bg3:#eceff3;--line:#dde2e8;
+  --fg:#1f2328;--fg2:#545d68;--fg3:#7d8590;
+  --acc:#a85a00;--acc2:#1a7f37;--link:#0969da;--violet:#7c3aed;
+  --chip:rgba(255,180,84,.16);
+  --shadow:0 1px 2px rgba(16,24,40,.06),0 8px 24px rgba(16,24,40,.08);
+}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--fg);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB",
+    "Microsoft YaHei","Source Han Sans SC","Noto Sans CJK SC",sans-serif;
+  font-size:16.5px;line-height:1.85;-webkit-font-smoothing:antialiased;
+  transition:background .2s,color .2s;}
+a{color:var(--link);text-decoration:none}
+a:hover{text-decoration:underline}
+code{font-family:var(--mono);font-size:.88em;background:var(--bg3);padding:.1em .38em;border-radius:5px}
+strong{color:var(--fg)}
+
+/* Hero */
+#hero{position:relative;padding:52px 24px 28px;border-bottom:1px solid var(--line);
+  background:
+    radial-gradient(900px 320px at 18% -10%,rgba(255,180,84,.13),transparent 70%),
+    radial-gradient(700px 300px at 85% 0%,rgba(167,139,250,.11),transparent 70%),
+    var(--bg2);}
+.hero-in{max-width:900px;margin:0 auto}
+.badge{display:inline-flex;align-items:center;gap:.5rem;font-size:.78rem;letter-spacing:.06em;
+  color:var(--acc);background:var(--chip);border:1px solid rgba(255,180,84,.28);
+  padding:.28rem .7rem;border-radius:999px;margin-bottom:1rem}
+#hero h1{margin:0 0 .4rem;font-size:1.95rem;line-height:1.3;letter-spacing:-.01em;font-weight:800}
+.hsub{color:var(--fg2);font-size:.96rem;margin:0 0 1.3rem;max-width:64ch}
+.meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:.1rem 1.5rem;
+  background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:.85rem 1.1rem}
+.mrow{display:flex;gap:.65rem;padding:.18rem 0;font-size:.88rem;line-height:1.7}
+.mk{flex:0 0 4.2rem;color:var(--acc);font-weight:600;font-size:.85rem}
+.mv{color:var(--fg2)}
+.act{display:flex;flex-wrap:wrap;gap:.55rem;margin-top:1.1rem}
+.btn{font:inherit;font-size:.84rem;color:var(--fg);background:var(--bg);border:1px solid var(--line);
+  border-radius:8px;padding:.4rem .8rem;cursor:pointer;transition:.15s;display:inline-flex;align-items:center;gap:.35rem}
+.btn:hover{border-color:var(--acc);color:var(--acc);text-decoration:none}
+.btn.primary{background:var(--acc);border-color:var(--acc);color:#10151c;font-weight:600}
+.btn.primary:hover{color:#10151c;filter:brightness(1.08)}
+#tg{margin-left:auto}
+
+/* 主体 */
+.wrap{max-width:900px;margin:0 auto;padding:0 24px 90px}
+.bar{display:flex;flex-wrap:wrap;align-items:center;gap:.6rem .9rem;padding:24px 0 8px;
+  font-size:.84rem;color:var(--fg3)}
+.bar b{color:var(--fg2);font-weight:600}
+.bar .prog{margin-left:auto;color:var(--acc)}
+.tip{background:var(--bg2);border:1px solid var(--line);border-left:3px solid var(--acc);
+  border-radius:10px;padding:.8rem 1rem;font-size:.88rem;color:var(--fg2);margin:0 0 .5rem}
+
+.part{font-size:1.2rem;margin:2.4rem 0 1rem;font-weight:750;letter-spacing:-.01em}
+.part .ht{display:inline-block;border-bottom:3px solid var(--acc);padding-bottom:.25rem}
+.part small{font-size:.8rem;color:var(--fg3);font-weight:400;margin-left:.6rem}
+
+.q{background:var(--bg2);border:1px solid var(--line);border-radius:14px;
+  padding:1.1rem 1.25rem 1rem;margin-bottom:14px}
+.qhd{display:flex;align-items:center;gap:.55rem;flex-wrap:wrap;margin-bottom:.55rem}
+.tag{font-size:.72rem;font-weight:700;border-radius:6px;padding:.12rem .45rem;border:1px solid}
+.tag.e{color:var(--acc);background:var(--chip);border-color:rgba(255,180,84,.3)}
+.tag.s{color:var(--acc2);background:rgba(126,231,135,.10);border-color:rgba(126,231,135,.28)}
+.no{font-family:var(--mono);font-size:.8rem;color:var(--fg);font-weight:700}
+.ref{font-size:.75rem;color:var(--fg3)}
+.stem{margin:0}
+.stem p{margin:.5rem 0}
+.stem ul{padding-left:1.25rem;margin:.5rem 0;color:var(--fg2);font-size:.94rem}
+.stem li{margin:.25rem 0}
+.stem .lead{color:var(--fg2);font-size:.92rem;margin-bottom:.6rem}
+
+details.sol{margin-top:.85rem;border-top:1px dashed var(--line);padding-top:.6rem}
+details.sol>summary{cursor:pointer;font-size:.84rem;color:var(--acc);font-weight:600;
+  list-style:none;display:flex;align-items:center;gap:.35rem;user-select:none}
+details.sol>summary::-webkit-details-marker{display:none}
+details.sol>summary::before{content:"▸";font-size:.75rem;transition:transform .15s}
+details.sol[open]>summary::before{transform:rotate(90deg)}
+.sol-body{background:var(--bg);border:1px solid var(--line);border-radius:10px;
+  padding:.85rem 1rem;margin-top:.6rem;font-size:.92rem;color:var(--fg2)}
+.sol-body p{margin:.45rem 0}
+.sol-body ul,.sol-body ol{padding-left:1.25rem;margin:.45rem 0}
+.sol-body li{margin:.28rem 0}
+.sol-body .key{color:var(--fg)}
+.sol-body code{color:var(--acc)}
+.sol-body table{border-collapse:collapse;width:100%;font-size:.88rem;margin:.5rem 0}
+.sol-body th,.sol-body td{border:1px solid var(--line);padding:.35rem .55rem;text-align:left}
+
+.ans{margin-top:.85rem}
+.ans label{display:block;font-size:.78rem;color:var(--fg3);margin-bottom:.35rem}
+.ans textarea{width:100%;font:inherit;font-size:.92rem;line-height:1.75;background:var(--bg);
+  color:var(--fg);border:1px solid var(--line);border-radius:10px;padding:.7rem .85rem;
+  resize:vertical;min-height:84px;outline:none}
+.ans textarea:focus{border-color:var(--acc)}
+.ans textarea::placeholder{color:var(--fg3)}
+.saved{font-size:.72rem;color:var(--fg3);margin-top:.3rem;opacity:0;transition:opacity .3s}
+.saved.on{opacity:1}
+
+footer{margin-top:44px;padding-top:20px;border-top:1px solid var(--line);
+  font-size:.8rem;color:var(--fg3);display:flex;flex-wrap:wrap;gap:.5rem 1.2rem}
+
+@media (max-width:640px){
+  #hero{padding:40px 18px 24px}#hero h1{font-size:1.5rem}
+  .wrap{padding:0 18px 60px}#tg{margin-left:0}
+}
+@media print{
+  #hero .act,.bar .nogap,details.sol>summary::before,.saved{display:none}
+  body{background:#fff;color:#000;font-size:11pt}
+  .q{break-inside:avoid;border-color:#ccc;background:#fff}
+  details.sol{display:block}.sol-body{display:block!important;border-color:#ccc;background:#fff}
+  textarea{border:1px solid #999!important;background:#fff!important}
+}
+</style>
+</head>
+<body>
+
+<header id="hero">
+  <div class="hero-in">
+    <div class="badge">南京大学 · 生成式软件工程 · 2026 秋 · 第 1 讲</div>
+    <h1>《欢迎来到未来》习题</h1>
+    <p class="hsub">
+      本页习题对应第 1 讲全部内容：交叉路口、LLM 与 Agent、qrgen 暴毙、Intent/Spec/Impl、成本结构、古法编程之死。
+      只有论述题与解答题 —— 没有标准答案的题目，才配得上这门课。
+    </p>
+    <div class="meta">
+      <div class="mrow"><span class="mk">范围</span><span class="mv">第 1 讲（讲义 §1–§15，含课堂现场）</span></div>
+      <div class="mrow"><span class="mk">题型</span><span class="mv">论述题 6 道 · 解答题 5 道 · 共 100 分</span></div>
+      <div class="mrow"><span class="mk">建议</span><span class="mv">90 分钟；论述题先写提纲再展开</span></div>
+      <div class="mrow"><span class="mk">作答</span><span class="mv">输入框内容自动保存在本机浏览器</span></div>
+    </div>
+    <div class="act">
+      <a class="btn primary" href="../NJU-生成式软件工程-第01讲-欢迎来到未来.html">← 返回第 1 讲讲义</a>
+      <button class="btn" id="openAll" type="button">展开全部要点 / 答案</button>
+      <button class="btn" id="closeAll" type="button">全部收起</button>
+      <button class="btn" id="clear" type="button">清空我的作答</button>
+      <button class="btn" id="print" type="button">打印</button>
+      <button class="btn" id="tg" type="button" title="切换深色 / 浅色">◐ 主题</button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="bar">
+    <span><b>第一部分</b> 论述题（E1–E6，各 10 分）</span>
+    <span><b>第二部分</b> 解答题（S1–S5，各 8 分）</span>
+    <span class="prog" id="prog">已作答 0 / 11</span>
+  </div>
+  <p class="tip">
+    建议顺序：先独立写完「我的作答」，再展开要点对照。论述题给的是<strong>判分要点</strong>而非标准答案——
+    能举出讲义之外的例子、能把两个小节连起来说，通常比复述原句得分更高。
+  </p>
+
+  <h2 class="part"><span class="ht">第一部分 · 论述题</span><small>60 分</small></h2>
+
+  <article class="q" id="E1">
+    <div class="qhd"><span class="tag e">论述</span><span class="no">E1</span>
+      <span class="ref">§5.1 心智模型 / §5.4 · 10 分</span></div>
+    <div class="stem">
+      <p class="lead">课堂上反复强调一句话：<strong>「预测下一个 token」是训练接口，不是能力上限</strong>；而使用者最有用的心智模型是
+        「它不是答案数据库，而是一个由 context 条件化的模拟器——我们真正『编程』的是 context」。</p>
+      <p>请围绕这两句话展开论述：</p>
+      <ul>
+        <li>为什么一个只做 next-token 预测的模型，能够承载草稿、算法和推理？请解释「自回归把静态分布展开成计算过程」。</li>
+        <li>为什么<strong>流畅 ≠ 正确</strong>？「流畅」到底证明了什么、又没有证明什么？</li>
+        <li>既然我们编程的对象是 context，那么在使用 Agent 时，应当建立哪些具体的检验习惯？（请至少给出三条可执行的做法）</li>
+      </ul>
+    </div>
+    <details class="sol"><summary>作答要点</summary><div class="sol-body">
+      <ul>
+        <li><span class="key">训练接口 ≠ 能力上限</span>：要同时预测代码、证明、对话和故事，模型被迫压缩语言背后的世界规律；目标函数简单，不代表由此习得的表示简单。</li>
+        <li><span class="key">自回归 = 把分布展开成过程</span>：每个输出都会被写回 context，于是「先写中间结果 → 基于它继续 → 发现矛盾再修正」成为可能；足够长的 token 序列因此可以承载草稿、搜索和算法轨迹。</li>
+        <li><span class="key">流畅只说明「在这个上下文里像一个答案」</span>：它是分布内似然的证据，不是正确性的证据；尤其在缺少可观测反馈时，模型会用更长的文字把错误说得更完整。</li>
+        <li><span class="key">检验习惯</span>：① 要求给出可回查的出处/中间产物，而不只是结论；② 让结论落到可执行的验证（脚本、oracle、真实解码器）上；③ 给 context 注入反例与约束，做对抗式提问；④ 对长任务拆步并要求每步的证据，而不是等终局再验收。</li>
+      </ul>
+    </div></details>
+    <div class="ans"><label>我的作答</label><textarea data-k="E1" placeholder="先写两三条提纲，再展开成段落…"></textarea>
+      <div class="saved">已保存到本机</div></div>
+  </article>
+
+  <article class="q" id="E2">
+    <div class="qhd"><span class="tag e">论述</span><span class="no">E2</span>
+      <span class="ref">§11.1–§11.3 古法编程死了 / · 10 分</span></div>
+    <div class="stem">
+      <p class="lead">第 11 节的标题是<strong>「古法编程死了，软件工程还没死」</strong>。请论述：</p>
+      <ul>
+        <li>这条分界线究竟划在哪里？请用「边界清楚、上下文装得下、结果能低成本验收」三个条件说明什么样的任务已经进入机器的领地。</li>
+        <li>用「Computer 原本是一种职业」的历史类比，说明为什么<strong>历史不奖励把旧动作做得更快的人</strong>。</li>
+        <li>课程说人的稀缺性是<strong>方向 × 验证 × 责任</strong>。请分别解释这三项，并论证为什么它们相乘而不是相加。</li>
+        <li>「禁止古法编程」是否等于「禁止理解程序」？请给出你的判断与理由。</li>
+      </ul>
+    </div>
+    <details class="sol"><summary>作答要点</summary><div class="sol-body">
+      <ul>
+        <li><span class="key">分界线</span>：边界清楚（可完整描述）、上下文装得下（信息可进入 context）、结果能低成本验收（有便宜的 oracle）——三条同时满足，任务就落入机器领地。缺任何一条，人的判断仍然必要。</li>
+        <li><span class="key">历史类比</span>：电子计算机出现后，优秀的 human computers 转向编程与研究；被淘汰的不是「计算能力」，而是「以手工方式执行确定性流程」这一角色。</li>
+        <li><span class="key">相乘而非相加</span>：三者互为前提——没有方向的验证是盲测，没有验证的方向是许愿，没有责任的二者都不必收敛。任一项趋近 0，整个乘积趋近 0，无法用另一项的强度补偿。</li>
+        <li><span class="key">禁止古法编程 ≠ 禁止理解</span>：禁止的是「把亲手敲出每一行代码当作学习成果」；正确的顺序是先让 Agent 生产，把人的注意力押在定义问题、设计验收、解释失败上。理解的对象从「语法」上移到「结构与约束」。</li>
+        <li><span class="key">可加分</span>：用本学期的自我追问收尾——我发现了什么值得解决的问题？我怎样把模糊愿望变成可检验的目标？失败时我凭什么知道该换路？</li>
+      </ul>
+    </div></details>
+    <div class="ans"><label>我的作答</label><textarea data-k="E2" placeholder="…"></textarea>
+      <div class="saved">已保存到本机</div></div>
+  </article>
+
+  <article class="q" id="E3">
+    <div class="qhd"><span class="tag e">论述</span><span class="no">E3</span>
+      <span class="ref">§9.2–§9.4 qrgen 暴毙 · 10 分</span></div>
+    <div class="stem">
+      <p class="lead">qrgen 的需求只有短短几行，两份 2 MB 的 Excel 也都「跑出来了」。讲义却把它们的失败归结为一句话：
+        <strong>「AI slop 的本质不是文件大，而是改动没有局部性」</strong>。</p>
+      <ul>
+        <li>为什么「需求很短」不等于「规格空间很小」？请从 qrgen 的需求里找出至少三处被隐藏的规格分支。</li>
+        <li>请论证：为什么说硬编码是<strong>把 ∀x 的程序问题，偷偷换成了「让这个 x₀ 通过」</strong>？</li>
+        <li>什么是「改动的局部性」？为什么它比文件大小、比代码行数更适合作为可维护性的判据？</li>
+        <li>「少量 prompt 换一个架构」为什么能成功？请说明从「生成一个能跑的文件」到「设计一个可复用的计算结构」之间的差别。</li>
+      </ul>
+    </div>
+    <details class="sol"><summary>作答要点</summary><div class="sol-body">
+      <ul>
+        <li><span class="key">隐藏的规格分支</span>：字符串编码（UTF-8？字节序？）、每帧容量与分片策略、输入变化时公式/工作表是否重建、「F9 刷新」与「1 秒一帧」如何配合、以及最关键的——验收是「文件能打开」还是「每帧可被真实解码器读取、拼接后还原原文」。</li>
+        <li><span class="key">硬编码之罪</span>：需求是 <code>∀s: Base64⁻¹(concat(scan(frames(s)))) = bytes(s)</code>；硬编码版本只保证某一个 <code>s₀</code> 成立。它把全称量化偷换成存在量化，可以演示成功，却没有实现需求。</li>
+        <li><span class="key">局部性</span>：一个需求变化应当只迫使系统的一小块改变。2 MB 只是症状——真正致命的是「改一个需求 → 整张表重新生成」，因为结构与数据耦合，不存在可复用的公式模板。</li>
+        <li><span class="key">换架构</span>：从「生成产物」切换到「设计计算结构」——公式可复用、工作表不随文本长度膨胀；判断标准是 <span class="key">O(1) vs O(n)</span>：公式模板与结构相对输入长度保持常数，只有数据、计算量和帧数线性增长。</li>
+        <li><span class="key">可加分</span>：指出 GLM-5.3 第一次用了 25 分钟 CoT 仍超 32K 上限、DeepSeek V4 Pro 最终交出硬编码版并自认 <em>“fundamental design flaw”</em>——说明「再多想一会儿」不能替代架构切换。</li>
+      </ul>
+    </div></details>
+    <div class="ans"><label>我的作答</label><textarea data-k="E3" placeholder="…"></textarea>
+      <div class="saved">已保存到本机</div></div>
+  </article>
+
+  <article class="q" id="E4">
+    <div class="qhd"><span class="tag e">论述</span><span class="no">E4</span>
+      <span class="ref">§9.5–§9.6 / §9.9 Intent·Spec·Impl · 10 分</span></div>
+    <div class="stem">
+      <p class="lead">本课主线是三层缺口：<strong>Intent Space → Spec Space → Impl Space</strong>。讲义给出两条断言：
+        ① <code>Impl ⊨ Spec</code> 并不推出「满足 Intent」；② <strong>spec 不是真相，只是对 intent 的一次有损观测</strong>。</p>
+      <ul>
+        <li>请解释三层各自的含义，并说明从 Intent 到 Spec、从 Spec 到 Impl 分别需要什么判断。</li>
+        <li>为什么「能通过测试」不等于「满足真实意图」？请联系「测试和 reward 看见的常常只是末端 proxy」展开。</li>
+        <li>这一论断对<strong>强化学习（如 GRPO）的 reward 设计</strong>意味着什么？为什么 long-horizon 的 reward 信号天然很弱？</li>
+        <li>模型靠「猜」来补 gap。既然猜不可避免，目标应如何调整？请结合决策不等式 <code>P(猜错) × C(返工) &gt; C(澄清)</code> 说明。</li>
+      </ul>
+    </div>
+    <details class="sol"><summary>作答要点</summary><div class="sol-body">
+      <ul>
+        <li><span class="key">三层</span>：Intent 是你真正想达成的目标（提出者自己往往也不 100% 确定）；Spec 是具体化后能描述行为与约束的规格；Impl 是程序实际执行的计算——计算机只接受 100% 无歧义的指令，不能留一句「到时候看着办」。</li>
+        <li><span class="key">判断的位置</span>：Intent → Spec 需要产品判断，Spec → Impl 需要设计与实现判断；同一个意图允许许多规格，同一个规格允许许多实现。</li>
+        <li><span class="key">测试 ≠ 意图</span>：测试只能证明 <code>Impl ⊨ Spec</code>；而 spec 本身已是对 intent 的有损观测。于是「测试全绿」只说明末端 proxy 达标，不能替人决定「这是不是我想要的」。</li>
+        <li><span class="key">对 RL 的含义</span>：reward 是 spec 的又一次有损压缩，long-horizon 任务的反馈稀疏且延迟，信号很弱；人在项目失败后会「三观尽毁」再重生（方法论重塑），模型没有等价机制。</li>
+        <li><span class="key">猜不可能消灭</span>：总不能每选一种颜色、每命名一个变量都问用户；目标是让猜测<span class="key">显式、可逆、可验证</span>。低影响决策先猜后验；高影响、难回滚的决策先停下来问——即当 <code>P(猜错)×C(返工) &gt; C(澄清)</code> 时提问，否则先做最小实验。</li>
+      </ul>
+    </div></details>
+    <div class="ans"><label>我的作答</label><textarea data-k="E4" placeholder="…"></textarea>
+      <div class="saved">已保存到本机</div></div>
+  </article>
+
+  <article class="q" id="E5">
+    <div class="qhd"><span class="tag e">论述</span><span class="no">E5</span>
+      <span class="ref">§10 成本结构变了 · 10 分</span></div>
+    <div class="stem">
+      <p class="lead">第 10 节给出一道乘法题：<strong>1000× 产量 × 1% 垃圾率 = 10× 旧时代全部产量的垃圾</strong>，
+        结论是「瓶颈不再是生产，而是验证」。</p>
+      <ul>
+        <li>请论证：<strong>「错误率很小」与「维护负担很小」为什么不是一回事</strong>？</li>
+        <li>为什么「生成可以并行，逐行 review 却不能」？这条不对称性会把工程组织推向什么形态？</li>
+        <li>课程由此提出的新工程任务是「让 spec、oracle、门控、观测和抽样本身也能扩展」。请解释这句话，并说明「让判断也具备规模效应」具体指什么。</li>
+        <li>如果 AI 连「品味」也学会，人的稀缺性继续向上游迁移。请讨论：那时真正困难的问题会变成什么？（提示：为何做、为谁做、后果由谁承担）</li>
+      </ul>
+    </div>
+    <details class="sol"><summary>作答要点</summary><div class="sol-body">
+      <ul>
+        <li><span class="key">错误率 vs 维护负担</span>：错误率是按件计的比率，维护负担是按量计的绝对数；产量放大 1000× 后，即便 1% 也是旧时代全部产量的 10 倍。<span class="key">99% 正确，在规模面前仍然是灾难。</span></li>
+        <li><span class="key">不对称性</span>：生成是并行的（1000 个 Agent 同时写），而人的 review 是串行、受注意力约束的；于是组织形态从「人写 + 人查」转向「机器写 + 机器门控 + 人抽样」，人只驻守最窄的高风险接口。</li>
+        <li><span class="key">让判断规模化</span>：把验收本身工程化——spec 可执行、oracle 独立于实现、CI 作为门控、观测与日志可回查、抽样降低人的审查量；目标是人的注意力花在最值得判断的地方。</li>
+        <li><span class="key">品味之后</span>：能力可以迁移，正当性与问责不会自动迁移；问题从「怎么做」转向「为何做、为谁做、后果由谁承担」。时代红利则是每个人都有机会去解决以前连开始都不敢想的 long-horizon 问题。</li>
+      </ul>
+    </div></details>
+    <div class="ans"><label>我的作答</label><textarea data-k="E5" placeholder="…"></textarea>
+      <div class="saved">已保存到本机</div></div>
+  </article>
+
+  <article class="q" id="E6">
+    <div class="qhd"><span class="tag e">论述</span><span class="no">E6</span>
+      <span class="ref">§8.3–§8.4 / §11.2 · 10 分</span></div>
+    <div class="stem">
+      <p class="lead">课堂 Quiz：<strong>一台「文件只进不出」的机器，怎么把文件偷出来？</strong>解法是——
+        Rx 用鼠标（鼠标也是输入线路），Tx 用二维码（Excel 是可编程显示设备），在一条 Raw Socket 上自建协议栈。</p>
+      <ul>
+        <li>请说明这个解法的<strong>关键思维动作</strong>是什么？讲义称之为「重解释」，请给出你的定义。</li>
+        <li>从这个例子出发，论证「Everything Is Code」：为什么视频、论文、零件只是不同后端？</li>
+        <li>把「重解释」迁移到你自己身上：课堂上还有一句话是<strong>「为什么要招你，而不是买一个 $200 的 Claude Max？」</strong>
+          请写一段 30 秒的回答，并批判性地讨论其中「可以坐牢」这个说法——在什么条件下，责任才不是 <em>moral crumple zone</em>（道德缓冲垫）？</li>
+      </ul>
+    </div>
+    <details class="sol"><summary>作答要点</summary><div class="sol-body">
+      <ul>
+        <li><span class="key">重解释</span>：不要只按应用程序的名字想象它的用途，要看它<span class="key">实际上提供了什么输入、计算和输出能力</span>。安全边界限制了「文件」，却没有限制信息——只要像素仍可被观察，出口容量就不为零。</li>
+        <li><span class="key">Everything Is Code</span>：任何能由<span class="key">中间表示</span>描述、再由某个后端兑现的东西都算——视频（脚本/分镜/时间线 → 渲染器）、论文（问题/证据/实验 → 排版系统与实验环境）、零件（CAD/仿真/BOM/G-code → CNC 与 3D 打印机）。即从 Bits 到 Atoms：可制造物总是先变成一份可复制、可修改的控制描述。</li>
+        <li><span class="key">协议栈</span>：QR Code 已提供同步与 Reed–Solomon 纠错，再加帧号、校验和、ACK/NAK 与重传，就能在一条原始媒介上传输复杂文件——「网卡」只是网络的一种实现。</li>
+        <li><span class="key">30 秒模板</span>：我能找到值得解决的问题，把未知拆成便宜的实验，用证据让坏方向及时停下，并对长期结果负责。</li>
+        <li><span class="key">对「坐牢」的批判</span>：「可以坐牢」只点出了责任；责任必须与最终决策权、情境判断与停止权绑定。<span class="key">没有这些权力却只负责背锅的人，只是自动化系统的 moral crumple zone。</span></li>
+      </ul>
+    </div></details>
+    <div class="ans"><label>我的作答</label><textarea data-k="E6" placeholder="…"></textarea>
+      <div class="saved">已保存到本机</div></div>
+  </article>
+
+  <h2 class="part"><span class="ht">第二部分 · 解答题</span><small>40 分</small></h2>
+
+  <article class="q" id="S1">
+    <div class="qhd"><span class="tag s">解答</span><span class="no">S1</span>
+      <span class="ref">§5.3 算术很重要 · 8 分</span></div>
+    <div class="stem">
+      <p>（1）若 Agent 每一步的成功率为 <strong>95%</strong>，且各步独立，连续 <strong>50 步</strong>全部正确的概率是多少？
+        （2）若希望一个 <strong>100 步</strong>任务的整体成功率不低于 <strong>90%</strong>，单步成功率至少应达到多少？
+        （3）由此说明：为什么在长任务里，「好一点」可能意味着从不可用到能用？</p>
+    </div>
+    <details class="sol"><summary>参考答案</summary><div class="sol-body">
+      <ol>
+        <li><code>0.95⁵⁰ ≈ 0.0769</code>，即约 <span class="key">7.7%</span>——看似很高的单步成功率，50 步后几乎必败。</li>
+        <li>设单步成功率为 <code>p</code>，要求 <code>p¹⁰⁰ ≥ 0.9</code>，则 <code>p ≥ 0.9^(1/100) ≈ 0.99895</code>，
+          即单步成功率需达到约 <span class="key">99.9%</span>。20 步时 <code>0.95²⁰ ≈ 35.9%</code>，可见步数比单步质量更致命。</li>
+        <li>因为整体成功率是<span class="key">单步成功率的指数函数</span>：步数越长，微小的单步差异被放大成可用性上的质变。
+          所以提升单步可靠性、缩短反馈回路（少走冤枉路）、以及把长任务拆成可独立验收的阶段，都比「让模型再多想一会儿」更有效。
+          这也解释了 <span class="key">test-time scaling 不是免费的</span>：没有有效反馈的「多想一会儿」，只是把错误说得更长。</li>
+      </ol>
+    </div></details>
+    <div class="ans"><label>我的作答</label><textarea data-k="S1" placeholder="…"></textarea>
+      <div class="saved">已保存到本机</div></div>
+  </article>
+
+  <article class="q" id="S2">
+    <div class="qhd"><span class="tag s">解答</span><span class="no">S2</span>
+      <span class="ref">§9.1 乘积效应 · 8 分</span></div>
+    <div class="stem">
+      <p>（1）一个产品有 <strong>10 个环节</strong>，每个环节各有 90% 可靠，整体成功率是多少？
+        （2）若要把整体成功率提升到 <strong>80%</strong>，在其他条件不变的前提下，每个环节至少需要达到多少可靠性？
+        （3）请用这个结果说明：为什么「AI 提高单点产能，不会自动消除接口与协作风险」？</p>
+    </div>
+    <details class="sol"><summary>参考答案</summary><div class="sol-body">
+      <ol>
+        <li><code>0.9¹⁰ ≈ 0.3487</code>，即约 <span class="key">35%</span>。</li>
+        <li>设每环节可靠性为 <code>r</code>，要求 <code>r¹⁰ ≥ 0.8</code>，则 <code>r ≥ 0.8^(1/10) ≈ 0.9779</code>，
+          即每环节需达到约 <span class="key">97.8%</span>——从 90% 提到 97.8%，远比「把某一环节做到 99.9%」更艰难，因为必须<span class="key">同时</span>提升。</li>
+        <li>整体成功率是各环节可靠性的<span class="key">乘积</span>：AI 主要放大的是单点产能（把某个环节写得更快更多），
+          而接口、状态所有权、例外处理这些<span class="key">跨环节的耦合</span>并不随单点产能改善；只要任一环节趋弱，乘积就坍塌。
+          因此工程的重心要从「让每个部分更强」转向「让耦合更少、让错误炸得不远、回退得便宜」——这正是拆解 / 验证 / 迭代这条反馈控制环的意义。</li>
+      </ol>
+    </div></details>
+    <div class="ans"><label>我的作答</label><textarea data-k="S2" placeholder="…"></textarea>
+      <div class="saved">已保存到本机</div></div>
+  </article>
+
+  <article class="q" id="S3">
+    <div class="qhd"><span class="tag s">解答</span><span class="no">S3</span>
+      <span class="ref">§9.11 如何安排 qrgen 的开发 · 8 分</span></div>
+    <div class="stem">
+      <p>请按<strong>「风险退休」</strong>的顺序安排 qrgen 的开发，而不是按最终需求堆功能。要求写出：
+        （1）需要先冻结的 <strong>invariants</strong>；（2）<strong>Stage 0–4</strong> 各阶段做什么；
+        （3）每一阶段留下的<strong>回归门</strong>是什么。</p>
+    </div>
+    <details class="sol"><summary>参考答案</summary><div class="sol-body">
+      <p><span class="key">（1）冻结 invariants</span>：Excel ≤ 2019 公式兼容；Base64 可重组；每一帧可被真实解码器还原；工作表不随输入长度膨胀。</p>
+      <table>
+        <thead><tr><th>阶段</th><th>做什么</th><th>回归门（可执行）</th></tr></thead>
+        <tbody>
+          <tr><td>Stage 0</td><td>先写独立于实现的 <strong>oracle</strong></td><td>随机用例 + 边界用例 + golden cases 全部通过；oracle 不依赖被测实现</td></tr>
+          <tr><td>Stage 1</td><td>固定短字符串 → 单帧 QR</td><td>该帧被<strong>真实解码器</strong>还原为原文（验证最核心的计算）</td></tr>
+          <tr><td>Stage 2</td><td>任意输入 → Base64 与分片正确</td><td>仍只选一帧；分片拼接后 <code>Base64⁻¹</code> 等于原始字节</td></tr>
+          <tr><td>Stage 3</td><td>多帧顺序、循环、拼接</td><td>帧序与完整性自动可验证（帧号 + 校验和）</td></tr>
+          <tr><td>Stage 4</td><td>最后加入 F9/定时、兼容性、性能</td><td>兼容性矩阵与耗时阈值；<strong>工作表体积对输入长度保持 O(1)</strong></td></tr>
+        </tbody>
+      </table>
+      <p>要点：<strong>每一阶段只消除一种具体的不确定性</strong>，并留下可执行的回归门；不是等整个文件写完再看能不能用。
+        顺序原则是让<span class="key">最难回滚、最容易推翻架构的风险最先退休</span>。</p>
+    </div></details>
+    <div class="ans"><label>我的作答</label><textarea data-k="S3" placeholder="…"></textarea>
+      <div class="saved">已保存到本机</div></div>
+  </article>
+
+  <article class="q" id="S4">
+    <div class="qhd"><span class="tag s">解答</span><span class="no">S4</span>
+      <span class="ref">§9.4 架构检查题 · 8 分</span></div>
+    <div class="stem">
+      <p>架构检查题：<strong>输入从 1 KB 变成 10 KB 时，究竟有哪些东西必须增长？</strong></p>
+      <ul>
+        <li>请分别列出应当保持 <strong>O(1)</strong> 的部分，与按 <strong>O(n)</strong> 增长的部分。</li>
+        <li>为什么「工作表不随输入长度膨胀」是一个好的可维护性判据？</li>
+        <li>请给出一条你能在这周就执行的最小实验设计，用来检验一个产物的改动局部性。</li>
+      </ul>
+    </div>
+    <details class="sol"><summary>参考答案</summary><div class="sol-body">
+      <ul>
+        <li><span class="key">应保持 O(1)</span>：公式模板、工作表结构、控制流与参数——即「计算结构」本身。它们描述的是规则，规则不随数据量变多。</li>
+        <li><span class="key">按 O(n) 增长</span>：数据、计算量、帧数（以及由此产生的时间开销）——这些是被处理的<span class="key">内容</span>。</li>
+        <li><span class="key">为什么它是好判据</span>：如果结构随数据一起膨胀，说明规则与内容耦合，任何需求变化都会迫使整份产物重新生成——这正是「改动没有局部性」的定义。体积（2 MB）只是症状，<span class="key">O(1) 的结构</span>才是可复用、可维护的充要信号。</li>
+        <li><span class="key">最小实验</span>：把同一个需求交给 Agent 两次——一次直接说「给我做出来」，一次先冻结 invariants、先写 oracle；然后改一个需求，比较两版产物各需要改动多少、改动是否集中在一小块。改动更小的那版，架构更好。</li>
+      </ul>
+    </div></details>
+    <div class="ans"><label>我的作答</label><textarea data-k="S4" placeholder="…"></textarea>
+      <div class="saved">已保存到本机</div></div>
+  </article>
+
+  <article class="q" id="S5">
+    <div class="qhd"><span class="tag s">解答</span><span class="no">S5</span>
+      <span class="ref">§9.6 决策不等式 / §9.10 反馈控制环 · 8 分</span></div>
+    <div class="stem">
+      <p>（1）请解释决策不等式 <code>P(猜错) × C(返工) &gt; C(澄清)</code> 的含义，并给出「应当提问」与「先做最小实验」各自的适用条件。
+        （2）请举出你当前项目（或课程作业）中的 <strong>三个决策</strong>，对每一个判断该问还是该先做，并说明你的 <code>P</code>、<code>C(返工)</code>、<code>C(澄清)</code> 大致如何估计。
+        （3）把「拆解 / 验证 / 迭代」说明为一个<strong>反馈控制环</strong>：它的目标为什么不是零错误？</p>
+    </div>
+    <details class="sol"><summary>参考答案</summary><div class="sol-body">
+      <ol>
+        <li>含义：当「猜错的期望代价」超过「澄清的代价」时，应当提问；否则先做最小实验。
+          适用条件——<span class="key">应当提问</span>：高影响、难回滚、涉及 invariants 与架构的决策；
+          <span class="key">先做最小实验</span>：低影响、可逆、验证成本低（如配色、命名、局部实现细节）。</li>
+        <li>示例（替换为你自己的项目即可，判分看的是估计是否合理，不是结论）：
+          <ul>
+            <li>选数据库/存储格式：P(猜错) 中高、C(返工) 很高（迁移代价大）、C(澄清) 低 → <span class="key">先问</span>。</li>
+            <li>函数命名与目录结构：P 中、C(返工) 低（重命名便宜）、C(澄清) 相对高 → <span class="key">先猜后验</span>。</li>
+            <li>是否引入某个第三方库：P 中、C(返工) 中（可替换但需改接口）、C(澄清) 低 → <span class="key">先做最小实验</span>（写一个 50 行的探针），再决定是否提问。</li>
+          </ul>
+        </li>
+        <li>反馈控制环：<span class="key">拆解</span>缩短因果距离（把大 gap 拆成小 gap）；<span class="key">验证</span>用测试与 CI 作为门控，限制错误传播；
+          <span class="key">迭代</span>用小步提交让噪音尽早暴露，便于定位与回退。
+          目标不是零错误（在长任务里不现实），而是<span class="key">错误出现得早、炸得不远、回退得便宜</span>——让系统始终处在可观测、可收敛的状态。</li>
+      </ol>
+    </div></details>
+    <div class="ans"><label>我的作答</label><textarea data-k="S5" placeholder="…"></textarea>
+      <div class="saved">已保存到本机</div></div>
+  </article>
+
+  <footer>
+    <a href="../NJU-生成式软件工程-第01讲-欢迎来到未来.html">← 返回第 1 讲讲义</a>
+    <a href="../index.html">全部讲义索引</a>
+    <span>习题依据第 1 讲课堂笔记命题，参考答案仅代表整理者理解</span>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var KEY='gse1-exercise';
+  var tas=[].slice.call(document.querySelectorAll('textarea[data-k]'));
+  var prog=document.getElementById('prog');
+
+  /* 主题 */
+  var TH='gse-theme';
+  try{var s=localStorage.getItem(TH); if(s) document.documentElement.dataset.theme=s;}catch(e){}
+  document.getElementById('tg').addEventListener('click',function(){
+    var n=document.documentElement.dataset.theme==='dark'?'light':'dark';
+    document.documentElement.dataset.theme=n;
+    try{localStorage.setItem(TH,n);}catch(e){}
+  });
+
+  /* 作答本地保存 */
+  var store={};
+  try{ store=JSON.parse(localStorage.getItem(KEY)||'{}'); }catch(e){ store={}; }
+  function save(){
+    try{ localStorage.setItem(KEY,JSON.stringify(store)); }catch(e){}
+    var done=tas.filter(function(t){return (store[t.dataset.k]||'').trim().length>0;}).length;
+    prog.textContent='已作答 '+done+' / '+tas.length;
+  }
+  tas.forEach(function(t){
+    t.value=store[t.dataset.k]||'';
+    var tip=t.parentNode.querySelector('.saved');
+    var timer;
+    t.addEventListener('input',function(){
+      store[t.dataset.k]=t.value; save();
+      if(tip){ tip.classList.add('on'); clearTimeout(timer);
+        timer=setTimeout(function(){tip.classList.remove('on');},1200); }
+    });
+  });
+  save();
+
+  /* 展开 / 收起 */
+  var ds=[].slice.call(document.querySelectorAll('details.sol'));
+  document.getElementById('openAll').onclick=function(){ ds.forEach(function(d){d.open=true;}); };
+  document.getElementById('closeAll').onclick=function(){ ds.forEach(function(d){d.open=false;}); };
+
+  document.getElementById('clear').onclick=function(){
+    if(!confirm('确定清空全部作答？该操作不可撤销。')) return;
+    tas.forEach(function(t){ t.value=''; });
+    store={}; save();
+    try{ localStorage.removeItem(KEY); }catch(e){}
+  };
+
+  document.getElementById('print').onclick=function(){
+    tas.forEach(function(t){ t.style.height=t.scrollHeight+'px'; });
+    window.print();
+  };
+})();
+</script>
+</body>
+</html>
