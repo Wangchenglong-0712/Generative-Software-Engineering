@@ -1,0 +1,174 @@
+/*!
+ * podcast.css — 「讲义播客」界面与页面联动样式
+ * 复用站点已有 CSS 变量（--bg/--bg2/--fg/--acc…），自动适配深/浅色。
+ */
+
+/* ================= 入口悬浮按钮 ================= */
+.pod{position:relative;z-index:70}
+.pod-fab{
+  position:fixed;right:20px;bottom:78px;z-index:70;
+  display:inline-flex;align-items:center;gap:.42rem;
+  font:inherit;font-size:.85rem;font-weight:650;line-height:1;
+  color:#10151c;background:linear-gradient(135deg,var(--acc),#ffd08a);
+  border:0;border-radius:999px;padding:.62rem .95rem;cursor:pointer;
+  box-shadow:0 6px 20px rgba(255,180,84,.35),0 2px 6px rgba(0,0,0,.3);
+  transition:transform .16s,box-shadow .16s,opacity .2s;
+}
+.pod-fab:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(255,180,84,.45)}
+.pod-fab-ico{font-size:1.02rem;line-height:1}
+[data-theme="light"] .pod-fab{color:#fff;background:linear-gradient(135deg,#a85a00,#d98700);
+  box-shadow:0 6px 20px rgba(168,90,0,.28),0 2px 6px rgba(16,24,40,.12)}
+.pod.pod-open .pod-fab{opacity:0;pointer-events:none;transform:scale(.9)}
+
+/* ================= 底部播放条 ================= */
+.pod-bar{
+  position:fixed;left:50%;bottom:16px;transform:translate(-50%,140%);
+  z-index:72;width:min(760px,calc(100vw - 28px));
+  display:flex;align-items:center;gap:.55rem;
+  background:color-mix(in srgb,var(--bg2) 88%,transparent);
+  -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+  border:1px solid var(--line);border-radius:14px;
+  padding:.5rem .7rem;box-shadow:var(--shadow);
+  transition:transform .32s cubic-bezier(.22,1,.36,1),opacity .2s;
+  opacity:0;
+}
+.pod-bar.on{transform:translate(-50%,0);opacity:1}
+.pod-btn{
+  flex:0 0 auto;font:inherit;font-size:.82rem;color:var(--fg2);
+  background:var(--bg);border:1px solid var(--line);border-radius:9px;
+  width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:.15s;padding:0;
+}
+.pod-btn:hover{color:var(--acc);border-color:var(--acc)}
+.pod-play{
+  width:38px;height:38px;font-size:.9rem;font-weight:700;
+  color:#10151c;background:var(--acc);border-color:var(--acc);
+}
+.pod-play:hover{color:#10151c;filter:brightness(1.08)}
+[data-theme="light"] .pod-play{color:#fff}
+
+.pod-meta{flex:1 1 auto;min-width:0;padding:0 .15rem}
+.pod-title{display:flex;align-items:center;gap:.4rem;font-size:.85rem;font-weight:650;color:var(--fg);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pod-live{flex:0 0 auto;width:7px;height:7px;border-radius:50%;background:var(--fg3);transition:.2s}
+.pod-live.on{background:#ff5a5a;box-shadow:0 0 0 0 rgba(255,90,90,.6);animation:podPulse 1.6s infinite}
+@keyframes podPulse{
+  0%{box-shadow:0 0 0 0 rgba(255,90,90,.55)}
+  70%{box-shadow:0 0 0 7px rgba(255,90,90,0)}
+  100%{box-shadow:0 0 0 0 rgba(255,90,90,0)}
+}
+.pod-sub{font-size:.72rem;color:var(--fg3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:.1rem}
+
+.pod-prog{flex:1 1 120px;min-width:70px;height:5px;border-radius:3px;background:var(--bg3);
+  cursor:pointer;overflow:hidden;position:relative}
+.pod-prog-fill{height:100%;width:0;border-radius:3px;
+  background:linear-gradient(90deg,var(--acc),var(--violet));transition:width .25s linear}
+
+/* ================= 展开面板 ================= */
+.pod-panel{
+  position:fixed;left:50%;bottom:74px;transform:translateX(-50%);
+  z-index:71;width:min(760px,calc(100vw - 28px));
+  max-height:min(66vh,560px);display:flex;flex-direction:column;
+  background:var(--bg2);border:1px solid var(--line);border-radius:16px;
+  box-shadow:var(--shadow);overflow:hidden;
+  animation:podUp .26s cubic-bezier(.22,1,.36,1);
+}
+@keyframes podUp{from{opacity:0;transform:translate(-50%,14px)}to{opacity:1;transform:translate(-50%,0)}}
+.pod-panel-hd{display:flex;align-items:center;justify-content:space-between;
+  padding:.75rem 1rem;border-bottom:1px solid var(--line)}
+.pod-panel-hd b{font-size:.92rem;font-weight:700}
+.pod-x{font:inherit;font-size:.8rem;color:var(--fg3);background:transparent;border:0;
+  cursor:pointer;padding:.2rem .4rem;border-radius:6px}
+.pod-x:hover{color:var(--acc);background:var(--bg3)}
+
+.pod-voices{padding:.7rem 1rem;display:grid;gap:.55rem;border-bottom:1px solid var(--line)}
+.pod-voice-row{display:flex;align-items:center;gap:.7rem}
+.pod-voice-name{flex:0 0 auto;display:inline-flex;align-items:center;gap:.45rem;
+  font-size:.84rem;font-weight:600;color:var(--fg);width:8.2rem}
+.pod-avatar{flex:0 0 auto;width:22px;height:22px;border-radius:50%;
+  display:inline-flex;align-items:center;justify-content:center;
+  font-size:.72rem;font-weight:700;font-style:normal;color:#10151c;background:var(--acc)}
+.pod-avatar.av1{background:var(--violet);color:#fff}
+[data-theme="light"] .pod-avatar{color:#fff;background:#a85a00}
+[data-theme="light"] .pod-avatar.av1{background:#7c3aed}
+.pod-select{flex:1 1 auto;min-width:0;font:inherit;font-size:.82rem;color:var(--fg);
+  background:var(--bg);border:1px solid var(--line);border-radius:8px;
+  padding:.4rem .55rem;outline:none;cursor:pointer}
+.pod-select:focus{border-color:var(--acc)}
+
+.pod-opts{display:flex;flex-wrap:wrap;align-items:center;gap:1.2rem;
+  padding:.7rem 1rem;border-bottom:1px solid var(--line);font-size:.82rem;color:var(--fg2)}
+.pod-opt{display:inline-flex;align-items:center;gap:.5rem}
+.pod-opt input[type=range]{width:130px;accent-color:var(--acc)}
+.pod-opt span{font-size:.78rem;color:var(--acc);font-weight:650;min-width:2.6rem}
+.pod-chk{cursor:pointer;user-select:none}
+.pod-chk input{accent-color:var(--acc)}
+
+.pod-list{flex:1 1 auto;overflow-y:auto;padding:.4rem .55rem;scrollbar-width:thin}
+.pod-list::-webkit-scrollbar{width:7px}
+.pod-list::-webkit-scrollbar-thumb{background:var(--line);border-radius:4px}
+.pod-ch{display:flex;align-items:center;gap:.65rem;width:100%;text-align:left;
+  font:inherit;font-size:.85rem;color:var(--fg2);background:transparent;border:0;
+  border-left:2px solid transparent;border-radius:8px;padding:.5rem .6rem;
+  cursor:pointer;transition:.15s}
+.pod-ch:hover{background:var(--bg3);color:var(--fg)}
+.pod-ch.on{background:var(--chip);color:var(--acc);border-left-color:var(--acc);font-weight:650}
+.pod-ch-n{flex:0 0 1.5rem;font-family:var(--mono);font-size:.72rem;color:var(--fg3);text-align:right}
+.pod-ch.on .pod-ch-n{color:var(--acc)}
+.pod-ch-t{flex:1 1 auto;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pod-ch-d{flex:0 0 auto;font-size:.72rem;color:var(--fg3)}
+.pod-ch.on .pod-ch-d{color:var(--acc);opacity:.8}
+
+.pod-tip{padding:.6rem 1rem .8rem;font-size:.76rem;color:var(--fg3);line-height:1.65;
+  border-top:1px solid var(--line);background:var(--bg)}
+.pod-tip.warn{color:var(--acc);background:rgba(255,180,84,.08)}
+
+/* ================= 页面联动效果 ================= */
+
+/* 1) 正在朗读的章节：正文区左侧光条 */
+main section.pod-active{position:relative}
+main section.pod-active::before{
+  content:"";position:absolute;left:-22px;top:0;bottom:0;width:3px;border-radius:2px;
+  background:linear-gradient(180deg,var(--acc),var(--violet));
+  animation:podBarIn .3s ease;
+}
+@keyframes podBarIn{from{opacity:0;transform:scaleY(.4)}to{opacity:1;transform:scaleY(1)}}
+
+/* 2) 正在朗读的句子：逐句高亮 */
+.pod-sent{transition:background .3s,color .3s;border-radius:4px;padding:1px 3px;margin:0 -3px}
+.pod-sent.pod-now{background:var(--chip);color:var(--fg);box-shadow:inset 3px 0 0 var(--acc);
+  padding-left:8px}
+[data-theme="dark"] .pod-sent.pod-now{background:rgba(255,180,84,.14)}
+
+/* 3) 侧栏 TOC 联动 */
+#toc a.pod-on{color:var(--acc)!important;font-weight:700}
+
+/* 4) 顶部进度条染成播客进行色（可选微调） */
+body.pod-playing #prog i{background:linear-gradient(90deg,var(--acc),#ff5a5a)}
+
+/* ================= 响应式 ================= */
+@media (max-width:760px){
+  .pod-fab{right:14px;bottom:70px}
+  .pod-bar{bottom:10px;gap:.4rem;padding:.45rem .55rem}
+  .pod-meta{display:none}
+  .pod-prog{flex:1 1 auto}
+  .pod-panel{bottom:66px;max-height:72vh}
+  .pod-voice-name{width:6.6rem;font-size:.8rem}
+  .pod-opt input[type=range]{width:96px}
+}
+@media (max-width:420px){
+  .pod-fab-tx{display:none}
+  .pod-fab{padding:.62rem .7rem}
+}
+
+/* 打印时隐藏一切播客元素 */
+@media print{
+  .pod{display:none!important}
+  .pod-sent{padding:0;margin:0;background:none!important;box-shadow:none!important}
+}
+
+/* 尊重「减少动态效果」偏好 */
+@media (prefers-reduced-motion:reduce){
+  .pod-bar,.pod-fab,.pod-panel{transition:none;animation:none}
+  .pod-live.on{animation:none}
+}
