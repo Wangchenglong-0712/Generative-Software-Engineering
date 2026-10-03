@@ -10,6 +10,7 @@
 | --- | --- |
 | 笔记索引首页 | [点击进入](https://wangchenglong-0712.github.io/Generative-Software-Engineering/) |
 | 第 1 讲《欢迎来到未来》 | [点击进入](https://wangchenglong-0712.github.io/Generative-Software-Engineering/NJU-%E7%94%9F%E6%88%90%E5%BC%8F%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B-%E7%AC%AC01%E8%AE%B2-%E6%AC%A2%E8%BF%8E%E6%9D%A5%E5%88%B0%E6%9C%AA%E6%9D%A5.html) |
+| 第 2 讲《提示词与上下文工程》 | [点击进入](https://wangchenglong-0712.github.io/Generative-Software-Engineering/NJU-%E7%94%9F%E6%88%90%E5%BC%8F%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B-%E7%AC%AC02%E8%AE%B2-%E6%8F%90%E7%A4%BA%E8%AF%8D%E4%B8%8E%E4%B8%8A%E4%B8%8B%E6%96%87%E5%B7%A5%E7%A8%8B.html) |
 
 > 第 1 讲配套的**习题页不设公开入口**：先打开第 1 讲讲义，在页面顶部操作区点「✎ 本讲习题」进入（第 15 节末尾也有同一入口）；在习题页点顶部或右下角的「← 返回讲义」，或直接按 `Esc`，即可回到讲义。
 
@@ -36,14 +37,17 @@
 
 > 说明：上面的“能坐牢”为课堂口语表述，第 2 讲已澄清并作补充——责任必须与决策权、情境判断与停止权绑定。
 
+第 2 讲《提示词与上下文工程》接着回答“怎样驾驭 Agent”：模型看到的远不止对话框里的那句话，而是整份上下文。这一讲从“提示词工程 → 上下文工程”出发，讨论怎样把“完成”写成可验证的条件、用 token 换计算深度、把有效经验蒸馏成 skill，并在没有确定路线时主动扩大探索、用证据筛选结果。
+
 ## 仓库内容
 
 ```
 Generative-Software-Engineering/
-├── index.html                                  # 静态站点首页：讲义索引
-├── NJU-生成式软件工程-第01讲-欢迎来到未来.html   # 第 1 讲课堂笔记
+├── index.html                                          # 静态站点首页：讲义索引
+├── NJU-生成式软件工程-第01讲-欢迎来到未来.html           # 第 1 讲课堂笔记
+├── NJU-生成式软件工程-第02讲-提示词与上下文工程.html     # 第 2 讲课堂笔记
 ├── exercises/
-│   └── NJU-生成式软件工程-第01讲-习题.html       # 第 1 讲习题（仅从第 1 讲讲义进入）
+│   └── NJU-生成式软件工程-第01讲-习题.html               # 第 1 讲习题（仅从第 1 讲讲义进入）
 └── README.md
 ```
 
@@ -89,7 +93,7 @@ NJU-生成式软件工程-第NN讲-标题.html
 ## 技术说明
 
 - 纯 HTML / CSS / 原生 JavaScript，**无框架、无构建、无外部 CDN 依赖**，可离线打开。
-- 深浅色主题统一使用 localStorage 键 `gse-theme`；讲义自测清单 `gse1-tasks`；习题作答 `gse1-exercise`。
+- 深浅色主题统一使用 localStorage 键 `gse-theme`（首页）；讲义按讲次存主题与自测进度：第 1 讲 `gse1-theme` / `gse1-tasks`，第 2 讲 `gse2-theme` / `gse2-tasks`；习题作答 `gse1-exercise`。
 - 托管方式：GitHub Pages（Settings → Pages → Deploy from a branch → `main` / `/(root)`）。
 
 ## 版权与致谢
