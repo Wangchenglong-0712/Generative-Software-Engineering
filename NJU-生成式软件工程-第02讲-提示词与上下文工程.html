@@ -268,6 +268,7 @@ details.appx>summary h2 .sn{display:none}
 <div class="meta"><div class="mrow"><span class="mk">视频</span><span class="mv"><a href="https://www.bilibili.com/video/BV1CQt365EzW" target="_blank" rel="noopener">BV1CQt365EzW</a>（98 分钟）</span></div><div class="mrow"><span class="mk">主讲</span><span class="mv">蒋炎岩（南京大学计算机学院，「绿导师」）</span></div><div class="mrow"><span class="mk">课程</span><span class="mv">2026 秋季学期《生成式软件工程》(GenSE)</span></div><div class="mrow"><span class="mk">上一讲</span><span class="mv"><a href="NJU-生成式软件工程-第01讲-欢迎来到未来.html">第 1 讲《欢迎来到未来》</a></span></div><div class="mrow"><span class="mk">配套资料</span><span class="mv"><a href="https://jyywiki.cn/GSE/2026/" target="_blank" rel="noopener">课程主页 jyywiki.cn/GSE/2026</a> ｜ <a href="https://jyywiki.cn/GSE/2026/lect2.md" target="_blank" rel="noopener">讲义 lect2</a> ｜ <a href="https://jyywiki.cn/GSE/2026/slides2.html" target="_blank" rel="noopener">幻灯片 slides2</a></span></div><div class="mrow"><span class="mk">整理说明</span><span class="mv">本笔记以官方讲义与 37 页幻灯片<strong>原文为主体</strong>，把课堂录像与现场讨论<strong>转写为连贯的文字解读</strong>，不按视频时间轴切分节点；讲义为课程方整理后的文本，与录像中的口语表述可能有细微差别。附录 A 为幻灯片逐页转录，附录 B 为官方讲义原文。</span></div></div><hr>
 <div class="hero-act">
   <a class="btn" href="index.html" title="返回课程笔记主页（快捷键 Esc）">← 返回主页</a>
+  <button class="btn btn-pod" id="podcast-open" type="button" title="打开讲义播客">🎙 播客</button>
   <button class="btn" id="appx">展开全部附录</button>
   <button class="btn" id="theme">☾ 深色</button>
   <a class="btn" href="https://jyywiki.cn/GSE/2026/" target="_blank" rel="noopener">课程主页 ↗</a>
@@ -1513,6 +1514,7 @@ details.appx>summary h2 .sn{display:none}
     root: document.querySelector('main') || document,
     mount: document.body,
     tocSelector: '#toc a',
+    triggerSelector: '#podcast-open',
     storageKey: 'gse2-podcast',
     maxSentencesPerChapter: 6,
     hosts: [
@@ -1520,6 +1522,18 @@ details.appx>summary h2 .sn{display:none}
       { name: '助教', voice: '' }
     ]
   });
+  if(!pod) return;
+
+  /* 入口按钮：播放后文字提示状态 */
+  var openBtn = document.getElementById('podcast-open');
+  function syncBtn(){
+    if(!openBtn) return;
+    openBtn.textContent = pod.playing ? '⏸ 播客播放中' : '🎙 播客';
+    openBtn.classList.toggle('on', pod.playing);
+  }
+  pod.on('turnstart', syncBtn);
+  pod.on('stop', syncBtn);
+  pod.on('finish', syncBtn);
 
   /* —— 页面联动 1：章节高亮 —— */
   var tocLinks = [].slice.call(document.querySelectorAll('#toc a'));
