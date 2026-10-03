@@ -12,9 +12,9 @@
 | 第 1 讲《欢迎来到未来》 | [点击进入](https://wangchenglong-0712.github.io/Generative-Software-Engineering/NJU-%E7%94%9F%E6%88%90%E5%BC%8F%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B-%E7%AC%AC01%E8%AE%B2-%E6%AC%A2%E8%BF%8E%E6%9D%A5%E5%88%B0%E6%9C%AA%E6%9D%A5.html) |
 | 第 2 讲《提示词与上下文工程》 | [点击进入](https://wangchenglong-0712.github.io/Generative-Software-Engineering/NJU-%E7%94%9F%E6%88%90%E5%BC%8F%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B-%E7%AC%AC02%E8%AE%B2-%E6%8F%90%E7%A4%BA%E8%AF%8D%E4%B8%8E%E4%B8%8A%E4%B8%8B%E6%96%87%E5%B7%A5%E7%A8%8B.html) |
 
-> 第 1 讲配套的**习题页不设公开入口**：先打开第 1 讲讲义，在页面顶部操作区点「✎ 本讲习题」进入（第 15 节末尾也有同一入口）；在习题页点顶部或右下角的「← 返回讲义」，或直接按 `Esc`，即可回到讲义。
+> 每一讲配套的**习题页不设公开入口**：先打开对应讲义，在页面顶部操作区点「✎ 本讲习题」进入（讲义末尾的「自测与行动清单」一节也有同一入口）；在习题页点顶部或右下角的「← 返回讲义」，或直接按 `Esc`，即可回到讲义。目前有第 1 讲、第 2 讲两套习题。
 
-课程官方主页：<https://jyywiki.cn/GSE/2026/> ｜ 第 1 讲课堂录像：[BV1pb8o6yE8f](https://www.bilibili.com/video/BV1pb8o6yE8f)
+课程官方主页：<https://jyywiki.cn/GSE/2026/> ｜ 课堂录像：第 1 讲 [BV1pb8o6yE8f](https://www.bilibili.com/video/BV1pb8o6yE8f)、第 2 讲 [BV1CQt365EzW](https://www.bilibili.com/video/BV1CQt365EzW)
 
 ## 关于本课程
 
@@ -47,7 +47,8 @@ Generative-Software-Engineering/
 ├── NJU-生成式软件工程-第01讲-欢迎来到未来.html           # 第 1 讲课堂笔记
 ├── NJU-生成式软件工程-第02讲-提示词与上下文工程.html     # 第 2 讲课堂笔记
 ├── exercises/
-│   └── NJU-生成式软件工程-第01讲-习题.html               # 第 1 讲习题（仅从第 1 讲讲义进入）
+│   ├── NJU-生成式软件工程-第01讲-习题.html               # 第 1 讲习题（仅从第 1 讲讲义进入）
+│   └── NJU-生成式软件工程-第02讲-习题.html               # 第 2 讲习题（仅从第 2 讲讲义进入）
 └── README.md
 ```
 
@@ -93,7 +94,7 @@ NJU-生成式软件工程-第NN讲-标题.html
 ## 技术说明
 
 - 纯 HTML / CSS / 原生 JavaScript，**无框架、无构建、无外部 CDN 依赖**，可离线打开。
-- 深浅色主题统一使用 localStorage 键 `gse-theme`（首页）；讲义按讲次存主题与自测进度：第 1 讲 `gse1-theme` / `gse1-tasks`，第 2 讲 `gse2-theme` / `gse2-tasks`；习题作答 `gse1-exercise`。
+- 深浅色主题统一使用 localStorage 键 `gse-theme`（首页与习题页）；讲义按讲次存主题与自测进度：第 1 讲 `gse1-theme` / `gse1-tasks`，第 2 讲 `gse2-theme` / `gse2-tasks`；习题作答按讲次：`gse1-exercise`、`gse2-exercise`。
 - 托管方式：GitHub Pages（Settings → Pages → Deploy from a branch → `main` / `/(root)`）。
 
 ## 版权与致谢
