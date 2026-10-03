@@ -182,6 +182,7 @@
       root: DOC,
       mount: DOC.body,
       tocSelector: '#toc a',
+      triggerSelector: '',          // 外部触发按钮选择器，如 '#podcast-open'
       hosts: [{ name: '主讲' }, { name: '助教' }],
       storageKey: 'gse-podcast',
       maxSentencesPerChapter: 6,
@@ -339,16 +340,19 @@
       var bar = $('#pod-bar', this.el);
       var panel = $('#pod-panel', this.el);
 
-      fab.addEventListener('click', function () {
-        if (!self.chapters.length) self.prepare();
-        if (!self.chapters.length) return;
-        self.el.classList.add('pod-open');
-        bar.classList.add('on');
-      });
-      $('#pod-close', this.el).addEventListener('click', function () {
-        panel.hidden = true;
-        self.el.classList.remove('pod-expand');
-      });
+      if (fab) fab.addEventListener('click', function () { self.open(); });
+
+      /* 外部触发按钮（如页面顶部“🎙 播客”）：由配置的 triggerSelector 绑定 */
+      if (this.o.triggerSelector) {
+        $$(this.o.triggerSelector).forEach(function (btn) {
+          btn.addEventListener('click', function (e) {
+            e.preventDefault();
+            self.open();
+          });
+        });
+      }
+
+      $('#pod-close', this.el).addEventListener('click', function () { self.close(); });
       $('#pod-expand', this.el).addEventListener('click', function () {
         panel.hidden = !panel.hidden;
         self.el.classList.toggle('pod-expand', !panel.hidden);
@@ -482,8 +486,38 @@
     /* ---- 播放控制 ---- */
     toggle: function () { this.playing ? this.pause() : this.play(); },
 
+    /* 打开播放器（外部按钮/悬浮按钮都走这里） */
+    open: function () {
+      if (!this.chapters.length) this.prepare();
+      if (!this.supported()) {                     // 不支持语音：仍然展开面板，显示提示
+        this.el.classList.add('pod-open');
+        var p0 = $('#pod-panel', this.el); if (p0) p0.hidden = false;
+        this._renderTip();
+        return;
+      }
+      this.el.classList.add('pod-open');
+      $('#pod-bar', this.el).classList.add('on');
+      var panel = $('#pod-panel', this.el);
+      if (panel && panel.hidden) {                 // 首次打开时展开脚本列表
+        panel.hidden = false;
+        this.el.classList.add('pod-expand');
+      }
+      if (!this.chapters.length) return;
+      this._updateProgress();
+      this._highlightList();
+    },
+
+    close: function () {
+      var panel = $('#pod-panel', this.el);
+      if (panel) panel.hidden = true;
+      this.el.classList.remove('pod-expand');
+      this.el.classList.remove('pod-open');
+      $('#pod-bar', this.el).classList.remove('on');
+      this.pause();
+    },
+
     play: function () {
-      if (!this.supported()) { this._renderTip(); this.el.classList.add('pod-open'); return; }
+      if (!this.supported()) { this.open(); return; }
       if (!this.chapters.length && !this.prepare()) return;
       this.el.classList.add('pod-open');
       $('#pod-bar', this.el).classList.add('on');
