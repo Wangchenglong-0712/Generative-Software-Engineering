@@ -1,0 +1,771 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>第 2 讲习题 —— 南京大学《生成式软件工程》2026 秋</title>
+<meta name="description" content="第 2 讲《提示词与上下文工程》习题：6 道论述题 + 5 道解答题，附作答要点与参考答案，另附 5 道实践题。">
+<style>
+*,*::before,*::after{box-sizing:border-box}
+:root{
+  --bg:#0d1117;--bg2:#161b22;--bg3:#1b2230;--line:#262d38;
+  --fg:#c9d5e1;--fg2:#8b98a9;--fg3:#69747f;
+  --acc:#ffb454;--acc2:#7ee787;--link:#79c0ff;--violet:#a78bfa;
+  --chip:rgba(255,180,84,.10);
+  --shadow:0 1px 2px rgba(0,0,0,.35),0 8px 24px rgba(0,0,0,.28);
+  --mono:"JetBrains Mono","SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+}
+[data-theme="light"]{
+  --bg:#ffffff;--bg2:#f6f8fa;--bg3:#eceff3;--line:#dde2e8;
+  --fg:#1f2328;--fg2:#545d68;--fg3:#7d8590;
+  --acc:#a85a00;--acc2:#1a7f37;--link:#0969da;--violet:#7c3aed;
+  --chip:rgba(255,180,84,.16);
+  --shadow:0 1px 2px rgba(16,24,40,.06),0 8px 24px rgba(16,24,40,.08);
+}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--fg);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB",
+    "Microsoft YaHei","Source Han Sans SC","Noto Sans CJK SC",sans-serif;
+  font-size:16.5px;line-height:1.85;-webkit-font-smoothing:antialiased;
+  transition:background .2s,color .2s;}
+a{color:var(--link);text-decoration:none}
+a:hover{text-decoration:underline}
+code{font-family:var(--mono);font-size:.88em;background:var(--bg3);padding:.1em .38em;border-radius:5px}
+strong{color:var(--fg)}
+
+/* Hero */
+#hero{position:relative;padding:52px 24px 28px;border-bottom:1px solid var(--line);
+  background:
+    radial-gradient(900px 320px at 18% -10%,rgba(255,180,84,.13),transparent 70%),
+    radial-gradient(700px 300px at 85% 0%,rgba(167,139,250,.11),transparent 70%),
+    var(--bg2);}
+.hero-in{max-width:900px;margin:0 auto}
+.badge{display:inline-flex;align-items:center;gap:.5rem;font-size:.78rem;letter-spacing:.06em;
+  color:var(--acc);background:var(--chip);border:1px solid rgba(255,180,84,.28);
+  padding:.28rem .7rem;border-radius:999px;margin-bottom:1rem}
+#hero h1{margin:0 0 .4rem;font-size:1.95rem;line-height:1.3;letter-spacing:-.01em;font-weight:800}
+.hsub{color:var(--fg2);font-size:.96rem;margin:0 0 1.3rem;max-width:64ch}
+.meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:.1rem 1.5rem;
+  background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:.85rem 1.1rem}
+.mrow{display:flex;gap:.65rem;padding:.18rem 0;font-size:.88rem;line-height:1.7}
+.mk{flex:0 0 4.2rem;color:var(--acc);font-weight:600;font-size:.85rem}
+.mv{color:var(--fg2)}
+.act{display:flex;flex-wrap:wrap;gap:.55rem;margin-top:1.1rem}
+.btn{font:inherit;font-size:.84rem;color:var(--fg);background:var(--bg);border:1px solid var(--line);
+  border-radius:8px;padding:.4rem .8rem;cursor:pointer;transition:.15s;display:inline-flex;align-items:center;gap:.35rem}
+.btn:hover{border-color:var(--acc);color:var(--acc);text-decoration:none}
+.btn.primary{background:var(--acc);border-color:var(--acc);color:#10151c;font-weight:600}
+.btn.primary:hover{color:#10151c;filter:brightness(1.08)}
+#tg{margin-left:auto}
+
+/* 主体 */
+.wrap{max-width:900px;margin:0 auto;padding:0 24px 90px}
+.bar{display:flex;flex-wrap:wrap;align-items:center;gap:.6rem .9rem;padding:24px 0 8px;
+  font-size:.84rem;color:var(--fg3)}
+.bar b{color:var(--fg2);font-weight:600}
+.bar .prog{margin-left:auto;color:var(--acc)}
+.tip{background:var(--bg2);border:1px solid var(--line);border-left:3px solid var(--acc);
+  border-radius:10px;padding:.8rem 1rem;font-size:.88rem;color:var(--fg2);margin:0 0 .5rem}
+
+.part{font-size:1.2rem;margin:2.4rem 0 1rem;font-weight:750;letter-spacing:-.01em}
+.part .ht{display:inline-block;border-bottom:3px solid var(--acc);padding-bottom:.25rem}
+.part small{font-size:.8rem;color:var(--fg3);font-weight:400;margin-left:.6rem}
+
+.q{background:var(--bg2);border:1px solid var(--line);border-radius:14px;
+  padding:1.1rem 1.25rem 1rem;margin-bottom:14px}
+.qhd{display:flex;align-items:center;gap:.55rem;flex-wrap:wrap;margin-bottom:.55rem}
+.tag{font-size:.72rem;font-weight:700;border-radius:6px;padding:.12rem .45rem;border:1px solid}
+.tag.e{color:var(--acc);background:var(--chip);border-color:rgba(255,180,84,.3)}
+.tag.s{color:var(--acc2);background:rgba(126,231,135,.10);border-color:rgba(126,231,135,.28)}
+.tag.p{color:var(--violet);background:rgba(167,139,250,.12);border-color:rgba(167,139,250,.3)}
+.ask{background:var(--bg);border:1px dashed var(--line);border-radius:10px;padding:.7rem .95rem;margin-top:.7rem}
+.ask b{color:var(--acc);font-size:.85rem}
+.ask ul{padding-left:1.2rem;margin:.4rem 0;color:var(--fg2);font-size:.93rem}
+.ask li{margin:.3rem 0}
+.no{font-family:var(--mono);font-size:.8rem;color:var(--fg);font-weight:700}
+.ref{font-size:.75rem;color:var(--fg3)}
+.stem{margin:0}
+.stem p{margin:.5rem 0}
+.stem ul{padding-left:1.25rem;margin:.5rem 0;color:var(--fg2);font-size:.94rem}
+.stem ol{padding-left:1.35rem;margin:.5rem 0;color:var(--fg2);font-size:.94rem}
+.stem li{margin:.25rem 0}
+.stem .lead{color:var(--fg2);font-size:.92rem;margin-bottom:.6rem}
+
+details.sol{margin-top:.85rem;border-top:1px dashed var(--line);padding-top:.6rem}
+details.sol>summary{cursor:pointer;font-size:.84rem;color:var(--acc);font-weight:600;
+  list-style:none;display:flex;align-items:center;gap:.35rem;user-select:none}
+details.sol>summary::-webkit-details-marker{display:none}
+details.sol>summary::before{content:"▸";font-size:.75rem;transition:transform .15s}
+details.sol[open]>summary::before{transform:rotate(90deg)}
+.sol-body{background:var(--bg);border:1px solid var(--line);border-radius:10px;
+  padding:.85rem 1rem;margin-top:.6rem;font-size:.92rem;color:var(--fg2)}
+.sol-body p{margin:.45rem 0}
+.sol-body ul,.sol-body ol{padding-left:1.25rem;margin:.45rem 0}
+.sol-body li{margin:.28rem 0}
+.sol-body .key{color:var(--fg)}
+.sol-body code{color:var(--acc)}
+.sol-body table{border-collapse:collapse;width:100%;font-size:.88rem;margin:.5rem 0}
+.sol-body th,.sol-body td{border:1px solid var(--line);padding:.35rem .55rem;text-align:left}
+
+.ans{margin-top:.85rem}
+.ans label{display:block;font-size:.78rem;color:var(--fg3);margin-bottom:.35rem}
+.ans textarea{width:100%;font:inherit;font-size:.92rem;line-height:1.75;background:var(--bg);
+  color:var(--fg);border:1px solid var(--line);border-radius:10px;padding:.7rem .85rem;
+  resize:vertical;min-height:84px;outline:none}
+.ans textarea:focus{border-color:var(--acc)}
+.ans textarea::placeholder{color:var(--fg3)}
+.saved{font-size:.72rem;color:var(--fg3);margin-top:.3rem;opacity:0;transition:opacity .3s}
+.saved.on{opacity:1}
+
+footer{margin-top:44px;padding-top:20px;border-top:1px solid var(--line);
+  font-size:.8rem;color:var(--fg3);display:flex;flex-wrap:wrap;gap:.5rem 1.2rem}
+
+@media (max-width:640px){
+  #hero{padding:40px 18px 24px}#hero h1{font-size:1.5rem}
+  .wrap{padding:0 18px 60px}#tg{margin-left:0}
+}
+/* 返回讲义 */
+#back{position:fixed;right:22px;bottom:22px;height:42px;display:flex;align-items:center;gap:.35rem;
+  padding:0 .9rem;border-radius:21px;background:var(--bg2);border:1px solid var(--line);
+  color:var(--fg2);font-size:.84rem;cursor:pointer;box-shadow:var(--shadow);z-index:50;
+  transition:.2s;text-decoration:none;white-space:nowrap}
+#back:hover{color:var(--acc);border-color:var(--acc);text-decoration:none}
+@media (max-width:640px){#back{right:14px;padding:0 .7rem;font-size:.78rem}}
+
+@media print{
+  #hero .act,.bar .nogap,details.sol>summary::before,.saved,#back{display:none}
+  body{background:#fff;color:#000;font-size:11pt}
+  .q{break-inside:avoid;border-color:#ccc;background:#fff}
+  details.sol{display:block}.sol-body{display:block!important;border-color:#ccc;background:#fff}
+  textarea{border:1px solid #999!important;background:#fff!important}
+}
+</style>
+</head>
+<body>
+
+<header id="hero">
+  <div class="hero-in">
+    <div class="badge">南京大学 · 生成式软件工程 · 2026 秋 · 第 2 讲</div>
+    <h1>《提示词与上下文工程》习题</h1>
+    <p class="hsub">
+      本页习题对应第 2 讲全部内容：上下文工程、写清楚「完成」、一步有限一串很深、三道刁难人的写作题、审稿方法论、
+      大仓库悖论、Research Failure、人的注意力与不确定性探索。
+      论述题没有标准答案，实践题没有终点——它们要的不是复述，而是你自己的判断。
+    </p>
+    <div class="meta">
+      <div class="mrow"><span class="mk">范围</span><span class="mv">第 2 讲（讲义 §0–§16，含课堂现场）</span></div>
+      <div class="mrow"><span class="mk">题型</span><span class="mv">论述题 6 · 解答题 5（100 分）· 实践题 5（建议本周完成）</span></div>
+      <div class="mrow"><span class="mk">建议</span><span class="mv">论述 90 分钟；实践题做一件是一件</span></div>
+      <div class="mrow"><span class="mk">作答</span><span class="mv">输入框内容自动保存在本机浏览器</span></div>
+      <div class="mrow"><span class="mk">快捷键</span><span class="mv">按 <b style="color:var(--acc)">Esc</b> 返回第 2 讲讲义</span></div>
+    </div>
+    <div class="act">
+      <a class="btn primary" href="../NJU-生成式软件工程-第02讲-提示词与上下文工程.html">← 返回第 2 讲讲义</a>
+      <button class="btn" id="openAll" type="button">展开全部要点 / 答案</button>
+      <button class="btn" id="closeAll" type="button">全部收起</button>
+      <button class="btn" id="clear" type="button">清空我的作答</button>
+      <button class="btn" id="print" type="button">打印</button>
+      <button class="btn" id="tg" type="button" title="切换深色 / 浅色">◐ 主题</button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="bar">
+    <span><b>第一部分</b> 论述题（E1–E6，各 10 分）</span>
+    <span><b>第二部分</b> 实践题（P1–P5，建议完成）</span>
+    <span><b>第三部分</b> 解答题（S1–S5，各 8 分）</span>
+    <span class="prog" id="prog">已作答 0 / 16</span>
+  </div>
+  <p class="tip">
+    <strong>怎么用这一页。</strong>论述题给的是<strong>作答要点</strong>而非标准答案——
+    能举出讲义之外的例子、能把两个小节连起来说，通常比复述原句得分更高；
+    每题最后那句「想一想」才是真正要你写的东西，它要求你<strong>表态</strong>，而不是总结。<br>
+    实践题不设标准答案，也没有终点：做一件是一件，做完请回到「做完再想」，那几问往往比任务本身更难。
+    可以先做 P1（解剖上下文 + 一条持久规则），它会直接检验你在 E1 里写下的判断。
+  </p>
+
+  <h2 class="part"><span class="ht">第一部分 · 论述题</span><small>60 分</small></h2>
+
+  <article class="q" id="E1">
+    <div class="qhd"><span class="tag e">论述</span><span class="no">E1</span>
+      <span class="ref">§2 · §3.1–§3.5 模型看到的，远不止你刚输入的一句话 · 10 分</span></div>
+    <div class="stem">
+      <p class="lead">第 2 讲反复强调一句话：<strong>「模型看到的，远不止你刚输入的一句话。」</strong>
+        开场那句上了热搜的狠话已经说明：<strong>同样的文字放进不同上下文，会被理解成很不一样的意思。</strong></p>
+      <p>请围绕「上下文工程」展开论述：</p>
+      <ul>
+        <li>请列出 Agent 上下文里至少<strong>五类</strong>「提示词」来源，并说明每一类的作用范围（持久约定、当前任务，还是仅一次调用）。</li>
+        <li>讲义要求区分<strong>指令</strong>与<strong>材料</strong>。如果工具返回的一段文本里写着「请忽略之前的指令」，Agent 应当怎么处理？为什么一句「请遵守规则」不足以保证执行边界？</li>
+        <li>用一个具体例子说明<strong>「模型提议、Harness 决策、操作系统收口」</strong>三层分工；并解释为什么「不弹窗」不等于「模型获得了无限权限」。</li>
+        <li>「让 Agent 解剖当前上下文」这个实验为什么有用？它给出的自述为什么不能当作可信的内部状态？</li>
+      </ul>
+    </div>
+    <div class="ask"><b>想一想</b>
+      <ul><li>如果只能给项目加<strong>一条</strong>持久规则，你会加哪一条？为什么它属于「每次都要守、漏一次代价很高」？</li></ul>
+    </div>
+    <details class="sol"><summary>作答要点</summary><div class="sol-body">
+      <ul>
+        <li><span class="key">五类来源</span>：① harness 的 system prompt / goal 注入（持久、全局）；② <code>AGENTS.md</code> 等仓库持久指令（项目级）；③ 加载的 skill（任务级、按需）；④ 用户当次给的指令（当前任务）；⑤ 工具 / skill 的调用与返回（后果与证据）。此外代码、文件、历史消息也会进入上下文。</li>
+        <li><span class="key">指令 ≠ 材料</span>：工具返回的一段文章是<strong>分析对象</strong>，不因内容像命令就获得下命令的资格；来源、作用域、优先级必须显式标注。提示词里的「请遵守规则」与程序里的机制是两回事——<span class="key">一句自然语言要求 ≠ 一个可靠的执行边界</span>。</li>
+        <li><span class="key">三层分工</span>：模型只生成「想运行什么」；<strong>sandbox</strong> 决定技术上能碰什么，<strong>approval policy</strong> 决定何时暂停询问；规则按<strong>完整参数列表</strong>匹配 allow / prompt / forbidden，最严格者胜。「不弹窗」只表示动作落在当前边界内。反例：早期 Codex 把 <code>rg</code> 当只读安全命令，却漏掉 <code>--pre</code>、<code>-z</code> 等可触发外部程序的参数（<span class="key">CVE-2025-54558</span>）——<span class="key">安全属性属于完整 invocation，不属于命令名</span>。</li>
+        <li><span class="key">解剖实验</span>：能帮我们理解它正在怎样组织任务；但模型给出的是「当前遵循计划」，<span class="key">不是可信的内部状态 dump</span>。想知道某个行为为什么发生，要检查可访问的配置、代码和实际操作结果，用实际行为交叉验证。</li>
+      </ul>
+    </div></details>
+    <div class="ans"><label>我的作答</label><textarea data-k="E1" placeholder="先写两三条提纲，再展开成段落…"></textarea>
+      <div class="saved">已保存到本机</div></div>
+  </article>
+
+  <article class="q" id="E2">
+    <div class="qhd"><span class="tag e">论述</span><span class="no">E2</span>
+      <span class="ref">§5.1–§5.6 写清楚「完成」是什么 · 10 分</span></div>
+    <div class="stem">
+      <p class="lead">讲义给出的经验法则是<strong>「写清楚你的指令，承担一切『不明确』的后果」</strong>，
+        并主张<strong>「可验证，才不会提前交卷」</strong>。</p>
+      <p>请论述：</p>
+      <ul>
+        <li>用「一句话生成极品飞车」说明 <strong>Intent → Spec → Impl</strong> 的缺口如何逐级放大：为什么说「每一次省略都在扩张选择空间」？</li>
+        <li>「做个现代风格的主页」为什么只是 intent 而不是 spec？请把它改写成一到两条<strong>可检查</strong>的要求。</li>
+        <li>为什么「让旁观者只看要求和产物就能判定通过 / 不通过」是一个好的 done 检查？它挡掉了哪一类「提前交卷」？</li>
+        <li>完整的「完成」语义为什么要包含<strong>显式失败</strong>？把失败语义写进契约，至少应包含哪些内容？</li>
+      </ul>
+    </div>
+    <div class="ask"><b>想一想</b>
+      <ul><li>你最近让 AI 做的一件事，别人真的只看要求和产物就能判断完成吗？如果不能，缺的是哪一条验收条件？</li></ul>
+    </div>
+    <details class="sol"><summary>作答要点</summary><div class="sol-body">
+      <ul>
+        <li><span class="key">缺口指数放大</span>：镜头、操控、地图、美术资产、胜负条件……若第 <code>i</code> 层各留下 <code>kᵢ</code> 个「似乎都行」的默认选项，最终候选空间约为 <code>∏kᵢ</code>。模型可以在每一步都做出自洽的选择，最后却离你心里的那款游戏很远。</li>
+        <li><span class="key">intent vs spec</span>：「现代风格」看似具体，其实<strong>几乎没有排除任何模板</strong>——两个称职的实现者都能严格照做，却交出完全不同的页面。改写成可检查的行为，例如：「页面首先展示研究方向和近期工作，手机上无需横向滚动，所有项目入口都能打开」。</li>
+        <li><span class="key">done 检查</span>：上下文里存在可识别的完成判据 <code>V(τ)=1</code>，「继续干」与「可以交卷」才不只是两种高概率续写。旁观者判定能挡掉「模型自己觉得完成了」这一类提前交卷。历史类比：1714 年英国《经度法》不是悬赏「改善航海」，而是<strong>按经度误差分档 + 驶往西印度群岛实测</strong>——愿望被写成验收条件，「解决」才有制度含义。</li>
+        <li><span class="key">显式失败</span>：好模型<strong>要么完成，要么失败</strong>，不应幻觉或违背指令。失败契约至少应报告：<strong>未完成的部分、阻塞点、缺少的证据、已尝试过的路径</strong>。只有状态说清楚，Agent 才能可靠地决定「继续尝试」还是「需要新信息」。</li>
+      </ul>
+    </div></details>
+    <div class="ans"><label>我的作答</label><textarea data-k="E2" placeholder="…"></textarea>
+      <div class="saved">已保存到本机</div></div>
+  </article>
+
+  <article class="q" id="E3">
+    <div class="qhd"><span class="tag e">论述</span><span class="no">E3</span>
+      <span class="ref">§6 一步有限，一串可以很深 / §7 三道刁难人的写作题 · 10 分</span></div>
+    <div class="stem">
+      <p class="lead">讲义说「<strong>一次很浅，串起来就有了深度</strong>」，又用三道刁难人的写作题告诉我们：
+        「<strong>通过检查器，说明它会搜索和修补；读起来仍有点别扭，说明测试没有覆盖品味。</strong>」</p>
+      <p>请论述：</p>
+      <ul>
+        <li>用「图灵机纸带」或「工作纸」的类比解释 chain-of-thought：为什么增加 token 可以增加计算深度？它成立的条件是什么？</li>
+        <li>用「三条并行信道 / 先占槽位再生成—检查—修补」解释模型如何解出藏头诗这类多约束问题。</li>
+        <li>三道题里「<strong>验收口径本身就是 spec</strong>」。请举至少两处（如「偏旁 vs 部首」「同音是否含声调」），说明口径变化如何改变难度。</li>
+        <li>Verifier「看得见」与「看不见」的部分分别是什么？为什么「形式约束能逼出搜索，却不会自动带来好作品」？这对软件测试意味着什么？</li>
+      </ul>
+    </div>
+    <div class="ask"><b>想一想</b>
+      <ul><li>如果给你的项目设计一套「既形式可验、又能体现品味」的验收，你会把品味拆成哪几条可检查的代理指标？每条各自的失效方式是什么？</li></ul>
+    </div>
+    <details class="sol"><summary>作答要点</summary><div class="sol-body">
+      <ul>
+        <li><span class="key">CoT = 把中间结果写回上下文</span>：<code>Pr[token | context]</code> 是一次深度有限的计算；但每个新 token 又成为下一步的 context，于是「先试探 → 发现不合适 → 继续输出 token 纠正」成为可能。类比图灵机纸带：单步转移很简单，中间结果却能写回纸带。</li>
+        <li><span class="key">成立条件</span>：只有当<strong>中间进展或最终答案可检查</strong>时，多写、多试、多修补才会稳定地变成能力；否则只是把错误说得更长（test-time scaling 不是免费的）。</li>
+        <li><span class="key">多约束解</span>：句首放藏头、句中放日期、句尾管押韵，像三条并行信道——<strong>先占槽位，再「生成—检查—修补」</strong>。模型不必一口气灵感命中。</li>
+        <li><span class="key">口径即 spec</span>：「都含三点水」≠「词典里同属一个部首」；「同音」是否要求声调相同会让难度骤变（Yi 音文）。要交给程序验收，就得先决定检查的是哪一个。</li>
+        <li><span class="key">看得见 / 看不见</span>：藏头、字数、指定字、偏旁、拼音都能写成检查器；通顺、趣味、文学性需要更丰富的判断。约束文学早有类似实验——乔治·佩雷克 1969 年《消失》全书避用法语字母 <code>e</code>：<span class="key">形式约束能逼出搜索，却不会自动带来好作品</span>。软件测试同理：通过测试只说明末端 proxy 达标。</li>
+      </ul>
+    </div></details>
+    <div class="ans"><label>我的作答</label><textarea data-k="E3" placeholder="…"></textarea>
+      <div class="saved">已保存到本机</div></div>
+  </article>
+
+  <article class="q" id="E4">
+    <div class="qhd"><span class="tag e">论述</span><span class="no">E4</span>
+      <span class="ref">§8 上下文中的规则，也会争夺注意力 / §9 「你是一位审稿人」，还不够 · 10 分</span></div>
+    <div class="stem">
+      <p class="lead">讲义提醒我们：<strong>「上下文里的规则会纠偏，也会抢注意力」</strong>；
+        又说：<strong>「换上 reviewer 的制服，不等于学会了 review。」</strong></p>
+      <p>请论述：</p>
+      <ul>
+        <li>否定指令有个尴尬之处：「为了禁止『半透明』，你先把『半透明』写进了上下文」。请解释这个副作用，并说明为什么「每遇到一次问题就加一条规则」不是免费的增强。</li>
+        <li>常驻层与按需加载应当如何分工？什么内容适合用「正规格 + 测试」而不是「自然语言劝诫」来收口？</li>
+        <li>请解释审稿的<strong>三条独立路线</strong>（判据驱动 / 证据审计 / 反方复现），并说明为什么它们必须<strong>先各自形成判断，最后才汇合</strong>。</li>
+        <li>「不要被作者带着走」：论文如何替 reviewer 选好词汇、问题顺序、baseline 和 metric？Skill 为什么「本身也是一道遵循题」？应当如何分层？</li>
+      </ul>
+    </div>
+    <div class="ask"><b>想一想</b>
+      <ul><li>你目前最靠得住的一套「做事方法」，能说清它的检查点和「看到什么证据就转向」吗？如果不能，它算不算已经可以蒸馏成 Skill？</li></ul>
+    </div>
+    <details class="sol"><summary>作答要点</summary><div class="sol-body">
+      <ul>
+        <li><span class="key">否定指令</span>：被禁止的词也成了可续写的模式（与「不要想白熊」相似，但原因更朴素）；模型可能把「不要半透明」变成代码注释。因此「再加一条永久规则禁止写注释」→ 上下文越来越长、约束越来越难协调。<span class="key">这不是免费的增强。</span></li>
+        <li><span class="key">常驻 vs 按需</span>：常驻层只放「每次都要守、漏一次代价很高」的短规则；任务细节、解释、范例按需加载。能写成检查项的，就用 <code>background:#fff; opacity:1</code> 这类正规格 / 类型 / lint / CI gate / 权限沙箱收口——<span class="key">少写一句劝诫，多加一个可检查的完成条件</span>。</li>
+        <li><span class="key">三条路线</span>：① <strong>判据驱动</strong>：还原论文声称的贡献，按标准打分，每个分数指向证据或明确缺失；② <strong>证据审计</strong>：为核心 claim 建账本（需要什么证据 / 给了什么 / 哪些假设没验证 / 还有什么替代解释）；③ <strong>反方复现</strong>：重算一个核心结果，寻找最小反例，问「什么观察会推翻结论」。<span class="key">先独立、后汇合</span>——否则「三个 reviewer」只是同一个锚点的三次润色。</li>
+        <li><span class="key">锚定效应</span>：论文不只提供事实，还替 reviewer 选好了词汇、问题顺序、baseline 和 metric；顺着读很容易接受整套框架。对策：深读前先独立写下三件事——它声称解决什么 / 最强替代解释是什么 / 什么结果会推翻它；再把正文拆成 <code>claim → evidence → assumption</code>。<span class="key">空格往往比句子更值得审。</span></li>
+        <li><span class="key">Skill</span>：值得保存的不是上次答案的版式，而是<strong>搜索策略、判断标准、检查点，以及「看到什么证据就转向」的条件</strong>。长 Skill 里指令很多，会提升指令遵循的难度（和写藏头诗差不多）；因此分层：常驻层只留目标、硬约束、停止条件，其余按需加载，机械约束交给工具验证。</li>
+      </ul>
+    </div></details>
+    <div class="ans"><label>我的作答</label><textarea data-k="E4" placeholder="…"></textarea>
+      <div class="saved">已保存到本机</div></div>
+  </article>
+
+  <article class="q" id="E5">
+    <div class="qhd"><span class="tag e">论述</span><span class="no">E5</span>
+      <span class="ref">§10 为什么大仓库有时比空项目更容易 / §11 Research Failure · 10 分</span></div>
+    <div class="stem">
+      <p class="lead">两个看起来相反的观察被放在一起：<strong>成熟的大仓库里 AI 反而游刃有余</strong>，
+        但<strong>投入更多 token，并不保证任何长程问题都会收敛</strong>。</p>
+      <p>请论述：</p>
+      <ul>
+        <li>用「代码少，不代表信息少」解释 <strong>Greenfield 悖论</strong>：为什么成熟仓库把设计空间压成了「照着邻居补全」，而空项目的信息熵反而更高？</li>
+        <li>为什么说「<strong>代码库本身也是提示词</strong>」？「第一桶 slop 成为多数派后像复利一样增长」是什么意思？</li>
+        <li>评价这个猜测——「放一个相近领域、优雅成熟的项目给 AI 看，能得到更好的软件」：RepoCoder、CodeRAG-Bench、negative transfer 分别支持或限制了它的哪一部分？你会如何设计对照实验？</li>
+        <li>Research Failure 案例里，「缺的不是 token，而是便宜、局部、可归因的反馈」。请说明为什么一个总 benchmark 分数几乎不给下一步方向，以及「把 idea 改写成可证伪预测 + 几十秒反馈的 microbenchmark」为什么更有用。</li>
+      </ul>
+    </div>
+    <div class="ask"><b>想一想</b>
+      <ul><li>你手上的项目现在更像「照着邻居补全」还是「每个选择都悬空」？你会先补哪一条工程纪律来降低熵？</li></ul>
+    </div>
+    <details class="sol"><summary>作答要点</summary><div class="sol-body">
+      <ul>
+        <li><span class="key">Greenfield 悖论</span>：成熟仓库用命名、分层、错误处理和测试，把巨大的设计空间压成「照着邻居补全」；greenfield 里每个选择都悬空，<span class="key">信息熵反而更高</span>。self-attention 让模型能「看到」好的 practice 并立即 in-context learning。</li>
+        <li><span class="key">代码库也是提示词</span>：模型只追求<strong>局部一致性</strong>，不知道眼前是 best practice 还是历史事故。<span class="key">第一桶 slop 一旦成为多数派，后面的 slop 会像复利一样增长。</span></li>
+        <li><span class="key">猜测成立一半</span>：RepoCoder 显示迭代检索仓库相关片段比只看当前文件提升 &gt;10%（好示例有用）；CodeRAG-Bench 更克制——高质量 context 有用，但「找对片段、用好片段」仍是瓶颈；整库输入还可能带来 <strong>negative transfer</strong>（技术栈 / 约束 / 架构哲学不匹配）并消耗 context。<span class="key">「相近、精选、按需取用」比「整库塞进去」重要。</span>对照实验：固定任务 / 模型 / token budget / 种子，比较「无示例 / 完整参考仓库 / 3–5 个精选 golden paths」，并盲测架构违规、修改扩散面、后续缺陷、克隆率。</li>
+        <li><span class="key">反馈分辨率</span>：总 benchmark 分数是<strong>粗粒度的末端指标</strong>，只告诉你「变没变」，不告诉你「哪一步、为什么」。缺的是<strong>便宜、局部、可归因</strong>的反馈。「没变快」可能来自 path explosion / solver / 缓存 / 内存 / 搜索策略 / 实现 bug / 环境噪声——混在一起就不知道该强化哪一步。</li>
+        <li><span class="key">可证伪 + microbenchmark</span>：把 idea 改写成一句可被实验推翻的预测，造几十秒就有反馈的实验，先 profile 主导瓶颈、再做 baseline 与 ablation。<span class="key">研究允许最好的结论是「原始 idea 不成立」</span>——而模型被训练成「把任务做完」，可能把错误想法实现得越来越完整。</li>
+      </ul>
+    </div></details>
+    <div class="ans"><label>我的作答</label><textarea data-k="E5" placeholder="…"></textarea>
+      <div class="saved">已保存到本机</div></div>
+  </article>
+
+  <article class="q" id="E6">
+    <div class="qhd"><span class="tag e">论述</span><span class="no">E6</span>
+      <span class="ref">§12 人应该盯住哪些地方 / §13 在不确定性中探索 · 10 分</span></div>
+    <div class="stem">
+      <p class="lead">讲义的结尾有两句反直觉的话：<strong>「我越来越少干预了」</strong>，以及
+        <strong>「探索的瓶颈常常不是『想不出』，而是模型太早认定『已经够了』」</strong>。</p>
+      <p>请论述：</p>
+      <ul>
+        <li>请解释 <strong>Latency 与 Throughput</strong> 的区别：为什么「人类干预优化单个任务的 latency，放手却优化一整天的 throughput」？这套取舍成立的<strong>前提</strong>是什么？</li>
+        <li>应当按什么原则分配人的注意力？请用「<strong>不可逆性 × 爆炸半径</strong>」说明哪些要早看、哪些可以晚看，并举一个「把要求从记忆升级成机制」的例子。</li>
+        <li>为什么「给我几种方案」只规定了停止条件 <code>k</code>，没有规定覆盖率？Herbert Simon 的<strong>满意化（satisficing）</strong>在这里意味着什么？</li>
+        <li>用「给小孩取名」说明如何把灵感改造成搜索；并解释 CoT（算力换深度）与并行枚举（算力换宽度）的区别，以及「<strong>选择质量 ≈ 覆盖率 × 评估分辨率</strong>」。</li>
+      </ul>
+    </div>
+    <div class="ask"><b>想一想</b>
+      <ul><li>「世界很大，人很小」「墙里面是超人，墙外面是动物世界」——如果算力持续转化为智力，你认为个体的价值会迁移到哪里？请<strong>表态</strong>并给出理由。</li></ul>
+    </div>
+    <details class="sol"><summary>作答要点</summary><div class="sol-body">
+      <ul>
+        <li><span class="key">Latency vs Throughput</span>：干预优化<strong>单任务延迟</strong>；放手优化<strong>一整天的吞吐</strong>——机器多走一点弯路，换回最稀缺的人类注意力。成立<strong>前提</strong>：① 任务可并行；② 失败可以便宜地恢复。<span class="key">否则「少干预」只是把故障推迟。</span></li>
+        <li><span class="key">注意力分配</span>：按「不可逆性 × 爆炸半径」——接口、不变量、数据格式、权限、测试早看；可替换的叶子实现晚看。机制化示例：把「必须过测试才算完成」写成 CI gate，把「不要越权」写成权限沙箱，把「字段含义」写成类型 / schema。<span class="key">prompt 会被压缩，失败的测试不会假装自己通过。</span></li>
+        <li><span class="key">满意化</span>：「给我几种」只规定 k，没有规定覆盖率——搜到「够好」就停。CoT 用算力换<strong>深度</strong>（沿一条路多走几步）；并行枚举用算力换<strong>宽度</strong>（让更多轨迹进入低概率的尾部）。</li>
+        <li><span class="key">把灵感改造成搜索</span>：取名时按「典故 × 音韵 × 方言 × 时代感」生成候选，<span class="key">先独立采样、再汇总</span>（别让 sub-agent 一开始就互相抄答案），再让「反对者」查出处、听谐音、看重名。枚举负责提高覆盖率，审查负责提高分辨率。<span class="key">没有分辨率的筛选，只是把一个平庸答案变成一百个平庸答案。</span></li>
+        <li><span class="key">可加分</span>：Big World Hypothesis——群体智能不要求每个人没有偏见，只要求偏见不能只剩一种；墙内的超人是对未来可能性的追问，并非终局；人的价值向「为何做、为谁做、后果由谁承担」迁移。</li>
+      </ul>
+    </div></details>
+    <div class="ans"><label>我的作答</label><textarea data-k="E6" placeholder="…"></textarea>
+      <div class="saved">已保存到本机</div></div>
+  </article>
+
+  <h2 class="part"><span class="ht">第二部分 · 实践题</span><small>不计分，建议本周完成</small></h2>
+  <p class="tip">
+    这一讲的每一个判断都可以被亲手检验。实践题的共同结构：<strong>任务 → 交付物（验收）→ 做完再想</strong>。
+    前两问考验你的手，最后一问考验你的判断——跳过它，就只是又做了一次「照默认值执行」。
+  </p>
+
+  <article class="q" id="P1">
+    <div class="qhd"><span class="tag p">实践</span><span class="no">P1</span>
+      <span class="ref">§3.4–§3.5 解剖上下文 / §8.3 常驻与按需 · 建议最先做</span></div>
+    <div class="stem">
+      <p class="lead">把「上下文工程」从概念变成一次可以观测的实验：先解剖，再动手加规则，最后亲手触发一次副作用。</p>
+      <p><strong>任务</strong></p>
+      <ol>
+        <li>新开一个 Agent 会话，让它按需要遵循的指令类型，分类总结当前上下文里的所有提示词：
+          <strong>目标与交付物 / 权限与安全 / 工作流与工具协议 / 持久规则与风格 / 环境事实与证据</strong>。</li>
+        <li>给项目写一个最小 <code>AGENTS.md</code>：只放 3 条「每次都要守、漏一次代价很高」的短规则。</li>
+        <li>在 3 个不同任务里观察它是否被遵循；再故意加一条<strong>否定指令</strong>（如「不要用半透明效果」），
+          看它是否把这句话带进了产物（注释 / 文案 / 配置）。</li>
+      </ol>
+      <p><strong>交付物（验收）</strong></p>
+      <ul>
+        <li>一份按五类归类的上下文清单；</li>
+        <li>你的 <code>AGENTS.md</code>（不超过 3 条）+ 三条规则的遵循情况记录；</li>
+        <li>一次「否定指令副作用」的原始证据（截图或产物片段）。</li>
+      </ul>
+      <div class="ask"><b>做完再想</b>
+        <ul>
+          <li>哪一条规则真的被<strong>稳定</strong>遵循了？它和「能写成检查项」有没有关系？</li>
+          <li>如果某条规则没有被遵循，是模型的问题，还是它本来就该交给脚本 / 测试来保证？</li>
+          <li>把「否定指令」改写成一个<strong>正面、可检查</strong>的陈述（例如 <code>background:#fff; opacity:1</code>），效果变好了吗？为什么？</li>
+        </ul>
+      </div>
+    </div>
+    <details class="sol"><summary>导师提示 / 常见坑</summary><div class="sol-body">
+      <ul>
+        <li>常见坑一：把清单写成对模型的赞美或吐槽。清单要能对应到「<span class="key">来源 — 作用域 — 优先级</span>」。</li>
+        <li>常见坑二：<code>AGENTS.md</code> 越长越差。如果 3 条里有 1 条说不清「漏一次的代价」，就删掉它。</li>
+        <li>预期结果：能写成检查项的规则最稳；纯自然语言的劝诫最容易被「顺手带进产物」或悄悄忽略。</li>
+        <li>副产品：你会得到一份可以真正放进自己项目仓库的 <code>AGENTS.md</code>——这正是「代码库也是提示词」的最小实践。</li>
+      </ul>
+    </div></details>
+    <div class="ans"><label>我的记录（清单 / AGENTS.md / 副作用证据）</label><textarea data-k="P1" placeholder="清单… 我的 3 条规则… 否定指令发生了什么…"></textarea>
+      <div class="saved">已保存到本机</div></div>
+  </article>
+
+  <article class="q" id="P2">
+    <div class="qhd"><span class="tag p">实践</span><span class="no">P2</span>
+      <span class="ref">§5.3–§5.5 写清指令 / 可验证 / 显式失败</span></div>
+    <div class="stem">
+      <p class="lead">「写清楚你的指令，承担一切『不明确』的后果。」这一题把这句话变成一个可检验的动作。</p>
+      <p><strong>任务</strong></p>
+      <ol>
+        <li>挑一个小而真实的需求（推荐：一个小工具或一个页面）。</li>
+        <li><strong>A 轮</strong>：新开会话，直接说「给我做出来」，不做额外约束。</li>
+        <li><strong>B 轮</strong>：新开会话，先写一份<strong>验收清单</strong>（旁观者只看产物就能判定的行为），
+          再让它实现；并明确要求它<strong>显式声明失败</strong>（哪些验收没过、缺什么证据）。</li>
+        <li>把 A、B 两轮的「要求 + 产物」分别交给一个<strong>没有参与</strong>的人（或另一个全新会话的 Agent），
+          只问一句：完成了吗？</li>
+      </ol>
+      <p><strong>交付物（验收）</strong></p>
+      <ul>
+        <li>一份验收清单（每条都是可观察的行为，不是形容词）；</li>
+        <li>两轮产物 + 两轮的「旁观者判定」与理由；</li>
+        <li>记录 B 轮在无法验证时是否如实报告了未完成。</li>
+      </ul>
+      <div class="ask"><b>做完再想</b>
+        <ul>
+          <li>哪一轮更容易被旁观者判定？判定不一致时，问题出在要求的哪一句话？</li>
+          <li>B 轮的「显式失败」出现了吗？如果没有，是不是你的验收条件<strong>还不够可检查</strong>？</li>
+          <li>把这套验收清单留给你下一个项目——你会在<strong>哪一步</strong>就用它？</li>
+        </ul>
+      </div>
+    </div>
+    <details class="sol"><summary>导师提示 / 常见坑</summary><div class="sol-body">
+      <ul>
+        <li>常见坑：验收条件写成形容词（「要好看」「要专业」）。改成可观察的行为：「手机上无需横向滚动」「所有项目入口都能打开」。</li>
+        <li>「旁观者」不能是同一个人——否则他会用你脑子里的隐含要求来打分，实验就失效了。</li>
+        <li>历史锚点：《经度法》（1714）把愿望写成「按误差分档 + 实测」，「解决」才有了制度含义。</li>
+        <li>如果 B 轮永远不失败，别急着夸它——先怀疑你的验收清单太松。</li>
+      </ul>
+    </div></details>
+    <div class="ans"><label>我的记录（验收清单 / 两轮判定 / 失败记录）</label><textarea data-k="P2" placeholder="验收清单… A 轮判定… B 轮判定… 是否显式失败…"></textarea>
+      <div class="saved">已保存到本机</div></div>
+  </article>
+
+  <article class="q" id="P3">
+    <div class="qhd"><span class="tag p">实践</span><span class="no">P3</span>
+      <span class="ref">§4.1–§4.2 拖延症的克星 / 费曼学习法</span></div>
+    <div class="stem">
+      <p class="lead">讲义把 AI 称作「拖延症的克星」，但也强调：<strong>学习仍然需要自己的活动</strong>。
+        这一题检验的是「让理解真的发生」。</p>
+      <p><strong>任务</strong>（严格按四步）</p>
+      <ol>
+        <li>选一个你一直没搞懂的知识点（微积分一步推导、数字电路一条数据通路、链接发生了什么，或你项目里的一个机制）。</li>
+        <li>先借助 AI 把它弄清；然后<strong>合上资料</strong>，用自己的话讲给 AI 听。</li>
+        <li>让 AI 只做三件事：<strong>追问含糊之处、找反例、验算</strong>——不要让它替你重讲一遍。</li>
+        <li>用推导 / 原文 / 程序结果核对，再重新解释一遍。</li>
+      </ol>
+      <p><strong>交付物（验收）</strong></p>
+      <ul>
+        <li>一段你自己的讲解稿；</li>
+        <li>一份「卡住的地方」清单；</li>
+        <li>至少一条被反例 / 验算推翻或修正的说法。</li>
+      </ul>
+      <div class="ask"><b>做完再想</b>
+        <ul>
+          <li>卡住的地方，是不是恰好是你以为已经懂了的地方？它比「读得顺畅」的地方信息量更大在哪？</li>
+          <li>如果 AI 直接替你把知识点讲一遍，你会损失什么？</li>
+          <li>这套循环能不能沉淀成一个可重放的 skill？它的<strong>检查点</strong>是什么？</li>
+        </ul>
+      </div>
+    </div>
+    <details class="sol"><summary>导师提示 / 常见坑</summary><div class="sol-body">
+      <ul>
+        <li>常见坑：让 AI 先讲一遍再复述——那不是费曼法，那是复读。顺序必须是「先合上资料、自己讲」。</li>
+        <li>「找反例」比「再解释一遍」更能暴露空洞；把反例留下来当回归用例。</li>
+        <li>实证支点：<span class="key">self-explanation</span> 与 <span class="key">retrieval practice</span>。</li>
+        <li>第三步是这题的核心：把 AI 的角色限制成「听众 + 反例机 + 验算器」，而不是讲师。</li>
+      </ul>
+    </div></details>
+    <div class="ans"><label>我的记录（讲解稿 / 卡住清单 / 被推翻的说法）</label><textarea data-k="P3" placeholder="我的讲解… 卡住的地方… 被推翻的点…"></textarea>
+      <div class="saved">已保存到本机</div></div>
+  </article>
+
+  <article class="q" id="P4">
+    <div class="qhd"><span class="tag p">实践</span><span class="no">P4</span>
+      <span class="ref">§9.2–§9.4 三条独立路线 / 把品味蒸馏成 Skill</span></div>
+    <div class="stem">
+      <p class="lead">「换上 reviewer 的制服，不等于学会了 review。」这一题让你亲自当一次审稿人，
+        并检验「三条独立路线」到底比「一份总体印象」强在哪。</p>
+      <p><strong>任务</strong></p>
+      <ol>
+        <li>选一份稿子（自己的论文 / 报告，或一篇你熟悉的论文）。</li>
+        <li>让 Agent 只在<strong>一条</strong>路线下工作，且<strong>不与另外两条共享结论</strong>：
+          <ul>
+            <li><strong>判据驱动</strong>：还原声称的贡献，按标准打分，每个分数指向论文中的证据或明确缺失；</li>
+            <li><strong>证据审计</strong>：为核心 claim 建账本（需要什么证据 / 给了什么 / 哪些假设没验证 / 还有什么替代解释）；</li>
+            <li><strong>反方复现</strong>：重算一个核心结果，寻找最小反例，问「什么观察会推翻结论」。</li>
+          </ul>
+        </li>
+        <li>三条路线<strong>各自独立成文</strong>后，再让它们汇合、比较分歧。</li>
+      </ol>
+      <p><strong>交付物（验收）</strong></p>
+      <ul>
+        <li>三份独立意见 + 一份「分歧清单」；</li>
+        <li>一处你在读正文<strong>之前</strong>先写下的判断（它声称解决什么 / 最强替代解释 / 什么会推翻它）。</li>
+      </ul>
+      <div class="ask"><b>做完再想</b>
+        <ul>
+          <li>三条路线里，哪一条最容易被「总体印象」污染？分歧清单里有没有一条是单独看时想不到的？</li>
+          <li>如果三条路线一开始就共享同一个结论，你会得到什么？（提示：同一个锚点的三次润色）</li>
+          <li>把它用回你自己：你写东西时，会不会也悄悄替读者选好了问题、术语和标准？</li>
+        </ul>
+      </div>
+    </div>
+    <details class="sol"><summary>导师提示 / 常见坑</summary><div class="sol-body">
+      <ul>
+        <li>关键在「<span class="key">先独立、后汇合</span>」；否则等于把一份印象洗三遍。</li>
+        <li>反方复现不一定要跑代码：能列出「什么观察会推翻它」就已经开始有价值。</li>
+        <li>「空格往往比句子更值得审」——论文<strong>没写</strong>的东西，往往比写了的更关键。</li>
+        <li>接着想：若这次审稿流程反复有效，它能不能变成你的一个 Review Skill？里面该写哪些<strong>检查点</strong>？</li>
+      </ul>
+    </div></details>
+    <div class="ans"><label>我的记录（三份意见 / 分歧 / 事先判断）</label><textarea data-k="P4" placeholder="判据… 证据… 反方… 分歧清单… 我事先写下的判断…"></textarea>
+      <div class="saved">已保存到本机</div></div>
+  </article>
+
+  <article class="q" id="P5">
+    <div class="qhd"><span class="tag p">实践</span><span class="no">P5</span>
+      <span class="ref">§13.3–§13.4 算力换智力 / 把灵感改造成搜索</span></div>
+    <div class="stem">
+      <p class="lead">「给我几种」只规定了停止条件 <code>k</code>，没有规定覆盖率。这一题把「灵感」改造成一次可控的<strong>搜索</strong>。</p>
+      <p><strong>任务</strong>（以「给蒋姓小孩取名」为例；也可换成你的选题 / 命名 / 方案设计）</p>
+      <ol>
+        <li><strong>直接要</strong>：新开会话，直接说「给我几个好听又有寄托的名字」，记录结果。</li>
+        <li><strong>改造成搜索</strong>：
+          <ul>
+            <li>定义探索空间：典故 × 音韵 × 方言 × 时代感，各生成一批候选，<strong>先独立采样、互不参考</strong>；</li>
+            <li>审查：查出处、听谐音、看重名，再让一个「反对者」专挑毛病。</li>
+          </ul>
+        </li>
+        <li>比较两轮：候选数量、方向覆盖，以及你最终愿意留下的结果。</li>
+      </ol>
+      <p><strong>交付物（验收）</strong></p>
+      <ul>
+        <li>两轮候选（第二轮标注来源方向）+ 审查记录；</li>
+        <li>一句话结论：这一轮里，「覆盖率」和「分辨率」分别由什么提供。</li>
+      </ul>
+      <div class="ask"><b>做完再想</b>
+        <ul>
+          <li>第二轮多了什么、少了什么？额外成本花在「想得更多」还是「看得更清」？</li>
+          <li>如果只保留一个动作，你会保留<strong>独立采样</strong>还是<strong>反对者审查</strong>？为什么？</li>
+          <li>把「探索空间 + 评估分辨率」搬到你的学习 / 项目上：你现在最该扩大的是覆盖率，还是提高分辨率？</li>
+        </ul>
+      </div>
+    </div>
+    <details class="sol"><summary>导师提示 / 常见坑</summary><div class="sol-body">
+      <ul>
+        <li>常见坑：sub-agent 一开始就互相抄答案——必须「<span class="key">先独立采样，再汇总</span>」。</li>
+        <li>审查者要真的「专挑毛病」，否则只是多一份赞美。</li>
+        <li>核心公式：选择质量 ≈ 覆盖率 × 评估分辨率。<span class="key">没有分辨率的筛选，只是把一个平庸答案变成一百个平庸答案。</span></li>
+        <li>把这道题和 E6 连起来：模型被训练成「完成任务」才有奖励，所以它天然会给你<strong>有限</strong>的方案——扩大覆盖率这件事，得由你来设计。</li>
+      </ul>
+    </div></details>
+    <div class="ans"><label>我的记录（两轮候选 / 审查 / 结论）</label><textarea data-k="P5" placeholder="直接要… 搜索… 审查… 覆盖率与分辨率分别来自…"></textarea>
+      <div class="saved">已保存到本机</div></div>
+  </article>
+
+  <h2 class="part"><span class="ht">第三部分 · 解答题</span><small>40 分</small></h2>
+
+  <article class="q" id="S1">
+    <div class="qhd"><span class="tag s">解答</span><span class="no">S1</span>
+      <span class="ref">§5.1–§5.2 候选空间与「压缩合法解空间」 · 8 分</span></div>
+    <div class="stem">
+      <p>（1）Intent → Spec → Impl 三层，若每层各留下 <strong>5 个</strong>「似乎都行」的默认选项，最终候选空间约有多大？若把每层压到 <strong>3 个</strong>呢？
+        （2）从 5 到 3 只是「少了一点」，为什么候选空间的变化远超直觉？
+        （3）由此说明：为什么「压缩合法解空间」比「多写几个形容词」更有效？</p>
+    </div>
+    <details class="sol"><summary>参考答案</summary><div class="sol-body">
+      <ol>
+        <li><code>5³ = 125</code>；<code>3³ = 27</code>。</li>
+        <li>候选空间随层数<strong>指数</strong>放大：约为 <code>∏kᵢ</code>。你在动的不是总和而是<strong>底数</strong>，效果被层数放大：每层从 5 压到 3（降到 60%），三层之后只剩 <code>0.6³ ≈ 21.6%</code>——125 降到 27，远超「每层降 40%」的直觉。</li>
+        <li>形容词<strong>不排除任何模板</strong>（「现代」仍兼容大量设计），对 <code>kᵢ</code> 几乎无影响；给出具体风格 / 样式 / 排版等于直接删掉大量默认分支，既把 <code>∏kᵢ</code> 变小，又让结果<strong>可检查</strong>。这就是「写清指令、承担不明确后果」的量化含义。</li>
+      </ol>
+    </div></details>
+    <div class="ans"><label>我的作答</label><textarea data-k="S1" placeholder="…"></textarea>
+      <div class="saved">已保存到本机</div></div>
+  </article>
+
+  <article class="q" id="S2">
+    <div class="qhd"><span class="tag s">解答</span><span class="no">S2</span>
+      <span class="ref">§7 形式约束的联合遵循率 / §9.4 长 Skill 之难 · 8 分</span></div>
+    <div class="stem">
+      <p>（1）一篇文本要同时满足 <strong>3 条</strong>相互独立的形式约束，每条被模型正确遵循的概率为 <strong>0.9</strong>，三条同时满足的概率是多少？
+        （2）若希望<strong>联合</strong>遵循率不低于 <strong>0.95</strong>，单条约束的遵循率至少应达到多少？
+        （3）长 Skill 里塞进大量指令，为什么「难度会和写藏头诗差不多」？由此给出两条编写 Skill 的原则。</p>
+    </div>
+    <details class="sol"><summary>参考答案</summary><div class="sol-body">
+      <ol>
+        <li><code>0.9³ = 0.729</code>，即约 <span class="key">72.9%</span>。</li>
+        <li>设单条遵循率为 <code>p</code>，要求 <code>p³ ≥ 0.95</code>，则 <code>p ≥ 0.95^(1/3) ≈ 0.9832</code>，
+          即单条需达到约 <span class="key">98.3%</span>——从 90% 提到 98.3%，远比直觉困难。</li>
+        <li>因为<strong>联合概率是各条遵循率的乘积</strong>：约束越多样本空间越难同时满足，难度随约束数<strong>指数</strong>上升。长 Skill 等于把许多约束叠加，联合遵循率随之骤降。
+          两条原则：<span class="key">① 分层</span>——常驻层只留目标、硬约束、停止条件，解释与范例按需加载；<span class="key">② 交给机制</span>——机械约束用类型 / lint / 测试验证，<span class="key">少写一句劝诫，多加一个可检查的完成条件</span>。</li>
+      </ol>
+    </div></details>
+    <div class="ans"><label>我的作答</label><textarea data-k="S2" placeholder="…"></textarea>
+      <div class="saved">已保存到本机</div></div>
+  </article>
+
+  <article class="q" id="S3">
+    <div class="qhd"><span class="tag s">解答</span><span class="no">S3</span>
+      <span class="ref">§11.2 反馈的分辨率 / 可证伪预测 · 8 分</span></div>
+    <div class="stem">
+      <p>一个符号执行引擎优化任务，总耗时构成约为：<strong>求解器 solver 60%、路径搜索 25%、缓存 10%、其他 5%</strong>。</p>
+      <p>（1）若你只有 1 小时，你会先测量 / 优化哪一部分？为什么不是「全面提升」？
+        （2）「总 benchmark 分数」为什么不给下一步方向？它缺的是哪一种信息？
+        （3）把「我想让引擎变快」改写成一个<strong>可证伪的预测</strong>，并说明你会用什么「几十秒就能给出反馈」的实验来检验它。</p>
+    </div>
+    <details class="sol"><summary>参考答案</summary><div class="sol-body">
+      <ol>
+        <li>先攻 <strong>solver</strong>（占比最大，理论上限 60%）。正确顺序是<strong>先 profile 主导瓶颈，再动手</strong>；「全面提升」会把预算摊薄、无法归因，也违背「先测量再优化」。</li>
+        <li>总分是<strong>粗粒度的末端指标</strong>：它只告诉你「变了 / 没变」，不告诉你「哪一步变了、为什么变」。缺的是<strong>局部、可归因</strong>的反馈——「没变快」可能来自 path explosion、solver、缓存、内存、搜索策略、实现 bug 或环境噪声，混在一起就不知道该强化哪一步。</li>
+        <li>示例预测：「在 X 类查询上，把约束缓存从 A 换成 B，求解器调用次数将下降 ≥20%，总耗时下降 ≥10%。」
+          检验实验（microbenchmark）：固定一组查询，<strong>几十秒</strong>跑完，直接报告求解器调用次数与总耗时——若没有下降，预测被推翻。研究允许最好的结论是「原始 idea 不成立」。</li>
+      </ol>
+    </div></details>
+    <div class="ans"><label>我的作答</label><textarea data-k="S3" placeholder="…"></textarea>
+      <div class="saved">已保存到本机</div></div>
+  </article>
+
+  <article class="q" id="S4">
+    <div class="qhd"><span class="tag s">解答</span><span class="no">S4</span>
+      <span class="ref">§12.2 Review 什么：不可逆性 × 爆炸半径 · 8 分</span></div>
+    <div class="stem">
+      <p>下面是某项目的若干决策，请按「<strong>不可逆性 × 爆炸半径</strong>」给出 Review 优先级（早看 / 晚看），并说明理由：</p>
+      <ul>
+        <li>（a）对外接口的字段与语义；</li>
+        <li>（b）某个内部工具函数的名字；</li>
+        <li>（c）数据存储格式与迁移方案；</li>
+        <li>（d）某个页面的按钮圆角；</li>
+        <li>（e）权限模型与 CI 门控；</li>
+        <li>（f）一段可替换的叶子实现。</li>
+      </ul>
+      <p>（1）请给出排序（早 → 晚）。
+        （2）为什么「接口我 review 过了，实现是 slop，最后出问题再修就行」是合理的？
+        （3）把其中至少两条从「写在 prompt 里」升级成「落在机制上」，各给出一种做法。</p>
+    </div>
+    <details class="sol"><summary>参考答案</summary><div class="sol-body">
+      <p><span class="key">（1）早看</span>：<code>c（数据格式 / 迁移）</code> → <code>e（权限 / CI）</code> → <code>a（对外接口）</code>——三者不可逆性或扩散面最大；
+        <span class="key">晚看</span>：<code>f（叶子实现）</code> → <code>b（内部命名）</code> / <code>d（圆角）</code>——可替换、可逆。
+        （b 与 d 可互换；排序依据是「决策影响 × 返工代价」，不是「看起来重要」。）</p>
+      <ol start="2">
+        <li>因为边界（接口、不变量、数据格式）一旦固定，<strong>内部实现可以整体替换且返工便宜</strong>；人的注意力应当押在决策影响大、返工代价高的地方，而不是平均撒在每一行代码上。</li>
+        <li>示例做法：把「字段含义」写成<strong>类型 / schema</strong>（编译期或运行时校验）；把「必须过测试才算完成」写成 <strong>CI gate</strong>；把「不要越权」写成<strong>权限沙箱</strong>；把「代码风格」写成 <strong>lint</strong>。<span class="key">prompt 会被压缩，失败的测试不会假装自己通过。</span></li>
+      </ol>
+    </div></details>
+    <div class="ans"><label>我的作答</label><textarea data-k="S4" placeholder="…"></textarea>
+      <div class="saved">已保存到本机</div></div>
+  </article>
+
+  <article class="q" id="S5">
+    <div class="qhd"><span class="tag s">解答</span><span class="no">S5</span>
+      <span class="ref">§12.1 Latency vs Throughput · 8 分</span></div>
+    <div class="stem">
+      <p>你一天有 <strong>8 小时</strong>可投入。</p>
+      <ul>
+        <li><strong>方案 A（全程盯着、不断纠偏）</strong>：单个任务 8 分钟完成，但你必须全程在场，无法并行。</li>
+        <li><strong>方案 B（放手让它跑）</strong>：单个任务平均 12 分钟（会走弯路），但你可以同时并行 3 个任务，只在真出问题时介入。</li>
+      </ul>
+      <p>（1）两种方案一天各能产出多少「完成的任务」（假设任务可并行、失败可便宜恢复）？
+        （2）方案 B 的<strong>单任务延迟</strong>更高，为什么<strong>总产出</strong>反而更高？
+        （3）这套取舍的<strong>前提条件</strong>是什么？请给出一个「不该放手」的反例。</p>
+    </div>
+    <details class="sol"><summary>参考答案</summary><div class="sol-body">
+      <ol>
+        <li><strong>A</strong>：8 小时 = 480 分钟，每个任务占用你全程 8 分钟且串行 → <code>480 / 8 = 60</code> 个。
+          <strong>B</strong>：你在同一时段推进 3 个任务，每个任务平均 12 分钟完成但<strong>不需要你全程在场</strong>，
+          吞吐约 <code>3 × (480 / 12) = 120</code> 个（在人类注意力不构成瓶颈的前提下）。<span class="key">量级对比即可。</span></li>
+        <li>A 优化的是<strong>单任务延迟</strong>（8 → 12 变差）；B 优化的是<strong>整天的吞吐</strong>。
+          机器多走一点弯路，换回的是最稀缺的<strong>人类注意力</strong>，而注意力可以复用到其他任务上——这正是「我越来越少干预了」的原因。</li>
+        <li>前提：① 任务<strong>可并行</strong>；② 失败可以<strong>便宜地恢复</strong>（可逆、易重跑）。
+          反例：一次不可逆的数据库迁移、一个对外发布的接口决定——代价高、难回滚，应当<strong>提前盯住</strong>而不是放手，否则「少干预」只是把故障推迟。</li>
+      </ol>
+    </div></details>
+    <div class="ans"><label>我的作答</label><textarea data-k="S5" placeholder="…"></textarea>
+      <div class="saved">已保存到本机</div></div>
+  </article>
+
+  <footer>
+    <a href="../NJU-生成式软件工程-第02讲-提示词与上下文工程.html">← 返回第 2 讲讲义</a>
+    <a href="../index.html">全部讲义索引</a>
+    <span>习题依据第 2 讲课堂笔记命题，参考答案仅代表整理者理解</span>
+  </footer>
+</div>
+
+<a id="back" href="../NJU-生成式软件工程-第02讲-提示词与上下文工程.html" title="返回第 2 讲讲义（快捷键 Esc）">← 返回讲义</a>
+
+<script>
+(function(){
+  var KEY='gse2-exercise';
+  var tas=[].slice.call(document.querySelectorAll('textarea[data-k]'));
+  var prog=document.getElementById('prog');
+
+  /* 主题 */
+  var TH='gse-theme';
+  try{var s=localStorage.getItem(TH); if(s) document.documentElement.dataset.theme=s;}catch(e){}
+  document.getElementById('tg').addEventListener('click',function(){
+    var n=document.documentElement.dataset.theme==='dark'?'light':'dark';
+    document.documentElement.dataset.theme=n;
+    try{localStorage.setItem(TH,n);}catch(e){}
+  });
+
+  /* 作答本地保存 */
+  var store={};
+  try{ store=JSON.parse(localStorage.getItem(KEY)||'{}'); }catch(e){ store={}; }
+  function save(){
+    try{ localStorage.setItem(KEY,JSON.stringify(store)); }catch(e){}
+    var done=tas.filter(function(t){return (store[t.dataset.k]||'').trim().length>0;}).length;
+    prog.textContent='已作答 '+done+' / '+tas.length;
+  }
+  tas.forEach(function(t){
+    t.value=store[t.dataset.k]||'';
+    var tip=t.parentNode.querySelector('.saved');
+    var timer;
+    t.addEventListener('input',function(){
+      store[t.dataset.k]=t.value; save();
+      if(tip){ tip.classList.add('on'); clearTimeout(timer);
+        timer=setTimeout(function(){tip.classList.remove('on');},1200); }
+    });
+  });
+  save();
+
+  /* 键盘：Esc 返回第 2 讲讲义（输入框内不触发，避免打断作答） */
+  function typing(){
+    var a=document.activeElement;
+    return !!a && (a.tagName==='INPUT'||a.tagName==='TEXTAREA'||a.tagName==='SELECT'||a.isContentEditable);
+  }
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Escape'&&!typing()&&!e.metaKey&&!e.ctrlKey&&!e.altKey){
+      e.preventDefault(); location.href='../NJU-生成式软件工程-第02讲-提示词与上下文工程.html';
+    }
+  });
+
+  /* 展开 / 收起 */
+  var ds=[].slice.call(document.querySelectorAll('details.sol'));
+  document.getElementById('openAll').onclick=function(){ ds.forEach(function(d){d.open=true;}); };
+  document.getElementById('closeAll').onclick=function(){ ds.forEach(function(d){d.open=false;}); };
+
+  document.getElementById('clear').onclick=function(){
+    if(!confirm('确定清空全部作答？该操作不可撤销。')) return;
+    tas.forEach(function(t){ t.value=''; });
+    store={}; save();
+    try{ localStorage.removeItem(KEY); }catch(e){}
+  };
+
+  document.getElementById('print').onclick=function(){
+    tas.forEach(function(t){ t.style.height=t.scrollHeight+'px'; });
+    window.print();
+  };
+})();
+</script>
+</body>
+</html>
