@@ -1,0 +1,1053 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>播客 | 生成式软件工程</title>
+<meta name="description" content="把《生成式软件工程》每讲的核心观点，用不同的音色读给你听。支持多音色、波形动画、章节高亮与断点续播。">
+<style>
+*,*::before,*::after{box-sizing:border-box}
+:root{
+  --bg:#0d1117;--bg2:#161b22;--bg3:#1b2230;--line:#262d38;
+  --fg:#c9d5e1;--fg2:#8b98a9;--fg3:#69747f;
+  --acc:#ffb454;--acc2:#7ee787;--link:#79c0ff;--violet:#a78bfa;
+  --chip:rgba(255,180,84,.10);
+  --shadow:0 1px 2px rgba(0,0,0,.35),0 8px 24px rgba(0,0,0,.28);
+  --mono:"JetBrains Mono","SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+  --pb:130px;
+}
+[data-theme="light"]{
+  --bg:#ffffff;--bg2:#f6f8fa;--bg3:#eceff3;--line:#dde2e8;
+  --fg:#1f2328;--fg2:#545d68;--fg3:#7d8590;
+  --acc:#a85a00;--acc2:#1a7f37;--link:#0969da;--violet:#7c3aed;
+  --chip:rgba(168,90,0,.12);
+  --shadow:0 1px 2px rgba(16,24,40,.06),0 8px 24px rgba(16,24,40,.08);
+}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--bg);color:var(--fg);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB",
+    "Microsoft YaHei","Source Han Sans SC","Noto Sans CJK SC",sans-serif;
+  font-size:16.5px;line-height:1.85;-webkit-font-smoothing:antialiased;
+  transition:background .2s,color .2s;
+  padding-bottom:var(--pb);
+}
+a{color:var(--link);text-decoration:none}
+a:hover{text-decoration:underline}
+code{font-family:var(--mono);font-size:.88em;background:var(--bg3);padding:.1em .38em;border-radius:5px}
+button{font-family:inherit}
+
+/* 背景渐变光斑（随播放进度换色） */
+.blob{position:fixed;z-index:0;border-radius:50%;filter:blur(90px);
+  pointer-events:none;transition:background 1.4s ease;will-change:background}
+#blobA{width:52vw;height:52vw;left:-14vw;top:-12vw;background:rgba(255,180,84,.16)}
+#blobB{width:44vw;height:44vw;right:-12vw;top:26vh;background:rgba(167,139,250,.13)}
+.hero,#voices,.stage,.foot{position:relative;z-index:1}
+
+/* ===== Hero ===== */
+#hero{position:relative;padding:48px 24px 30px;border-bottom:1px solid var(--line);
+  background:linear-gradient(180deg,var(--bg2),transparent 92%)}
+.hero-in{max-width:1080px;margin:0 auto}
+.badge{display:inline-flex;align-items:center;gap:.5rem;font-size:.78rem;letter-spacing:.06em;
+  color:var(--acc);background:var(--chip);border:1px solid rgba(255,180,84,.28);
+  padding:.28rem .7rem;border-radius:999px;margin-bottom:1rem}
+#hero h1{margin:0 0 .4rem;font-size:2rem;line-height:1.3;letter-spacing:-.015em;font-weight:800}
+.hsub{color:var(--fg2);font-size:.96rem;margin:0 0 1.2rem;max-width:66ch}
+.hero-act{display:flex;flex-wrap:wrap;gap:.6rem}
+.btn{font:inherit;font-size:.85rem;color:var(--fg);background:var(--bg);border:1px solid var(--line);
+  border-radius:8px;padding:.42rem .85rem;cursor:pointer;transition:.15s;display:inline-flex;
+  align-items:center;gap:.35rem;text-decoration:none}
+.btn:hover{border-color:var(--acc);color:var(--acc);text-decoration:none}
+.btn.primary{background:var(--acc);border-color:var(--acc);color:#10151c;font-weight:600}
+.btn.primary:hover{filter:brightness(1.08);color:#10151c}
+#tg{margin-left:auto}
+
+/* ===== 主体 ===== */
+.wrap{max-width:1080px;margin:0 auto;padding:0 24px 40px}
+.panel{background:var(--bg2);border:1px solid var(--line);border-radius:16px;
+  box-shadow:var(--shadow)}
+section h2{margin:0;font-size:1.15rem;font-weight:750}
+section h2 .ht{display:inline-block;border-bottom:3px solid var(--acc);padding-bottom:.2rem}
+.sub{color:var(--fg2);font-size:.9rem;margin:.3rem 0 1rem}
+
+/* ---- 舞台 ---- */
+.stage{margin-top:28px}
+.stage-head{margin-bottom:16px}
+.kicker{font-family:var(--mono);font-size:.78rem;letter-spacing:.08em;color:var(--acc)}
+#epTitle{margin:.3rem 0 .15rem;font-size:1.55rem;line-height:1.35;font-weight:800}
+#epSub{margin:0;color:var(--fg2);font-size:.9rem;max-width:72ch}
+.stage-grid{display:grid;grid-template-columns:1.25fr 1fr;gap:16px}
+.wave-card{padding:22px 22px 18px;overflow:hidden}
+.wave-head{display:flex;align-items:baseline;justify-content:space-between;gap:.8rem;margin-bottom:18px}
+.now-ch{font-size:1.02rem;font-weight:700;color:var(--acc)}
+.now-t{font-family:var(--mono);font-size:.8rem;color:var(--fg3);white-space:nowrap}
+.wave{display:flex;align-items:center;gap:4px;height:120px}
+.wave i{flex:1;height:100%;display:block;border-radius:3px;
+  background:linear-gradient(180deg,var(--acc),var(--violet));
+  transform:scaleY(.1);transform-origin:center;will-change:transform}
+.wave.idle i{animation:none}
+.wave-meta{display:flex;justify-content:space-between;margin-top:12px;font-size:.78rem;color:var(--fg3);font-family:var(--mono)}
+.wave-meta .pct{color:var(--acc)}
+
+.key-card{padding:20px 22px;display:flex;flex-direction:column}
+.key-head{font-size:.8rem;color:var(--fg3);letter-spacing:.05em;display:flex;justify-content:space-between;margin-bottom:.5rem}
+#keyIdx{font-family:var(--mono);color:var(--acc)}
+#keyList{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px}
+#keyList li{position:relative;padding:.5rem .75rem .5rem 1.9rem;border:1px solid var(--line);
+  border-radius:10px;font-size:.88rem;color:var(--fg2);line-height:1.55;transition:.25s}
+#keyList li::before{content:"";position:absolute;left:.75rem;top:.85rem;width:7px;height:7px;
+  border-radius:50%;background:var(--bg3);transition:.25s}
+#keyList li.on{border-color:var(--acc);color:var(--fg);background:var(--chip)}
+#keyList li.on::before{background:var(--acc);box-shadow:0 0 8px var(--acc)}
+#keyList li.done{color:var(--fg3)}
+#keyList li.done::before{background:var(--acc2)}
+.key-note{margin-top:auto;padding-top:12px;font-size:.75rem;color:var(--fg3)}
+
+/* ---- 章节时间轴 ---- */
+.timeline{margin-top:16px;padding:16px 20px}
+.tl-head{font-size:.8rem;color:var(--fg3);letter-spacing:.05em;margin-bottom:10px}
+.tl{display:flex;gap:6px;position:relative}
+.tl-seg{flex:1;min-width:0;text-align:center;cursor:pointer;border:1px solid var(--line);
+  border-radius:9px;padding:.45rem .3rem .4rem;transition:.2s;user-select:none}
+.tl-seg:hover{border-color:var(--acc)}
+.tl-seg .tl-n{display:block;font-size:.72rem;color:var(--fg2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tl-seg .tl-bar{height:3px;border-radius:2px;background:var(--bg3);margin-top:.4rem;overflow:hidden}
+.tl-seg .tl-bar i{display:block;height:100%;width:0%;background:var(--acc);transition:width .3s}
+.tl-seg.cur{border-color:var(--acc);background:var(--chip)}
+.tl-seg.cur .tl-n{color:var(--acc);font-weight:600}
+.tl-seg.passed .tl-bar i{width:100%}
+.tl-seg.passed .tl-n{color:var(--fg3)}
+
+/* ---- 音色 ---- */
+.voices{margin-top:40px}
+.voice-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:12px}
+.vc{background:var(--bg2);border:1px solid var(--line);border-radius:14px;padding:.8rem .95rem;
+  cursor:pointer;transition:.16s;position:relative}
+.vc:hover{border-color:var(--acc);transform:translateY(-2px)}
+.vc.cur{border-color:var(--acc);background:var(--chip);box-shadow:0 0 0 1px var(--acc)}
+.vc-name{font-weight:700;font-size:.95rem;display:flex;align-items:center;gap:.45rem}
+.vc-badge{font-family:var(--mono);font-size:.66rem;color:var(--acc);border:1px solid rgba(255,180,84,.3);
+  background:var(--chip);padding:.05rem .4rem;border-radius:999px}
+.vc-desc{font-size:.78rem;color:var(--fg2);margin:.35rem 0 .55rem;line-height:1.5;min-height:2.4em}
+.vc-foot{display:flex;align-items:center;justify-content:space-between;gap:.5rem}
+.vc-prev{font-size:.75rem;color:var(--link);background:transparent;border:1px solid var(--line);
+  border-radius:7px;padding:.2rem .55rem;cursor:pointer;transition:.15s}
+.vc-prev:hover{border-color:var(--link)}
+.vc-meta{font-size:.68rem;color:var(--fg3);font-family:var(--mono)}
+.voice-status{margin-top:14px;font-size:.8rem;color:var(--fg3)}
+.voice-status b{color:var(--acc2)}
+
+/* ---- 底部信息 ---- */
+.foot{margin-top:44px;padding-top:20px;border-top:1px solid var(--line);
+  font-size:.8rem;color:var(--fg3);display:flex;flex-wrap:wrap;gap:.6rem 1.2rem}
+
+/* ===== 播放条（固定底部） ===== */
+.player{position:fixed;left:0;right:0;bottom:0;z-index:50;
+  background:var(--bg2); /* 降级：不支持 color-mix 时使用不透明背景 */
+  background:color-mix(in srgb,var(--bg2) 88%,transparent);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-top:1px solid var(--line);box-shadow:0 -8px 24px rgba(0,0,0,.22)}
+.player-in{max-width:1080px;margin:0 auto;padding:12px 24px;display:grid;
+  grid-template-columns:minmax(0,1.1fr) minmax(0,1.6fr) auto auto;gap:14px 20px;align-items:center}
+.p-title{font-size:.92rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.p-ep{font-size:.74rem;color:var(--fg3);font-family:var(--mono);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.p-seek{display:flex;align-items:center;gap:10px;min-width:0}
+.t{font-family:var(--mono);font-size:.76rem;color:var(--fg2);white-space:nowrap}
+.seek{flex:1;height:18px;display:flex;align-items:center;cursor:pointer;position:relative;touch-action:none}
+.seek-track{width:100%;height:6px;border-radius:3px;background:var(--bg3);overflow:hidden}
+.seek-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--acc),var(--violet));border-radius:3px}
+.seek-thumb{position:absolute;left:0;top:50%;width:14px;height:14px;border-radius:50%;
+  background:#fff;border:2px solid var(--acc);transform:translate(-50%,-50%) scale(0);transition:transform .15s}
+.seek:hover .seek-thumb,.seek.drag .seek-thumb{transform:translate(-50%,-50%) scale(1)}
+.p-controls{display:flex;align-items:center;gap:4px}
+.ctl{font:inherit;font-size:.78rem;color:var(--fg);background:var(--bg);border:1px solid var(--line);
+  border-radius:9px;padding:.34rem .6rem;cursor:pointer;transition:.15s;line-height:1;display:inline-flex;
+  align-items:center;gap:.3rem;white-space:nowrap}
+.ctl:hover{border-color:var(--acc);color:var(--acc)}
+.ctl svg{display:block;width:16px;height:16px;fill:currentColor}
+#btnPlay{width:46px;height:46px;border-radius:50%;padding:0;justify-content:center;
+  background:var(--acc);border-color:var(--acc);color:#10151c}
+#btnPlay:hover{filter:brightness(1.08);color:#10151c}
+.p-extra{display:flex;align-items:center;gap:8px}
+.vol{display:flex;align-items:center;gap:6px}
+.vol input[type=range]{width:86px;accent-color:var(--acc);cursor:pointer}
+#btnMute.muted{color:var(--fg3);text-decoration:line-through}
+#btnSpeed{min-width:56px;justify-content:center;font-family:var(--mono)}
+
+/* ===== 播放列表抽屉 ===== */
+.playlist{position:fixed;right:0;bottom:var(--pb);top:0;z-index:40;width:min(420px,92vw);
+  background:var(--bg2);border-left:1px solid var(--line);box-shadow:-8px 0 24px rgba(0,0,0,.22);
+  transform:translateX(105%);transition:transform .28s ease;display:flex;flex-direction:column}
+.playlist.open{transform:none}
+.pl-head{display:flex;align-items:center;gap:.6rem;padding:16px 20px 10px;font-weight:700;font-size:1rem;
+  border-bottom:1px solid var(--line);flex-wrap:wrap}
+.pl-count{font-size:.75rem;color:var(--fg3);font-weight:400}
+.pl-head .ctl{margin-left:auto}
+#plList{margin:0;padding:10px 20px 20px;list-style:none;overflow-y:auto;flex:1}
+#plList li{display:flex;align-items:center;gap:.6rem;padding:.62rem .7rem;border-radius:10px;cursor:pointer;transition:.15s}
+#plList li:hover{background:var(--bg3)}
+#plList li.playing{background:var(--chip)}
+#plList li.playing .pl-t{color:var(--acc)}
+.pl-i{font-family:var(--mono);font-size:.72rem;color:var(--fg3);flex:0 0 1.6rem}
+.pl-main{flex:1;min-width:0}
+.pl-t{font-size:.9rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pl-s{font-size:.72rem;color:var(--fg3)}
+.pl-d{font-family:var(--mono);font-size:.74rem;color:var(--fg2);white-space:nowrap}
+.pl-act{display:flex;gap:2px}
+.pl-act button{font:inherit;font-size:.74rem;color:var(--fg2);background:transparent;border:1px solid var(--line);
+  border-radius:6px;padding:.15rem .4rem;cursor:pointer}
+.pl-act button:hover{color:var(--acc);border-color:var(--acc)}
+.pl-shade{position:fixed;inset:0;z-index:39;background:rgba(0,0,0,.35);opacity:0;pointer-events:none;transition:opacity .25s}
+.pl-shade.open{opacity:1;pointer-events:auto}
+.resume-tip{position:fixed;left:50%;bottom:calc(var(--pb) + 12px);transform:translateX(-50%);
+  z-index:55;display:none;align-items:center;gap:.7rem;max-width:min(92vw,600px);
+  background:var(--bg2);border:1px solid var(--acc2);border-radius:12px;
+  box-shadow:var(--shadow);padding:.55rem .85rem;font-size:.82rem;color:var(--acc2)}
+.resume-tip.show{display:flex}
+.resume-tip button{font:inherit;font-size:.78rem;color:#0b1410;background:var(--acc2);border:0;border-radius:7px;
+  padding:.2rem .6rem;cursor:pointer}
+.resume-tip button:hover{filter:brightness(1.08)}
+
+/* ===== 响应式 ===== */
+@media (max-width:960px){
+  .stage-grid{grid-template-columns:1fr}
+  .player-in{grid-template-columns:minmax(0,1fr) auto auto}
+  .p-seek{grid-column:1 / -1;grid-row:2;order:3}
+  .player-in{padding:10px 16px}
+  .vol input[type=range]{width:64px}
+}
+@media (max-width:640px){
+  :root{--pb:170px}
+  #hero{padding:38px 18px 24px}
+  #hero h1{font-size:1.55rem}
+  .wrap{padding:0 18px 30px}
+  #tg{margin-left:0}
+  .voice-grid{grid-template-columns:1fr 1fr}
+  .player-in{grid-template-columns:minmax(0,1fr) auto}
+  .p-extra{grid-column:1 / -1;justify-content:space-between}
+  .wave{height:90px}
+  .tl-seg .tl-n{font-size:.64rem}
+}
+@media (max-width:420px){
+  .voice-grid{grid-template-columns:1fr}
+}
+.hide{display:none!important}
+</style>
+</head>
+<body>
+
+<div class="blob" id="blobA"></div>
+<div class="blob" id="blobB"></div>
+
+<header id="hero">
+  <div class="hero-in">
+    <div class="badge">南京大学 · 生成式软件工程 · 2026 秋 · 播客</div>
+    <h1>把每讲的核心，读给你听</h1>
+    <p class="hsub">
+      语音合成驱动的播客模块：选一集、挑一个喜欢的音色，跟着波形、色彩渐变与章节时间轴一起听完。
+      播放进度会自动记住，下次回来继续。
+    </p>
+    <div class="hero-act">
+      <a class="btn primary" href="#stage">开始收听 ↓</a>
+      <a class="btn" href="index.html">← 返回主页</a>
+      <button class="btn" id="tg" type="button" title="切换深色 / 浅色">◐ 主题</button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <section class="stage" id="stage">
+    <div class="stage-head">
+      <span class="kicker" id="epKicker">请从下方播放列表选择一集</span>
+      <h2 id="epTitle">尚未选择节目</h2>
+      <p id="epSub"></p>
+      <div class="resume-tip" id="resumeTip"></div>
+    </div>
+
+    <div class="stage-grid">
+      <div class="wave-card panel">
+        <div class="wave-head">
+          <span class="now-ch" id="nowCh">等待播放…</span>
+          <span class="now-t" id="nowT">00:00 / 00:00</span>
+        </div>
+        <div class="wave idle" id="wave" aria-hidden="true"></div>
+        <div class="wave-meta">
+          <span id="waveMeta">播放中波形会随语音节奏律动</span>
+          <span class="pct" id="pct">0%</span>
+        </div>
+      </div>
+
+      <div class="key-card panel">
+        <div class="key-head"><span>当前要点 · 随进度高亮</span><span id="keyIdx"></span></div>
+        <ul id="keyList"></ul>
+        <div class="key-note">提示：要点会随旁白进度逐条点亮，章节结束自动进入下一段。</div>
+      </div>
+    </div>
+
+    <div class="timeline panel">
+      <div class="tl-head">章节时间轴 · 点击章节可跳转</div>
+      <div class="tl" id="tl"></div>
+    </div>
+  </section>
+
+  <section class="voices" id="voices">
+    <h2><span class="ht">音色选择</span></h2>
+    <p class="sub">点击卡片切换播报音色（立即应用到当前进度），可先「试听」再决定。音色 = 系统语音 + 音高 / 语速风格调制。</p>
+    <div class="voice-grid" id="voiceGrid"></div>
+    <p class="voice-status" id="voiceStatus">正在加载语音引擎…</p>
+  </section>
+
+  <footer class="foot">
+    <span>播客 · 语音合成模块（Web Speech API，纯本地）</span>
+    <span>内容整理自课堂笔记，非官方教材</span>
+    <span><a href="index.html">返回主页 ↗</a></span>
+  </footer>
+</div>
+
+<div class="pl-shade" id="plShade"></div>
+
+<!-- ===== 播放列表抽屉 ===== -->
+<aside class="playlist" id="playlist" aria-label="播放列表">
+  <div class="pl-head">
+    播放列表
+    <span class="pl-count" id="plCount"></span>
+    <button class="ctl" id="plRestore" type="button">恢复全部</button>
+  </div>
+  <ul id="plList"></ul>
+</aside>
+
+<!-- ===== 播放条 ===== -->
+<div class="player" id="player">
+  <div class="player-in">
+    <div class="p-info">
+      <div class="p-title" id="pTitle">未选择节目</div>
+      <div class="p-ep" id="pEp"></div>
+    </div>
+
+    <div class="p-seek">
+      <span class="t" id="tCur">00:00</span>
+      <div class="seek" id="seekTrack" role="slider" aria-label="播放进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+        <div class="seek-track"><div class="seek-fill" id="seekFill"></div></div>
+        <div class="seek-thumb" id="seekThumb"></div>
+      </div>
+      <span class="t" id="tDur">00:00</span>
+    </div>
+
+    <div class="p-controls">
+      <button class="ctl" id="btnPrev" type="button" title="上一集">⏮</button>
+      <button class="ctl" id="btnPlay" type="button" title="播放 / 暂停">
+        <svg id="icPlay" viewBox="0 0 16 16"><path d="M4 2.5v11l9-5.5z"/></svg>
+        <svg id="icPause" viewBox="0 0 16 16" class="hide"><path d="M3.5 2.5h3.2v11H3.5zM9.3 2.5h3.2v11H9.3z"/></svg>
+      </button>
+      <button class="ctl" id="btnNext" type="button" title="下一集">⏭</button>
+    </div>
+
+    <div class="p-extra">
+      <button class="ctl" id="btnSpeed" type="button" title="播放速度">1.0×</button>
+      <div class="vol">
+        <button class="ctl" id="btnMute" type="button" title="静音">♪</button>
+        <input id="vol" type="range" min="0" max="100" value="100" aria-label="音量">
+      </div>
+      <button class="ctl" id="btnPlaylist" type="button" title="播放列表">≡ 播放列表</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  'use strict';
+
+  /* ================= 数据：节目与音色 ================= */
+
+  var EPISODES=[
+    {id:'ep1', title:'欢迎来到未来 · 核心观点', sub:'为什么需要一门实验性的课程：实现成本坍塌后，什么能力还值得训练？',
+     segments:[
+       {ch:'开场', title:'这门课想回答什么',
+        keys:['一门实验性课程','副标题：AI 时代还有用的软件工程智慧','第一讲：回答这门课想教会你什么'],
+        text:'大家好，欢迎收听生成式软件工程。这是一门南京大学二零二六年秋季开设的实验性课程，副标题是：AI 时代还有用的软件工程智慧。今天的第一讲，回答一个看起来很简单的问题：这门课，究竟想教会你什么？'},
+       {ch:'三层能力', title:'信息差 · 能坐牢 · 能驾驭',
+        keys:['信息差：知道有什么、去哪找答案','能坐牢：决定要承担后果','能驾驭：组织人、工具与反馈做成事'],
+        text:'当把一个想法变成能运行的软件这件事，成本发生数量级坍塌之后，什么能力还值得训练？课程给出了三层回答。第一，信息差：知道计算机世界里有什么，知道哪里能找到答案。第二，能坐牢：做了决定，就要有人承担后果。第三，能驾驭：能把人、工具和反馈组织起来，最终做成一件事。'},
+       {ch:'两条 Policy', title:'Token 自费 与 通过 / 不通过',
+        keys:['Policy 一：Token 自费，亲自使用','Policy 二：通过 / 不通过，作品即证据','实现可以交给 Agent，判断留给人类'],
+        text:'课程有两条约定。第一条，Token 自费。只有亲自使用，才会形成对成本、质量和延迟的真实感知；但不鼓励无意义的挥霍。第二条，尽量通过或不通过。最终的证据不是分数，而是别人可以打开、运行、质疑并继续使用的作品。'},
+       {ch:'结语', title:'实现变便宜，问题不会消失',
+        keys:['AI 加速实现，问题不会自动消失','要训练的是实现成本坍塌后稀缺的能力','每一讲，把能力一点点捡回来'],
+        text:'所以，这一讲真正的答案是：AI 可以加速实现，但问题不会随着代码自动生成而消失。这门课要训练的，正是那些在实现成本坍塌之后依然稀缺的能力。接下来，我们会用每一讲，把这些能力一点点捡回来。'}
+     ]},
+    {id:'ep2', title:'提示词与上下文工程 · 核心观点', sub:'模型看到的远不止对话框里那句话，而是整份上下文。',
+     segments:[
+       {ch:'开场', title:'从提示词到上下文',
+        keys:['提示词 → 上下文工程','模型看到的是整份上下文','管理上下文，比雕琢一句话更重要'],
+        text:'欢迎回来。第二讲，我们谈一个经常被误解的词：提示词。模型看到的，远不止对话框里那一句话，而是整份上下文。所以真正重要的，不是怎么写提示词，而是怎么管理上下文。'},
+       {ch:'可验证的条件', title:'把「完成」写成条件',
+        keys:['把「完成」写成可验证的条件','明确用什么标准检验','含糊的指令，换来含糊的结果'],
+        text:'第一步，是把完成两个字，写成可验证的条件。你说清楚什么算做完、用什么标准检验，Agent 才能朝着明确的目标前进。含糊的指令，只会换来含糊的结果。'},
+       {ch:'token 换深度', title:'用上下文换计算深度',
+        keys:['用 token 换计算深度','经验蒸馏成 skill','把决定与证据放进上下文'],
+        text:'第二步，是用 token 换计算深度。上下文越充分，模型思考的空间就越大。把有效经验蒸馏成 skill，把决定和证据放进上下文，模型就能在关键处多想一步，少犯那些本可以避免的错误。'},
+       {ch:'审稿与仓库', title:'面对大仓库的审稿方法',
+        keys:['没有确定路线时，主动扩大探索','用证据而不是感觉筛选结果','审稿是替未来的使用者踩坑'],
+        text:'第三步，是学会审稿，学会面对大仓库。没有确定路线时，主动扩大探索；用证据，而不是感觉，来筛选结果。审稿不是挑刺，而是替未来的使用者，提前踩一遍坑。'},
+       {ch:'结语', title:'朴素的三件事',
+        keys:['把完成写清楚','把决定写进上下文','把经验留成资产，然后反复练习'],
+        text:'第二讲的结论很朴素：把完成写清楚，把决定写进上下文，把经验留成资产。剩下的，就是一遍一遍地练习。下一期，我们继续。'}
+     ]},
+    {id:'ep3', title:'AI 时代还有用的软件工程智慧', sub:'把整门课最核心的想法，串成一条线。',
+     segments:[
+       {ch:'开场', title:'价值在转移',
+        keys:['实现被 AI 变得廉价','值钱的变成了判断、设计与检验','工程不失败的古老问题'],
+        text:'最后一期，我们把这门课最核心的想法，串成一条线。软件工程过去最值钱的部分，是实现；而当实现被 AI 变得廉价，真正值钱的，变成了判断、设计与检验。这门课始终在回答一个更老的问题：怎么让工程不失败。'},
+       {ch:'真实世界', title:'系统要承受真实世界',
+        keys:['演示跑起来只是开始','需求变化、真实用户、错误输入','人与人之间的协作'],
+        text:'但让一个演示跑起来，只是开始。一个系统，还要承受需求的变化、真实的用户、错误的输入，以及人与人之间的协作。这些挑战，不会因为你用 AI 生成代码，就自动消失。'},
+       {ch:'驾驭', title:'AI 时代最有用的能力',
+        keys:['信息差：知道工具的世界里有什么','责任：敢于为决定负责','组织：把人、工具和反馈做成事'],
+        text:'所以，AI 时代最有用的能力，是驾驭。知道工具的世界里有什么，敢于为自己的决定负责，最终把人、工具和反馈组织起来，做成一件事。这门课的所有练习，都在训练这三件事。'},
+       {ch:'结语', title:'作品，是最好的证据',
+        keys:['作品可以打开、运行、质疑','在自己的作品里看到这门课的影子','感谢收听，下期再见'],
+        text:'感谢收听。我们相信，真正的作品，是别人可以打开、运行、质疑并继续使用的东西。期待你在自己的作品里，看到这门课的影子。我们，下期再见。'}
+     ]}
+  ];
+
+  var STYLES=[
+    {id:'default',  name:'自然 · 默认声', desc:'系统默认中文语音，平稳自然，适合通勤听', pitch:1, rateBias:1,
+      kw:['xiaoxiao','huihui','xiao','yun','yaoyao','meijia','女','female','woman']},
+    {id:'deep',     name:'沉稳 · 男声',   desc:'低沉磁性，语速略缓，适合严肃话题', pitch:.82, rateBias:.94,
+      kw:['yunjian','yunxi','kangkang','男','male','man','zhcn']},
+    {id:'bright',   name:'甜美 · 女声',   desc:'明亮上扬，轻快亲切，适合轻松内容', pitch:1.22, rateBias:1.02,
+      kw:['xiaoyi','xiaoyou','lili','小艺','tingting']},
+    {id:'child',    name:'童声 · 活泼',   desc:'音高上调的稚气声线，俏皮有画面感', pitch:1.55, rateBias:1.08, kw:[]},
+    {id:'news',     name:'播音 · 新闻腔', desc:'字正腔圆，节奏稳，重点鲜明', pitch:1, rateBias:1.05, kw:[]},
+    {id:'story',    name:'情感 · 朗读',   desc:'舒缓深情，娓娓道来，适合睡前', pitch:1.12, rateBias:.86, kw:[]}
+  ];
+  var STYLE_IDS=STYLES.map(function(s){return s.id;});
+  var PREVIEW_TEXT='你好，我是这段播客的声优。同样的句子，用不同的音色读出来，感觉会很不一样。';
+
+  /* ================= 工具 ================= */
+  function $(id){ return document.getElementById(id); }
+  function clamp(v,a,b){ return v<a?a:(v>b?b:v); }
+  function fmt(sec){
+    sec=Math.max(0,Math.floor(sec));
+    var h=Math.floor(sec/3600), m=Math.floor(sec%3600/60), s=sec%60;
+    function p(n){ return (n<10?'0':'')+n; }
+    return (h>0?p(h)+':':'')+p(m)+':'+p(s);
+  }
+  var baseCps=4.5; // 中文正常语速每字符秒数（1x）
+
+  /* ================= 状态 ================= */
+  var state={ episodeId:null, playing:false, segIndex:0, segOffset:0, posChar:0,
+              speed:1, volume:1, muted:false, voiceId:'default' };
+  var ep=null;          // 当前节目
+  var voicesCache=[];   // 系统语音
+  var currentU=null;    // 当前 utterance
+  var raf=0, lastNow=0, lastUi=0;
+  var playlist=EPISODES.map(function(e){return e.id;});
+  var removed={};
+
+  var el={};
+  ['seekTrack','seekFill','seekThumb','tCur','tDur','pct','nowCh','nowT','epKicker','epTitle','epSub',
+   'keyList','keyIdx','tl','pTitle','pEp','btnPlay','btnPrev','btnNext','btnSpeed','btnMute','vol',
+   'btnPlaylist','plList','plCount','plRestore','plShade','playlist','voiceGrid','voiceStatus',
+   'resumeTip','wave','waveMeta','icPlay','icPause','blobA','blobB'].forEach(function(id){ el[id]=$(id); });
+
+  function cps(){ return baseCps*state.speed*style().rateBias; }
+  function style(){ return STYLES[STYLE_IDS.indexOf(state.voiceId)]||STYLES[0]; }
+  function seg(i){ return ep.segments[i]; }
+  function segStart(i){
+    var c=0;
+    for(var k=0;k<i;k++) c+=seg(k).text.length;
+    return c;
+  }
+  function totalChars(){
+    var c=0;
+    for(var k=0;k<ep.segments.length;k++) c+=ep.segments[k].text.length;
+    return c;
+  }
+  function dur(){ return totalChars()/cps(); }
+  function posSec(){ return state.posChar/cps(); }
+  function segFrac(){ // 当前段内进度 0..1
+    var s=seg(state.segIndex);
+    return clamp((state.posChar-segStart(state.segIndex))/s.text.length,0,1);
+  }
+
+  /* ================= 语音引擎 ================= */
+  var hasTTS=('speechSynthesis' in window);
+  function loadVoices(){
+    if(!hasTTS) return;
+    function grab(){
+      var v=window.speechSynthesis.getVoices()||[];
+      if(v.length) voicesCache=v;
+      renderVoiceStatus();
+    }
+    grab();
+    if(!voicesCache.length){
+      window.speechSynthesis.onvoiceschanged=grab;
+    }
+  }
+  function zhVoices(){
+    var zh=voicesCache.filter(function(v){return /^zh/i.test(v.lang||'');});
+    return zh.length?zh:voicesCache;
+  }
+  function pickVoice(st){
+    var list=zhVoices();
+    if(!list.length) return null;
+    if(st.kw&&st.kw.length){
+      for(var i=0;i<list.length;i++){
+        var n=(list[i].name||'').toLowerCase();
+        for(var j=0;j<st.kw.length;j++){
+          if(n.indexOf(st.kw[j])>=0) return list[i];
+        }
+      }
+    }
+    return list[0];
+  }
+  function voiceName(st){
+    var v=pickVoice(st);
+    return v?(v.name+(v.lang?' ('+v.lang+')':'')):'（未找到可用语音）';
+  }
+  function buildUtterance(text,st,isPreview){
+    var u=new SpeechSynthesisUtterance(text);
+    var v=pickVoice(st);
+    if(v) u.voice=v;
+    u.lang=(v&&v.lang)?v.lang:'zh-CN';
+    u.rate=clamp(state.speed*st.rateBias,0.4,2.6);
+    u.pitch=st.pitch;
+    u.volume=state.muted?0:state.volume;
+    if(!isPreview){
+      u.onboundary=function(e){
+        if(!state.playing) return;
+        var gi=(typeof e.charIndex==='number'&&e.charIndex>=0)?e.charIndex:0;
+        state.posChar=segStart(state.segIndex)+state.segOffset+gi;
+        if(state.posChar>totalChars()) state.posChar=totalChars();
+      };
+      u.onend=function(){
+        if(state.segIndex<ep.segments.length-1){
+          state.segIndex++; state.segOffset=0;
+          renderSegmentUI(); speakCurrent();
+        }else{
+          finishEpisode();
+        }
+      };
+      u.onerror=function(e){
+        if(e&&/cancel|interrupt/i.test(e.error||'')) return; // 主动取消不算错误
+      };
+    }
+    return u;
+  }
+
+  /* ================= 播放控制 ================= */
+  function speakCurrent(){
+    if(!hasTTS||!ep) return;
+    var s=seg(state.segIndex);
+    var offset=clamp(state.segOffset,0,s.text.length);
+    state.segOffset=offset;
+    var text=s.text.slice(offset);
+    if(!text.length){ // 段尾边界，前进
+      if(state.segIndex<ep.segments.length-1){ state.segIndex++; state.segOffset=0; renderSegmentUI(); speakCurrent(); }
+      else finishEpisode();
+      return;
+    }
+    window.speechSynthesis.cancel();
+    currentU=buildUtterance(text,style(),false);
+    try{ window.speechSynthesis.resume(); }catch(e){}
+    window.speechSynthesis.speak(currentU);
+    if(!state.playing) state.playing=true;
+    updatePlayIcon();
+    startLoop();
+  }
+  function play(){
+    if(!ep){ return; }
+    if(state.playing){ return; }
+    state.playing=true;
+    if(!window.speechSynthesis.speaking){ speakCurrent(); }
+    else { try{ window.speechSynthesis.resume(); }catch(e){} }
+    updatePlayIcon(); startLoop(); saveState();
+  }
+  function pause(){
+    if(!state.playing) return;
+    state.playing=false;
+    if(currentU) window.speechSynthesis.cancel();
+    stopLoop(); updatePlayIcon();
+    renderStaticProgress(); saveState();
+  }
+  function toggle(){ state.playing?pause():play(); }
+  function setPosChar(c){
+    c=clamp(c,0,totalChars());
+    state.posChar=c;
+    var s=0;
+    while(s<ep.segments.length-1 && segStart(s+1)<=c) s++;
+    state.segIndex=s;
+    state.segOffset=Math.min(Math.round(c-segStart(s)),seg(s).text.length);
+  }
+  function seek(sec){
+    if(!ep) return;
+    sec=clamp(sec,0,dur());
+    setPosChar(sec*cps());
+    renderSegmentUI(); renderStaticProgress();
+    if(state.playing) speakCurrent();
+    saveState();
+  }
+  function finishEpisode(){
+    state.playing=false;
+    state.posChar=totalChars();
+    stopLoop(); updatePlayIcon();
+    renderStaticProgress(); saveState();
+    // 自动播下一集
+    var idx=playlist.indexOf(state.episodeId);
+    if(idx>=0&&idx<playlist.length-1){
+      loadEpisode(playlist[idx+1],{autoplay:true,fromStart:true});
+    }
+  }
+
+  /* ================= 节目加载 ================= */
+  function loadEpisode(id,opts){
+    opts=opts||{};
+    var i=EPISODES.findIndex(function(e){return e.id===id;});
+    if(i<0) return;
+    ep=EPISODES[i];
+    state.episodeId=id;
+    if(opts.fromStart) setPosChar(0);
+    else if(typeof opts.pos==='number') setPosChar(opts.pos);
+    else { state.segIndex=0; state.segOffset=0; state.posChar=0; }
+    renderEpisode();
+    if(opts.autoplay) play();
+    saveState();
+  }
+  function playEpisode(id,fromStart){
+    if(id===state.episodeId&&fromStart) seek(0);
+    else loadEpisode(id,{autoplay:true,fromStart:fromStart!==false});
+  }
+
+  /* ================= 渲染：节目 ================= */
+  function renderEpisode(){
+    el.epKicker.textContent='第 '+EPISODES.findIndex(function(e){return e.id===state.episodeId;})+1+' 集';
+    el.epTitle.textContent=ep.title;
+    el.epSub.textContent=ep.sub;
+    el.pTitle.textContent=ep.title;
+    el.pEp.textContent=ep.segments.length+' 个章节 · 约 '+fmt(totalChars()/baseCps)+'（1.0×）';
+    renderTimeline();
+    renderSegmentUI();
+    renderStaticProgress();
+    renderPlaylist();
+  }
+  function renderSegmentUI(){
+    var s=seg(state.segIndex);
+    el.nowCh.textContent=s.ch+' · '+s.title;
+    setAccent(state.segIndex);
+    renderKeys();
+    renderTimeline();
+  }
+  function setAccent(idx){
+    var pair=[['#ffb454','#a78bfa'],['#7ee787','#79c0ff'],['#79c0ff','#ff7b72'],['#a78bfa','#7ee787'],['#f0b429','#ff7b72']][idx%5];
+    el.blobA.style.background='rgba('+hexRgb(pair[0])+',.18)';
+    el.blobB.style.background='rgba('+hexRgb(pair[1])+',.15)';
+  }
+  function hexRgb(h){
+    var n=parseInt(h.slice(1),16);
+    return (n>>16)+','+((n>>8)&255)+','+(n&255);
+  }
+  function renderKeys(){
+    var s=seg(state.segIndex);
+    var html='';
+    for(var i=0;i<s.keys.length;i++) html+='<li data-k="'+i+'">'+s.keys[i]+'</li>';
+    el.keyList.innerHTML=html;
+    el.keyIdx.textContent=(state.segIndex+1)+' / '+ep.segments.length;
+  }
+  function syncActiveKey(){
+    if(!ep) return;
+    var s=seg(state.segIndex), n=s.keys.length;
+    var f=segFrac();
+    var act=clamp(Math.floor(f*n),0,n-1);
+    var lis=el.keyList.children;
+    for(var i=0;i<lis.length;i++){
+      var cls=lis[i].className;
+      var want=(i<act?'done ':'')+(i===act?'on':'');
+      if(cls!==want) lis[i].className=want;
+    }
+  }
+  function renderTimeline(){
+    if(!ep) return;
+    var html='';
+    for(var i=0;i<ep.segments.length;i++){
+      html+='<div class="tl-seg" data-i="'+i+'" title="跳到：'+ep.segments[i].ch+'">'+
+            '<span class="tl-n">'+(i+1)+'. '+ep.segments[i].ch+'</span>'+
+            '<span class="tl-bar"><i></i></span></div>';
+    }
+    el.tl.innerHTML=html;
+    Array.prototype.forEach.call(el.tl.children,function(d){
+      d.addEventListener('click',function(){
+        var i=+d.getAttribute('data-i');
+        seek(segStart(i)/cps());
+      });
+    });
+    updateTimeline();
+  }
+  function updateTimeline(){
+    if(!ep||!el.tl.children.length) return;
+    for(var i=0;i<el.tl.children.length;i++){
+      var d=el.tl.children[i];
+      var cls='tl-seg '+(i<state.segIndex?'passed ':'')+(i===state.segIndex?'cur':'');
+      if(d.className!==cls) d.className=cls;
+    }
+    var f=clamp(posSec()/dur(),0,1);
+    var cur=el.tl.children[state.segIndex];
+    if(cur) cur.querySelector('.tl-bar i').style.width=Math.round(segFrac()*100)+'%';
+    el.pct.textContent=Math.round(f*100)+'%';
+  }
+
+  /* ================= 渲染：播放列表 ================= */
+  function renderPlaylist(){
+    el.plCount.textContent=playlist.length+' 集';
+    var html='';
+    playlist.forEach(function(id,i){
+      var e=EPISODES.find(function(x){return x.id===id;});
+      if(!e) return;
+      var playing=(state.episodeId===id);
+      html+='<li data-id="'+id+'"'+(playing?' class="playing"':'')+'>'+
+        '<span class="pl-i">'+(i+1)+'</span>'+
+        '<span class="pl-main"><span class="pl-t">'+e.title+'</span>'+
+        '<span class="pl-s">'+e.segments.length+' 章 · '+(playing?'播放中':'点击播放')+'</span></span>'+
+        '<span class="pl-d">'+fmt(totalCharsFor(e)/baseCps)+'</span>'+
+        '<span class="pl-act">'+
+          '<button data-act="up" title="上移">↑</button>'+
+          '<button data-act="down" title="下移">↓</button>'+
+          '<button data-act="rm" title="移出列表">✕</button>'+
+        '</span></li>';
+    });
+    el.plList.innerHTML=html;
+    Array.prototype.forEach.call(el.plList.children,function(li){
+      li.addEventListener('click',function(e){
+        var btn=e.target.closest('[data-act]');
+        var id=li.getAttribute('data-id');
+        var act=btn&&btn.getAttribute('data-act');
+        if(act==='up'||act==='down'){
+          e.stopPropagation();
+          var i=playlist.indexOf(id);
+          var j=act==='up'?i-1:i+1;
+          if(j<0||j>=playlist.length) return;
+          playlist[i]=playlist[j]; playlist[j]=id;
+          renderPlaylist(); saveState();
+        }else if(act==='rm'){
+          e.stopPropagation();
+          removed[id]=true;
+          playlist=playlist.filter(function(x){return x!==id;});
+          renderPlaylist(); saveState();
+        }else{
+          playEpisode(id,true);
+        }
+      });
+    });
+  }
+  function totalCharsFor(e){
+    var c=0;
+    for(var i=0;i<e.segments.length;i++) c+=e.segments[i].text.length;
+    return c;
+  }
+
+  /* ================= 渲染：音色 ================= */
+  function renderVoices(){
+    var html='';
+    STYLES.forEach(function(st){
+      html+='<div class="vc'+(st.id===state.voiceId?' cur':'')+'" data-id="'+st.id+'">'+
+        '<div class="vc-name">'+st.name+(st.id===state.voiceId?'<span class="vc-badge">使用中</span>':'')+'</div>'+
+        '<div class="vc-desc">'+st.desc+'</div>'+
+        '<div class="vc-foot"><button class="vc-prev" data-id="'+st.id+'" type="button">♪ 试听</button>'+
+        '<span class="vc-meta">pitch '+st.pitch.toFixed(2)+' · 语速×'+st.rateBias.toFixed(2)+'</span></div>'+
+        '</div>';
+    });
+    el.voiceGrid.innerHTML=html;
+    Array.prototype.forEach.call(el.voiceGrid.children,function(card){
+      card.addEventListener('click',function(e){
+        var id=card.getAttribute('data-id');
+        if(e.target.closest('.vc-prev')){
+          previewVoice(id);
+          return;
+        }
+        if(id!==state.voiceId){
+          state.voiceId=id;
+          renderVoices(); renderVoiceStatus();
+          if(state.playing) speakCurrent(); // 切换音色立即应用
+          saveState();
+        }
+      });
+    });
+  }
+  function previewVoice(id){
+    if(!hasTTS) return;
+    var st=STYLES[STYLE_IDS.indexOf(id)]||STYLES[0];
+    window.speechSynthesis.cancel();
+    if(state.playing){ state.playing=false; stopLoop(); updatePlayIcon(); }
+    var u=buildUtterance(PREVIEW_TEXT,st,true);
+    try{ window.speechSynthesis.resume(); }catch(e){}
+    window.speechSynthesis.speak(u);
+    setTimeout(function(){ window.speechSynthesis.cancel(); },1800);
+  }
+  function renderVoiceStatus(){
+    if(!hasTTS){
+      el.voiceStatus.innerHTML='当前浏览器不支持语音合成（Web Speech API），请使用 Chrome / Edge 以获得最佳体验。';
+      return;
+    }
+    el.voiceStatus.innerHTML='当前音色：<b>'+style().name+'</b> · 系统语音：<b>'+voiceName(style())+'</b> · '+
+      (voicesCache.length?('检测到 '+voicesCache.length+' 个系统语音'):'正在加载系统语音…');
+  }
+
+  /* ================= 波形动画（rAF，仅播放时运行） ================= */
+  var bars=[];
+  function buildWave(){
+    var n=window.innerWidth<640?20:32;
+    el.wave.innerHTML='';
+    bars=[];
+    for(var i=0;i<n;i++){
+      var b=document.createElement('i');
+      el.wave.appendChild(b);
+      bars.push(b);
+    }
+  }
+  function waveTick(t){
+    if(!ep) return;
+    var f=segFrac();
+    var env=clamp(Math.min(1,f*5)*Math.min(1,(1-f)*5),0.15,1);
+    var amp=env*(0.5+0.5*state.volume);
+    for(var i=0;i<bars.length;i++){
+      var ph=t*0.9+i*0.55;
+      var v=Math.sin(ph)*0.55+Math.sin(ph*1.7+1.3)*0.3+Math.sin(ph*3.1+0.7)*0.15;
+      var h=0.12+0.88*(0.5+0.5*v*amp);
+      bars[i].style.transform='scaleY('+h.toFixed(3)+')';
+    }
+  }
+  function idleWave(){
+    for(var i=0;i<bars.length;i++) bars[i].style.transform='scaleY(0.1)';
+  }
+  function startLoop(){
+    if(raf) return;
+    lastNow=performance.now(); lastUi=0;
+    raf=requestAnimationFrame(tick);
+  }
+  function stopLoop(){
+    if(raf){ cancelAnimationFrame(raf); raf=0; }
+    idleWave();
+  }
+  function tick(now){
+    var dt=(now-lastNow)/1000; lastNow=now;
+    dt=Math.min(dt,0.08);
+    if(state.playing&&ep&&window.speechSynthesis.speaking){
+      state.posChar+=dt*cps();
+      if(state.posChar>totalChars()) state.posChar=totalChars();
+    }
+    if(state.playing) waveTick(now/1000);
+    renderStaticProgress();
+    if(now-lastUi>180){ lastUi=now; syncActiveKey(); updateTimeline(); }
+    if(state.playing) raf=requestAnimationFrame(tick);
+    else stopLoop();
+  }
+  function renderStaticProgress(){
+    if(!ep) return;
+    var d=dur(), ps=posSec();
+    var f=clamp(ps/d,0,1);
+    el.seekFill.style.width=(f*100)+'%';
+    el.seekThumb.style.left=(f*100)+'%';
+    el.tCur.textContent=fmt(ps);
+    el.tDur.textContent=fmt(d);
+    el.nowT.textContent=fmt(ps)+' / '+fmt(d);
+    el.pct.textContent=Math.round(f*100)+'%';
+    updateTimeline();
+    syncActiveKey();
+  }
+  function updatePlayIcon(){
+    el.icPlay.classList.toggle('hide',state.playing);
+    el.icPause.classList.toggle('hide',!state.playing);
+  }
+
+  /* ================= 进度条拖动 ================= */
+  function initSeek(){
+    var dragging=false;
+    function xToF(clientX){
+      var r=el.seekTrack.getBoundingClientRect();
+      return clamp((clientX-r.left)/r.width,0,1);
+    }
+    el.seekTrack.addEventListener('pointerdown',function(e){
+      dragging=true;
+      el.seekTrack.classList.add('drag');
+      try{ el.seekTrack.setPointerCapture(e.pointerId); }catch(err){}
+      var f=xToF(e.clientX);
+      el.seekFill.style.width=(f*100)+'%';
+      el.seekThumb.style.left=(f*100)+'%';
+      el.tCur.textContent=fmt(f*dur());
+    });
+    el.seekTrack.addEventListener('pointermove',function(e){
+      if(!dragging) return;
+      var f=xToF(e.clientX);
+      el.seekFill.style.width=(f*100)+'%';
+      el.seekThumb.style.left=(f*100)+'%';
+      el.tCur.textContent=fmt(f*dur());
+    });
+    function up(e){
+      if(!dragging) return;
+      dragging=false;
+      el.seekTrack.classList.remove('drag');
+      seek(xToF(e.clientX)*dur());
+    }
+    el.seekTrack.addEventListener('pointerup',up);
+    el.seekTrack.addEventListener('pointercancel',up);
+  }
+
+  /* ================= 播放记忆（localStorage） ================= */
+  var SAVE_KEY='gse-podcast';
+  function saveState(){
+    if(!ep) return;
+    try{
+      var pos=JSON.parse(localStorage.getItem(SAVE_KEY)||'{}');
+      pos.episodeId=state.episodeId;
+      pos.pos=state.posChar;
+      pos.speed=state.speed; pos.volume=state.volume; pos.muted=state.muted;
+      pos.voiceId=state.voiceId; pos.playlist=playlist; pos.removed=removed;
+      localStorage.setItem(SAVE_KEY,JSON.stringify(pos));
+    }catch(e){}
+  }
+  function loadState(){
+    try{ return JSON.parse(localStorage.getItem(SAVE_KEY)||'null'); }
+    catch(e){ return null; }
+  }
+
+  /* ================= 快捷键 & 事件 ================= */
+  function initEvents(){
+    el.btnPlay.addEventListener('click',toggle);
+    el.btnPrev.addEventListener('click',function(){ step(-1); });
+    el.btnNext.addEventListener('click',function(){ step(1); });
+    el.btnSpeed.addEventListener('click',function(){
+      var arr=[0.5,0.75,1,1.25,1.5,2];
+      var i=arr.indexOf(state.speed);
+      state.speed=arr[(i+1)%arr.length];
+      el.btnSpeed.textContent=state.speed.toFixed(2).replace(/0$/,'')+'×';
+      if(state.playing) speakCurrent(); // 倍速立即生效（保持同一位置）
+      renderStaticProgress(); saveState();
+    });
+    el.btnMute.addEventListener('click',function(){
+      state.muted=!state.muted;
+      el.btnMute.classList.toggle('muted',state.muted);
+      if(state.playing) speakCurrent();
+      saveState();
+    });
+    el.vol.addEventListener('input',function(){
+      state.volume=el.vol.value/100;
+      el.btnMute.classList.toggle('muted',state.volume===0);
+      if(state.playing) renderStaticProgress();
+    });
+    el.vol.addEventListener('change',function(){
+      if(state.playing) speakCurrent();
+      saveState();
+    });
+    el.btnPlaylist.addEventListener('click',openPlaylist);
+    el.plShade.addEventListener('click',closePlaylist);
+    el.plRestore.addEventListener('click',function(){
+      playlist=EPISODES.map(function(e){return e.id;});
+      removed={}; renderPlaylist(); saveState();
+    });
+    document.addEventListener('keydown',function(e){
+      if(e.target&&/INPUT|TEXTAREA/.test(e.target.tagName)) return;
+      if(e.code==='Space'){ e.preventDefault(); toggle(); }
+      else if(e.code==='ArrowRight'){ seek(posSec()+10); }
+      else if(e.code==='ArrowLeft'){ seek(posSec()-10); }
+      else if(e.code==='KeyM'){ el.btnMute.click(); }
+    });
+    document.addEventListener('visibilitychange',function(){
+      if(document.hidden){ if(state.playing) saveState(); }
+      else if(state.playing&&!window.speechSynthesis.speaking){ speakCurrent(); }
+    });
+    window.addEventListener('beforeunload',function(){ if(state.playing) saveState(); });
+    window.addEventListener('resize',function(){ buildWave(); idleWave(); });
+  }
+  function step(dir){
+    if(!state.episodeId) return;
+    var i=playlist.indexOf(state.episodeId);
+    var j=i+dir;
+    if(j<0||j>=playlist.length) return;
+    loadEpisode(playlist[j],{autoplay:true,fromStart:true});
+  }
+  function openPlaylist(){
+    el.playlist.classList.add('open');
+    el.plShade.classList.add('open');
+  }
+  function closePlaylist(){
+    el.playlist.classList.remove('open');
+    el.plShade.classList.remove('open');
+  }
+
+  /* ================= 预加载：语音引擎预热 ================= */
+  var warmed=false;
+  function warmup(){
+    if(warmed||!hasTTS) return;
+    warmed=true;
+    try{
+      // 触发语音引擎加载（一次静音短句）。不安排延迟取消，
+      // 避免误杀用户随后立即开始的真实播报；speakCurrent 的 cancel 会清掉这条静音句。
+      var u=new SpeechSynthesisUtterance(' ');
+      u.volume=0; u.rate=5;
+      window.speechSynthesis.resume();
+      window.speechSynthesis.speak(u);
+    }catch(e){}
+  }
+
+  /* ================= 初始化 ================= */
+  function init(){
+    // 主题：与首页共用 gse-theme
+    try{ var t=localStorage.getItem('gse-theme'); if(t) document.documentElement.dataset.theme=t; }catch(e){}
+    document.getElementById('tg').addEventListener('click',function(){
+      var n=document.documentElement.dataset.theme==='dark'?'light':'dark';
+      document.documentElement.dataset.theme=n;
+      try{ localStorage.setItem('gse-theme',n); }catch(e){}
+    });
+
+    buildWave(); idleWave();
+    initSeek(); initEvents(); renderVoices(); renderPlaylist();
+    loadVoices();
+    renderVoiceStatus();
+
+    // 首次交互预热语音引擎
+    document.addEventListener('pointerdown',warmup,{once:true});
+    document.addEventListener('keydown',warmup,{once:true});
+
+    // 恢复播放记忆
+    var st=loadState();
+    if(st&&st.episodeId&&EPISODES.some(function(e){return e.id===st.episodeId;})){
+      state.speed=st.speed||1; state.volume=(typeof st.volume==='number')?st.volume:1;
+      state.muted=!!st.muted; state.voiceId=st.voiceId||'default';
+      if(Array.isArray(st.playlist)&&st.playlist.length){
+        playlist=st.playlist.filter(function(id){return EPISODES.some(function(e){return e.id===id;});});
+        if(!playlist.length) playlist=EPISODES.map(function(e){return e.id;});
+      }
+      removed=st.removed||{};
+      el.vol.value=Math.round(state.volume*100);
+      el.btnMute.classList.toggle('muted',state.muted);
+      el.btnSpeed.textContent=state.speed.toFixed(2).replace(/0$/,'')+'×';
+      var savedPos=(typeof st.pos==='number')?clamp(st.pos,0,totalCharsFor(EPISODES.find(function(e){return e.id===st.episodeId;}))):0;
+      loadEpisode(st.episodeId,{pos:savedPos});
+      renderVoices(); renderVoiceStatus(); // 恢复后刷新音色卡片
+      if(savedPos>3){
+        var tip=el.resumeTip;
+        tip.innerHTML='<span>已恢复上次进度：'+fmt(savedPos/cps())+'（'+EPISODES.find(function(e){return e.id===st.episodeId;}).title+'）</span>'+
+          '<button type="button" id="btnResume">继续播放</button><button type="button" id="btnRestart">从头开始</button>';
+        tip.classList.add('show');
+        tip.querySelector('#btnResume').addEventListener('click',function(){ tip.classList.remove('show'); play(); });
+        tip.querySelector('#btnRestart').addEventListener('click',function(){ tip.classList.remove('show'); loadEpisode(state.episodeId,{autoplay:true,fromStart:true}); });
+      }
+    }else{
+      renderVoiceStatus();
+    }
+  }
+
+  if(hasTTS){
+    init();
+  }else{
+    document.addEventListener('DOMContentLoaded',function(){
+      el.voiceStatus.textContent='当前浏览器不支持语音合成（Web Speech API），请使用 Chrome / Edge。';
+      document.getElementById('epTitle').textContent='需要语音合成支持';
+      document.getElementById('epSub').textContent='请使用 Chrome / Edge / Safari 打开本页面。';
+    });
+  }
+})();
+</script>
+</body>
+</html>
