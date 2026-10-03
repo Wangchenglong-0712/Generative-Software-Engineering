@@ -4,17 +4,33 @@
 
 ## 在线阅读
 
-**站点首页：<https://wangchenglong-0712.github.io/Generative-Software-Engineering/>**
+站点采用「单仓库双分支 → 一个 Pages 站点」的结构：根路径为跳转入口，本分支（`AI_Reader`）的内容发布在 **`/AI_Reader/`** 路径下。
+
+**站点入口：<https://wangchenglong-0712.github.io/Generative-Software-Engineering/>**（自动跳转到 `/main/`）
+**本分支首页：<https://wangchenglong-0712.github.io/Generative-Software-Engineering/AI_Reader/>**
 
 | 页面 | 链接 |
 | --- | --- |
-| 笔记索引首页 | [点击进入](https://wangchenglong-0712.github.io/Generative-Software-Engineering/) |
-| 第 1 讲《欢迎来到未来》 | [点击进入](https://wangchenglong-0712.github.io/Generative-Software-Engineering/NJU-%E7%94%9F%E6%88%90%E5%BC%8F%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B-%E7%AC%AC01%E8%AE%B2-%E6%AC%A2%E8%BF%8E%E6%9D%A5%E5%88%B0%E6%9C%AA%E6%9D%A5.html) |
-| 第 2 讲《提示词与上下文工程》 | [点击进入](https://wangchenglong-0712.github.io/Generative-Software-Engineering/NJU-%E7%94%9F%E6%88%90%E5%BC%8F%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B-%E7%AC%AC02%E8%AE%B2-%E6%8F%90%E7%A4%BA%E8%AF%8D%E4%B8%8E%E4%B8%8A%E4%B8%8B%E6%96%87%E5%B7%A5%E7%A8%8B.html) |
+| 笔记索引首页 | [点击进入](https://wangchenglong-0712.github.io/Generative-Software-Engineering/AI_Reader/) |
+| 播客（本分支特色） | [点击进入](https://wangchenglong-0712.github.io/Generative-Software-Engineering/AI_Reader/podcast.html) |
+| 第 1 讲《欢迎来到未来》 | [点击进入](https://wangchenglong-0712.github.io/Generative-Software-Engineering/AI_Reader/NJU-%E7%94%9F%E6%88%90%E5%BC%8F%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B-%E7%AC%AC01%E8%AE%B2-%E6%AC%A2%E8%BF%8E%E6%9D%A5%E5%88%B0%E6%9C%AA%E6%9D%A5.html) |
+| 第 2 讲《提示词与上下文工程》 | [点击进入](https://wangchenglong-0712.github.io/Generative-Software-Engineering/AI_Reader/NJU-%E7%94%9F%E6%88%90%E5%BC%8F%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B-%E7%AC%AC02%E8%AE%B2-%E6%8F%90%E7%A4%BA%E8%AF%8D%E4%B8%8E%E4%B8%8A%E4%B8%8B%E6%96%87%E5%B7%A5%E7%A8%8B.html) |
 
 > 每一讲配套的**习题页不设公开入口**：先打开对应讲义，在页面顶部操作区点「✎ 本讲习题」进入（讲义末尾的「自测与行动清单」一节也有同一入口）；在习题页点顶部或右下角的「← 返回讲义」，或直接按 `Esc`，即可回到讲义。目前有第 1 讲、第 2 讲两套习题。
 
 课程官方主页：<https://jyywiki.cn/GSE/2026/> ｜ 课堂录像：第 1 讲 [BV1pb8o6yE8f](https://www.bilibili.com/video/BV1pb8o6yE8f)、第 2 讲 [BV1CQt365EzW](https://www.bilibili.com/video/BV1CQt365EzW)
+
+## 本分支特色功能
+
+`AI_Reader` 分支在 `main` 的基础上，额外提供 **AI 播客模块**（`podcast.html`）：
+
+- **多音色朗读**：把每讲的核心观点整理成播客文稿，用多种不同音色讲给你听，通勤、散步时也能"听课"；
+- **波形动画与章节高亮**：播放时波形随声音律动，正文随播放进度实时高亮对应章节，边听边读；
+- **断点续播**：自动记住上次播放位置与所选音色，下次打开直接从断点继续。
+
+入口：首页顶部「♪ 播客」按钮，或直接访问 <https://wangchenglong-0712.github.io/Generative-Software-Engineering/AI_Reader/podcast.html>。
+
+> 提示：若需纯笔记版本（无播客模块），可切换到 `main` 分支查看。
 
 ## 关于本课程
 
@@ -43,7 +59,8 @@
 
 ```
 Generative-Software-Engineering/
-├── index.html                                          # 静态站点首页：讲义索引
+├── index.html                                          # 静态站点首页：讲义索引（含「♪ 播客」入口）
+├── podcast.html                                        # 本分支特色：AI 播客模块（多音色 / 波形动画 / 断点续播）
 ├── NJU-生成式软件工程-第01讲-欢迎来到未来.html           # 第 1 讲课堂笔记
 ├── NJU-生成式软件工程-第02讲-提示词与上下文工程.html     # 第 2 讲课堂笔记
 ├── exercises/
@@ -58,6 +75,7 @@ Generative-Software-Engineering/
   讲义列表通过 **GitHub Contents API 实时读取仓库根目录**自动生成，因此往根目录丢一个新 HTML 就会被自动收录；网络不可用时回退到内置静态清单。
 - **讲义页** —— 每一讲的完整笔记：侧栏目录、全文搜索（按 `/` 聚焦搜索框）、附录折叠、术语表、金句、自测清单（勾选状态存 localStorage）、公式与代码块。
   顶部有「← 返回主页」，右下角有回主页悬浮按钮，也可直接按 `Esc`。
+- **podcast.html** —— 本分支特色的 AI 播客页。将各讲核心观点整理为播客文稿，支持多音色朗读、随播放进度律动的波形动画、正文章节实时高亮，并自动记忆播放位置与音色（断点续播）。
 - **exercises/ 习题页** —— 每讲配套习题，三部分：**论述题**（作答要点折叠）、**实践题**（任务 → 交付物 → 做完再想）、**解答题**（参考答案折叠）。
   每题下方有「我的作答」输入框，内容自动保存在本机浏览器；支持一键展开/收起、清空、打印。
 
@@ -95,7 +113,7 @@ NJU-生成式软件工程-第NN讲-标题.html
 
 - 纯 HTML / CSS / 原生 JavaScript，**无框架、无构建、无外部 CDN 依赖**，可离线打开。
 - 深浅色主题统一使用 localStorage 键 `gse-theme`（首页与习题页）；讲义按讲次存主题与自测进度：第 1 讲 `gse1-theme` / `gse1-tasks`，第 2 讲 `gse2-theme` / `gse2-tasks`；习题作答按讲次：`gse1-exercise`、`gse2-exercise`。
-- 托管方式：GitHub Pages（Settings → Pages → Deploy from a branch → `main` / `/(root)`）。
+- 托管方式：GitHub Pages（Settings → Pages → Source → **GitHub Actions**），由 `.github/workflows/deploy-branches.yml` 将 `main`、`AI_Reader` 两分支内容分别发布到 `/main/`、`/AI_Reader/`，根路径为跳转入口。
 
 ## 版权与致谢
 
