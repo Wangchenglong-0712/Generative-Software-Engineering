@@ -1500,5 +1500,113 @@ details.appx>summary h2 .sn{display:none}
 })();
 
 </script>
+
+<!-- ===== 讲义播客：样式 + 引擎 + 页面联动 ===== -->
+<link rel="stylesheet" href="assets/podcast.css">
+<script src="assets/podcast.js"></script>
+<script>
+/* 播客集成：把正文交给 Podcast，令播放进度反向驱动页面 */
+(function(){
+  if(!window.Podcast || !Podcast.init) return;
+
+  var pod = Podcast.init({
+    root: document.querySelector('main') || document,
+    mount: document.body,
+    tocSelector: '#toc a',
+    storageKey: 'gse2-podcast',
+    maxSentencesPerChapter: 6,
+    hosts: [
+      { name: '主讲', voice: '' },   // ⬇︎ 可在播放器面板切换音色
+      { name: '助教', voice: '' }
+    ]
+  });
+
+  /* —— 页面联动 1：章节高亮 —— */
+  var tocLinks = [].slice.call(document.querySelectorAll('#toc a'));
+  function markChapter(chIdx){
+    var ch = pod.chapters[chIdx];
+    // 侧栏
+    tocLinks.forEach(function(a){ a.classList.remove('pod-on'); });
+    // 正文 section
+    var secs = [].slice.call(document.querySelectorAll('main section'));
+    secs.forEach(function(s){ s.classList.remove('pod-active'); });
+    if(!ch) return;
+    var anchor = ch.anchorId && document.getElementById(ch.anchorId);
+    if(anchor){
+      var sec = anchor.closest('section');
+      if(sec) sec.classList.add('pod-active');
+      var link = tocLinks.filter(function(a){
+        return decodeURIComponent((a.getAttribute('href')||'').slice(1)) === ch.anchorId;
+      })[0];
+      if(link) link.classList.add('pod-on');
+    }
+  }
+
+  /* —— 页面联动 2：正文逐句高亮 —— */
+  /* 把播客句子匹配回 DOM 中的段落：找到与该句文本重合度最高的 p/li，加视觉高亮 */
+  var BRIDGE_RE = /^(那这里其实有个关键点，|换个角度说，|我补充一句，|顺着刚才的话，|这里要注意，|有意思的是，|第\s*\d+\s*部分，|欢迎收听[^。]*。|我们会用[^。]*。|如果听到[^。]*。|好，这一部分我们先聊到这。)/;
+  /* 幻灯片标记、括号注释等噪声，不参与匹配 */
+  var NOISE_RE = /（[^）]*幻灯片[^）]*）|\([^)]*slide[^)]*\)|（[^）]{1,14}）|【[^】]*】/g;
+  function norm(s){
+    return String(s||'')
+      .replace(NOISE_RE,'')
+      .replace(/[\s，。、；：！？「」『』（）()【】“”‘’—…·.,;:!?\-\/]/g,'');
+  }
+  function highlightSentence(text){
+    clearSentenceHighlight();
+    if(!text) return;
+    var probeRaw = text.replace(BRIDGE_RE,'');
+    var probe = norm(probeRaw);
+    if(probe.length < 4){ probe = norm(text); }
+    if(probe.length < 4) return;
+    var head = probe.slice(0, 16);           // 取前 16 个字作为指纹
+    var targets = [].slice.call(document.querySelectorAll('main p, main li'));
+    var best = null, bestScore = 0;
+    for(var i=0;i<targets.length;i++){
+      var el = targets[i];
+      if(el.closest('details')) continue;
+      var t = norm(el.textContent);
+      if(!t) continue;
+      // 优先整段包含指纹
+      if(t.indexOf(head) >= 0){ best = el; break; }
+      // 否则按前 N 字重合度打分
+      var n = Math.min(head.length, t.length, 10), hit = 0;
+      for(var k=0;k<n;k++){ if(head[k] === t[k]) hit++; else break; }
+      if(hit > bestScore){ bestScore = hit; best = el; }
+    }
+    if(best && (bestScore >= 5 || norm(best.textContent).indexOf(head) >= 0)){
+      best.classList.add('pod-sent','pod-now');
+      // 若目标段落不在视口内，轻微滚动（引擎的章节滚动优先）
+      var r = best.getBoundingClientRect();
+      if(r.top < 60 || r.bottom > window.innerHeight - 40){
+        try{ window.scrollTo({top: window.scrollY + r.top - 130, behavior:'smooth'}); }catch(e){}
+      }
+    }
+  }
+  function clearSentenceHighlight(){
+    var on = document.querySelectorAll('.pod-sent.pod-now');
+    for(var i=0;i<on.length;i++) on[i].classList.remove('pod-now');
+  }
+
+  pod.on('turnstart', function(d){
+    markChapter(d.ch);
+    highlightSentence(d.text);
+    document.body.classList.add('pod-playing');
+  });  pod.on('stop', function(){
+    clearSentenceHighlight();
+    document.body.classList.remove('pod-playing');
+  });
+  pod.on('finish', function(){
+    clearSentenceHighlight();
+    document.body.classList.remove('pod-playing');
+  });
+
+  /* —— 页面联动 3：跟随开关关闭时，不打扰用户 —— */
+  pod.on('scrollto', function(ch){ markChapter(pod.cursor.ch); });
+
+  /* 让正文句子在停止时清干净 */
+  window.addEventListener('beforeunload', function(){ try{ speechSynthesis.cancel(); }catch(e){} });
+})();
+</script>
 </body>
 </html>
