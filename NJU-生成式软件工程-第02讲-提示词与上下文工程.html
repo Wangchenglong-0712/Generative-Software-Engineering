@@ -1,0 +1,1498 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>提示词与上下文工程 —— 南京大学《生成式软件工程》第 2 讲</title>
+<meta name="description" content="南京大学《生成式软件工程》(GenSE) 2026 秋季第 2 讲《提示词与上下文工程》课堂笔记，蒋炎岩主讲。含 37 页幻灯片逐页全文与官方讲义原文。">
+<style>
+
+/* ===== KaTeX ===== */
+
+/* ===== 页面样式 ===== */
+
+*,*::before,*::after{box-sizing:border-box}
+:root{
+  --bg:#0d1117;--bg2:#161b22;--bg3:#1b2230;--line:#262d38;--line2:#1e2530;
+  --fg:#c9d5e1;--fg2:#8b98a9;--fg3:#69747f;
+  --acc:#ffb454;--acc2:#7ee787;--link:#79c0ff;--violet:#a78bfa;
+  --codebg:#0b0e14;--chip:rgba(255,180,84,.10);
+  --shadow:0 1px 2px rgba(0,0,0,.35),0 8px 24px rgba(0,0,0,.28);
+  --mono:"JetBrains Mono","SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+}
+[data-theme="light"]{
+  --bg:#ffffff;--bg2:#f6f8fa;--bg3:#eceff3;--line:#dde2e8;--line2:#eaeef3;
+  --fg:#1f2328;--fg2:#545d68;--fg3:#7d8590;
+  --acc:#a85a00;--acc2:#1a7f37;--link:#0969da;--violet:#7c3aed;
+  --codebg:#f6f8fa;--chip:rgba(255,180,84,.16);
+  --shadow:0 1px 2px rgba(16,24,40,.06),0 8px 24px rgba(16,24,40,.08);
+}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--bg);color:var(--fg);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB",
+    "Microsoft YaHei","Source Han Sans SC","Noto Sans CJK SC",sans-serif;
+  font-size:16.5px;line-height:1.85;-webkit-font-smoothing:antialiased;
+  transition:background .2s,color .2s;
+}
+a{color:var(--link);text-decoration:none}
+a:hover{text-decoration:underline}
+code,pre,.katex{font-family:var(--mono)}
+
+/* 顶部进度条 */
+#prog{position:fixed;top:0;left:0;right:0;height:3px;z-index:60;background:transparent}
+#prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--acc),var(--violet));
+  transition:width .1s linear}
+
+/* Hero */
+#hero{position:relative;padding:56px 24px 30px;border-bottom:1px solid var(--line);
+  background:
+    radial-gradient(900px 320px at 18% -10%,rgba(255,180,84,.13),transparent 70%),
+    radial-gradient(700px 300px at 85% 0%,rgba(167,139,250,.11),transparent 70%),
+    var(--bg2);}
+.hero-in{max-width:1180px;margin:0 auto}
+.badge{display:inline-flex;align-items:center;gap:.5rem;font-size:.78rem;letter-spacing:.06em;
+  color:var(--acc);background:var(--chip);border:1px solid rgba(255,180,84,.28);
+  padding:.28rem .7rem;border-radius:999px;margin-bottom:1rem}
+#hero h1{margin:0 0 .5rem;font-size:2.15rem;line-height:1.3;letter-spacing:-.01em;font-weight:800}
+.hsub{color:var(--fg2);font-size:.98rem;margin-bottom:1.35rem}
+.meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:.15rem 1.6rem;
+  background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:1rem 1.15rem}
+.mrow{display:flex;gap:.65rem;padding:.22rem 0;font-size:.9rem;line-height:1.7}
+.mk{flex:0 0 4.2rem;color:var(--acc);font-weight:600;font-size:.85rem;padding-top:.05rem}
+.mv{color:var(--fg2);flex:1}
+.mv a{color:var(--link)}
+.hero-act{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:1.1rem}
+.btn{font:inherit;font-size:.85rem;color:var(--fg);background:var(--bg);border:1px solid var(--line);
+  border-radius:8px;padding:.42rem .85rem;cursor:pointer;transition:.15s}
+.btn:hover{border-color:var(--acc);color:var(--acc);text-decoration:none}
+
+/* 布局 */
+.layout{display:flex;max-width:1180px;margin:0 auto;padding:0 24px;gap:38px;align-items:flex-start}
+#sidebar{position:sticky;top:0;flex:0 0 268px;width:268px;max-height:100vh;overflow-y:auto;
+  padding:26px 4px 40px 0;scrollbar-width:thin}
+#sidebar::-webkit-scrollbar{width:6px}
+#sidebar::-webkit-scrollbar-thumb{background:var(--line);border-radius:3px}
+.side-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:.6rem}
+.side-hd b{font-size:.82rem;letter-spacing:.1em;color:var(--fg3);font-weight:600}
+#q{width:100%;font:inherit;font-size:.84rem;background:var(--bg);color:var(--fg);
+  border:1px solid var(--line);border-radius:8px;padding:.42rem .6rem;margin-bottom:.7rem;outline:none}
+#q:focus{border-color:var(--acc)}
+#toc a{display:block;font-size:.87rem;color:var(--fg2);padding:.24rem .55rem;border-radius:6px;
+  border-left:2px solid transparent;line-height:1.55}
+#toc a:hover{background:var(--bg2);color:var(--fg);text-decoration:none}
+#toc a.lv3{font-size:.8rem;padding-left:1.35rem;color:var(--fg3)}
+#toc a.on{color:var(--acc);background:var(--chip);border-left-color:var(--acc);font-weight:600}
+#toc a.hide{display:none}
+.side-ft{margin-top:1.1rem;padding-top:.9rem;border-top:1px solid var(--line);
+  font-size:.76rem;color:var(--fg3);line-height:1.8}
+.side-ft span{color:var(--acc)}
+
+main{flex:1;min-width:0;padding:30px 0 80px}
+section{margin-bottom:8px}
+section>*{scroll-margin-top:20px}
+
+/* 标题 */
+h2,h3,h4{scroll-margin-top:20px;line-height:1.4}
+h2{font-size:1.45rem;margin:2.9rem 0 1rem;font-weight:750;letter-spacing:-.01em}
+h2 .ht{display:inline-block;border-bottom:3px solid var(--acc);padding-bottom:.25rem}
+h3{font-size:1.09rem;margin:2rem 0 .7rem;color:var(--fg);font-weight:700}
+h3 .ht{padding-left:.7rem;position:relative}
+h3 .ht::before{content:"";position:absolute;left:0;top:.62em;width:5px;height:5px;border-radius:50%;
+  background:var(--acc);opacity:.85}
+h4{font-size:.82rem;margin:1.9rem 0 .55rem;font-weight:700;letter-spacing:.04em;
+  color:var(--acc);background:var(--chip);display:inline-block;padding:.2rem .6rem;border-radius:6px;
+  border:1px solid rgba(255,180,84,.22)}
+h4 a.ha{display:none}
+.anchor{position:relative}
+.ha{position:absolute;left:-1.5rem;top:50%;transform:translateY(-50%);
+  color:var(--fg3);opacity:0;font-size:.8rem;padding:0 .3rem;transition:.15s;text-decoration:none}
+.anchor:hover .ha{opacity:.75}
+.ha:hover{color:var(--acc);text-decoration:none}
+
+/* 文本 */
+p{margin:.75rem 0}
+strong{font-weight:700;color:var(--fg)}
+[data-theme="dark"] strong{color:#e6edf3}
+em{font-style:normal;color:var(--acc);opacity:.95}
+hr{border:0;border-top:1px solid var(--line);margin:2.4rem 0}
+ul,ol{padding-left:1.35rem;margin:.7rem 0}
+li{margin:.3rem 0}
+li>ul,li>ol{margin:.3rem 0}
+p.note{color:var(--fg2);border-left:2px solid var(--line);padding-left:.8rem}
+li.note{color:var(--fg2)}
+.warn{background:rgba(255,180,84,.09);border-left:3px solid var(--acc);
+  padding:.55rem .85rem;border-radius:0 8px 8px 0}
+li.warn{list-style:none;margin-left:-.6rem}
+.warn strong{color:var(--acc)}
+[data-theme="light"] .warn strong{color:#a85a00}
+blockquote{margin:1rem 0;padding:.8rem 1.1rem;border-left:3px solid var(--acc);
+  background:var(--bg2);border-radius:0 10px 10px 0}
+blockquote p{margin:.35rem 0}
+blockquote.bq-note{border-left-color:var(--violet);background:rgba(167,139,250,.07)}
+blockquote>*:first-child{margin-top:0}
+blockquote>*:last-child{margin-bottom:0}
+
+/* 表格 */
+.tw{overflow-x:auto;margin:1.1rem 0;border:1px solid var(--line);border-radius:10px;background:var(--bg2)}
+table{border-collapse:collapse;width:100%;font-size:.92rem}
+th,td{padding:.55rem .8rem;text-align:left;border-bottom:1px solid var(--line);line-height:1.7}
+th{background:var(--bg3);font-weight:650;font-size:.85rem;color:var(--fg);white-space:nowrap}
+tbody tr:last-child td{border-bottom:0}
+tbody tr:hover{background:var(--chip)}
+td code{white-space:nowrap}
+
+/* 代码 */
+.cb{position:relative;margin:1.1rem 0}
+pre{margin:0;background:var(--codebg);border:1px solid var(--line);border-radius:10px;
+  padding:.9rem 1rem;overflow-x:auto;font-size:.86rem;line-height:1.7;color:var(--fg)}
+.cp{position:absolute;top:.45rem;right:.5rem;font:inherit;font-size:.72rem;color:var(--fg3);
+  background:var(--bg2);border:1px solid var(--line);border-radius:6px;padding:.18rem .5rem;
+  cursor:pointer;opacity:0;transition:.15s}
+.cb:hover .cp{opacity:1}
+.cp:hover{color:var(--acc);border-color:var(--acc)}
+:not(pre)>code{background:rgba(125,145,170,.16);padding:.12em .38em;border-radius:5px;
+  font-size:.87em;color:var(--acc)}
+[data-theme="light"] :not(pre)>code{color:#a85a00}
+
+/* 公式 */
+.m.bd{display:block;margin:1.1rem 0;overflow-x:auto;overflow-y:hidden;text-align:center}
+.katex{font-size:1.02em}
+.katex-display{margin:0}
+
+/* 任务清单 */
+li.task{list-style:none;margin-left:-1.35rem}
+li.task label{display:flex;gap:.6rem;align-items:flex-start;cursor:pointer;padding:.18rem 0}
+li.task input{appearance:none;-webkit-appearance:none;width:1.05rem;height:1.05rem;flex:0 0 1.05rem;
+  margin-top:.38rem;border:1.5px solid var(--line);border-radius:4px;background:var(--bg2);
+  cursor:pointer;position:relative;transition:.15s}
+li.task input:hover{border-color:var(--acc)}
+li.task input:checked{background:var(--acc);border-color:var(--acc)}
+li.task input:checked::after{content:"";position:absolute;left:.24rem;top:.06rem;width:.34rem;
+  height:.6rem;border:solid var(--bg);border-width:0 2px 2px 0;transform:rotate(42deg)}
+li.task input:checked+span{color:var(--fg3);text-decoration:line-through}
+
+/* 附录 */
+details.appx{margin:1.2rem 0;border:1px solid var(--line);border-radius:12px;background:var(--bg2);overflow:hidden}
+details.appx>summary{cursor:pointer;padding:0;list-style:none}
+details.appx>summary::-webkit-details-marker{display:none}
+details.appx>summary h2{margin:0;padding:1rem 1.15rem;font-size:1.15rem;display:flex;
+  justify-content:space-between;align-items:center}
+details.appx>summary h2 .ht{border:0;display:inline}
+details.appx>summary h2 .ha{display:none}
+.tg{color:var(--fg3);font-size:.85rem}
+details.appx[open] .tg{color:var(--acc)}
+.tg::after{content:"▸ 展开";}
+details.appx[open] .tg::after{content:"▾ 收起";}
+.appx-body{padding:0 1.15rem 1.2rem;border-top:1px solid var(--line)}
+details.appx[open]>summary{border-bottom:0}
+.appx-body h4{margin-top:1.4rem}
+
+/* 页脚 */
+footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--line);
+  color:var(--fg3);font-size:.84rem;font-style:normal}
+
+/* 回到顶部 */
+#top{position:fixed;right:22px;bottom:22px;width:42px;height:42px;border-radius:50%;
+  background:var(--bg2);border:1px solid var(--line);color:var(--fg2);font-size:1.05rem;
+  cursor:pointer;box-shadow:var(--shadow);opacity:0;pointer-events:none;transition:.2s;z-index:50}
+#top.on{opacity:1;pointer-events:auto}
+#top:hover{color:var(--acc);border-color:var(--acc)}
+#menu{display:none}
+
+/* 返回主页 */
+#home{position:fixed;right:76px;bottom:22px;height:42px;display:flex;align-items:center;gap:.35rem;
+  padding:0 .9rem;border-radius:21px;background:var(--bg2);border:1px solid rgba(255,180,84,.45);
+  color:var(--acc);font-size:.84rem;cursor:pointer;box-shadow:var(--shadow);z-index:50;
+  transition:.2s;text-decoration:none;white-space:nowrap}
+#home:hover{color:var(--acc);border-color:var(--acc);text-decoration:none;filter:brightness(1.1)}
+@media (max-width:640px){#home{right:70px;padding:0 .7rem;font-size:.78rem}}
+
+@media (max-width:1000px){
+  .layout{padding:0 16px;gap:0}
+  #sidebar{position:fixed;left:0;top:0;bottom:0;width:290px;background:var(--bg2);
+    border-right:1px solid var(--line);padding:18px 14px;z-index:55;transform:translateX(-102%);
+    transition:transform .22s;max-height:100vh}
+  #sidebar.open{transform:none}
+  #menu{display:flex;position:fixed;left:14px;bottom:22px;z-index:56;align-items:center;
+    justify-content:center;width:42px;height:42px;border-radius:50%;background:var(--bg2);
+    border:1px solid var(--line);color:var(--fg);cursor:pointer;box-shadow:var(--shadow)}
+  #hero{padding:34px 16px 22px}
+  #hero h1{font-size:1.6rem}
+  main{padding:20px 0 70px}
+  .ha{display:none}
+}
+@media print{
+  #sidebar,#top,#menu,#prog,#home,.hero-act{display:none!important}
+  details.appx{border:0}
+  .appx-body{display:block!important}
+  details.appx[open]>summary h2{font-size:1.2rem}
+  body{background:#fff;color:#000;font-size:11pt}
+}
+
+
+
+/* 第2讲补充样式 */
+.slide-title{font-size:1.02rem;margin:1.8rem 0 .2rem;font-weight:750;color:var(--fg)}
+.slide-title .sn{display:inline-block;font:inherit;font-size:.72rem;letter-spacing:.06em;color:var(--bg);
+  background:var(--acc);border-radius:5px;padding:.08rem .42rem;margin-right:.5rem;vertical-align:middle;font-weight:700}
+.sub{color:var(--fg3);font-size:.86rem;margin:.1rem 0 .5rem}
+.aigc{color:var(--fg2)}
+.imgnote{display:inline-block;font-size:.78rem;color:var(--fg3);background:var(--bg3);
+  border:1px dashed var(--line);border-radius:6px;padding:.1rem .5rem;margin:.25rem 0}
+.cbx{position:relative;margin:1.1rem 0;background:var(--codebg);border:1px solid var(--line);
+  border-radius:10px;padding:.75rem .95rem;overflow-x:auto;font-size:.85rem;line-height:1.7}
+.cbx .cl{color:var(--fg3);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;display:block;margin-bottom:.35rem}
+.poem{font-family:var(--mono);font-size:.92rem;line-height:1.9;letter-spacing:.06em}
+.m{font-family:var(--mono);font-size:.92em}
+.m.bd{display:block;text-align:center;margin:.8rem 0;color:var(--acc)}
+.term dt{font-weight:700;color:var(--fg);margin-top:.85rem}
+[data-theme="dark"] .term dt{color:#e6edf3}
+.term dd{margin:.15rem 0 0;color:var(--fg2);font-size:.93rem}
+.tag{display:inline-block;font-size:.72rem;color:var(--acc);background:var(--chip);
+  border:1px solid rgba(255,180,84,.25);border-radius:999px;padding:.05rem .5rem;margin-right:.35rem}
+.qa{margin:1.1rem 0;padding:.75rem .95rem;border:1px solid var(--line);border-radius:10px;background:var(--bg2)}
+.qa .qq{font-weight:700;color:var(--acc)}
+.qa .aa{margin-top:.4rem;color:var(--fg2)}
+details.appx>summary h2 .sn{display:none}
+
+</style>
+</head>
+<body>
+<div id="prog"><i></i></div>
+
+<header id="hero"><div class="hero-in">
+<div class="badge">南京大学 · 生成式软件工程 · 2026 秋 · 第 2 讲</div>
+<h1>提示词与上下文工程 —— 南京大学《生成式软件工程》第 2 讲</h1>
+<div class="hsub">课堂笔记 · 以官方讲义与 37 页幻灯片原文为主体，附课堂现场与延伸索引</div>
+<div class="meta"><div class="mrow"><span class="mk">视频</span><span class="mv"><a href="https://www.bilibili.com/video/BV1CQt365EzW" target="_blank" rel="noopener">BV1CQt365EzW</a>（98 分钟）</span></div><div class="mrow"><span class="mk">主讲</span><span class="mv">蒋炎岩（南京大学计算机学院，「绿导师」）</span></div><div class="mrow"><span class="mk">课程</span><span class="mv">2026 秋季学期《生成式软件工程》(GenSE)</span></div><div class="mrow"><span class="mk">上一讲</span><span class="mv"><a href="NJU-生成式软件工程-第01讲-欢迎来到未来.html">第 1 讲《欢迎来到未来》</a></span></div><div class="mrow"><span class="mk">配套资料</span><span class="mv"><a href="https://jyywiki.cn/GSE/2026/" target="_blank" rel="noopener">课程主页 jyywiki.cn/GSE/2026</a> ｜ <a href="https://jyywiki.cn/GSE/2026/lect2.md" target="_blank" rel="noopener">讲义 lect2</a> ｜ <a href="https://jyywiki.cn/GSE/2026/slides2.html" target="_blank" rel="noopener">幻灯片 slides2</a></span></div><div class="mrow"><span class="mk">整理说明</span><span class="mv">本笔记以官方讲义与 37 页幻灯片<strong>原文为主体</strong>，把课堂录像与现场讨论<strong>转写为连贯的文字解读</strong>，不按视频时间轴切分节点；讲义为课程方整理后的文本，与录像中的口语表述可能有细微差别。附录 A 为幻灯片逐页转录，附录 B 为官方讲义原文。</span></div></div><hr>
+<div class="hero-act">
+  <a class="btn" href="index.html" title="返回课程笔记主页（快捷键 Esc）">← 返回主页</a>
+  <button class="btn" id="appx">展开全部附录</button>
+  <button class="btn" id="theme">☾ 深色</button>
+  <a class="btn" href="https://jyywiki.cn/GSE/2026/" target="_blank" rel="noopener">课程主页 ↗</a>
+  <a class="btn" href="https://www.bilibili.com/video/BV1CQt365EzW" target="_blank" rel="noopener">视频 BV1CQt365EzW ↗</a>
+</div>
+</div></header>
+
+<div class="layout">
+<aside id="sidebar">
+  <div class="side-hd"><b>目 录</b></div>
+  <input id="q" placeholder="筛选章节…  （按 / 聚焦）" autocomplete="off">
+  <nav id="toc"><a class="lv2" href="#目录">目录</a>
+<a class="lv2" href="#0-一页纸总结">0. 一页纸总结</a>
+<a class="lv2" href="#1-开场一句狠话与它的上下文">1. 开场：一句狠话与它的上下文</a>
+<a class="lv3" href="#11-没有-token-的-cs-学生应该立即退学上了热搜">1.1 「没有 token 的 CS 学生应该立即退学」上了热搜</a>
+<a class="lv3" href="#12-现场成立截图只剩狠">1.2 现场成立，截图只剩「狠」</a>
+<a class="lv3" href="#13-不要等完美工具">1.3 「不要把等待完美工具变成不开始的理由」</a>
+<a class="lv2" href="#2-提示词从哪里来">2. 「提示词」从哪里来</a>
+<a class="lv2" href="#3-模型看到的远不止你刚输入的一句话">3. 模型看到的，远不止你刚输入的一句话</a>
+<a class="lv3" href="#31-提示词不止在对话框">3.1 提示词不止在对话框</a>
+<a class="lv3" href="#32-指令与材料来源作用范围与优先级">3.2 指令与材料：来源、作用范围与优先级</a>
+<a class="lv3" href="#33-从提示词工程到上下文工程">3.3 从「提示词工程」到「上下文工程」</a>
+<a class="lv3" href="#34-立即行动解剖当前上下文">3.4 立即行动：解剖当前上下文</a>
+<a class="lv3" href="#35-安全命令是谁判的">3.5 「安全命令」是谁判的？</a>
+<a class="lv2" href="#4-ai-降低了开始学习的成本">4. AI 降低了开始学习的成本</a>
+<a class="lv3" href="#41-拖延症的克星立即行动">4.1 拖延症的克星：立即行动</a>
+<a class="lv3" href="#42-费曼学习法让-ai-当听众">4.2 费曼学习法：让 AI 当听众</a>
+<a class="lv2" href="#5-写清楚完成是什么">5. 写清楚「完成」是什么</a>
+<a class="lv3" href="#51-一句话生成极品飞车">5.1 一句话生成极品飞车：Intent → Spec → Impl</a>
+<a class="lv3" href="#52-从-ai-味到你的主页">5.2 从「AI 味」到你的主页</a>
+<a class="lv3" href="#53-写清指令承担不明确的后果">5.3 写清指令，承担「不明确」的后果</a>
+<a class="lv3" href="#54-可验证才不会提前交卷">5.4 可验证，才不会「提前交卷」</a>
+<a class="lv3" href="#55-要么完成要么显式失败">5.5 要么完成，要么显式失败</a>
+<a class="lv3" href="#56-新分工人定义问题-ai-搜索实现">5.6 新分工：人定义问题，AI 搜索实现</a>
+<a class="lv2" href="#6-一步有限为什么还能完成复杂任务">6. 一步有限，为什么还能完成复杂任务</a>
+<a class="lv3" href="#61-把输出当作可写的工作纸">6.1 把输出当作可写的工作纸</a>
+<a class="lv3" href="#62-用-token-换计算深度">6.2 用 Token 换计算深度</a>
+<a class="lv2" href="#7-三道刁难人的写作题">7. 三道刁难人的写作题：指令遵循的压力测试</a>
+<a class="lv3" href="#71-三条约束藏进八句诗">7.1 三条约束，藏进八句诗</a>
+<a class="lv3" href="#72-十八个字一片水">7.2 十八个字，一片水</a>
+<a class="lv3" href="#73-只许一个音还要讲现代故事">7.3 只许一个音，还要讲现代故事</a>
+<a class="lv3" href="#74-通过测试不等于写得好">7.4 通过测试，不等于写得好</a>
+<a class="lv2" href="#8-上下文中的规则也会争夺注意力">8. 上下文中的规则，也会争夺注意力</a>
+<a class="lv3" href="#81-过去的上下文一直都在场">8.1 过去的上下文一直都在场</a>
+<a class="lv3" href="#82-提示词的副作用要求变成注释">8.2 提示词的副作用：要求变成注释</a>
+<a class="lv3" href="#83-常驻还是按需加载">8.3 常驻，还是按需加载？</a>
+<a class="lv2" href="#9-你是一位审稿人还不够">9. 「你是一位审稿人」，还不够</a>
+<a class="lv3" href="#91-ai-耿同学上线">9.1 AI 耿同学上线</a>
+<a class="lv3" href="#92-怎样构造一个好的-reviewer">9.2 怎样构造一个好的 Reviewer：三条独立路线</a>
+<a class="lv3" href="#93-不要被作者带着走">9.3 不要被作者「带着走」</a>
+<a class="lv3" href="#94-把品味蒸馏成-skill">9.4 把品味蒸馏成 Skill</a>
+<a class="lv2" href="#10-为什么大仓库有时比空项目更容易">10. 为什么大仓库有时比空项目更容易</a>
+<a class="lv3" href="#101-long-horizon-能力是怎么练出来的">10.1 Long-Horizon 能力是怎么「练」出来的</a>
+<a class="lv3" href="#102-greenfield-悖论">10.2 Greenfield 悖论：大型系统反而更容易？</a>
+<a class="lv3" href="#103-放一个好项目给-ai-看靠谱吗">10.3 「放一个好项目给 AI 看」靠谱吗？</a>
+<a class="lv3" href="#104-没有超能力-ai">10.4 没有「超能力 AI」：你仍然需要「有概念」</a>
+<a class="lv2" href="#11-research-failure">11. Research Failure：Token 花完了，知识没有增加</a>
+<a class="lv3" href="#111-符号执行引擎优化">11.1 符号执行引擎优化</a>
+<a class="lv3" href="#112-问题可能出在哪">11.2 问题可能出在哪？</a>
+<a class="lv2" href="#12-人应该盯住哪些地方">12. 人应该盯住哪些地方</a>
+<a class="lv3" href="#121-少干预反而做得更多">12.1 少干预，反而做得更多</a>
+<a class="lv3" href="#122-review-什么">12.2 Review 什么？</a>
+<a class="lv3" href="#123-context-越长不等于记得越牢">12.3 Context 越长，不等于记得越牢</a>
+<a class="lv3" href="#124-把要求从记忆升级成机制">12.4 把要求从「记忆」升级成「机制」</a>
+<a class="lv2" href="#13-在不确定性中探索">13. 在不确定性中探索</a>
+<a class="lv3" href="#131-这次不是解题">13.1 这次不是「解题」</a>
+<a class="lv3" href="#132-谁规定已经想完了">13.2 谁规定「已经想完了」？</a>
+<a class="lv3" href="#133-算力换智力">13.3 算力换智力：把灵感改造成搜索</a>
+<a class="lv3" href="#134-我们一直在多采样">13.4 我们一直在「多采样」：世界很大，人很小</a>
+<a class="lv3" href="#135-墙内的超人">13.5 墙内的超人</a>
+<a class="lv2" href="#14-术语表">14. 术语表</a>
+<a class="lv2" href="#15-金句清单">15. 金句清单</a>
+<a class="lv2" href="#16-自测与行动清单">16. 自测与行动清单</a>
+<a class="lv2" href="#附录-a37-页幻灯片逐页全文">附录 A：37 页幻灯片逐页全文</a>
+<a class="lv2" href="#附录-b官方讲义原文全文">附录 B：官方讲义原文全文</a>
+<a class="lv2" href="#附录-c课程主页与视频信息">附录 C：课程主页与视频信息</a></nav>
+  <div class="side-ft">
+    正文字数 <span>约 38,823 字</span><br>
+    <span id="tk">自测进度 0 / 0</span><br>
+    勾选状态保存在本地浏览器<br>
+    按 <span>Esc</span> 返回主页
+  </div>
+</aside>
+<main>
+<section><h2 id="目录" class="anchor"><span class="ht">目录</span><a class="ha" href="#目录" title="复制本节链接">#</a></h2><ul><li><a class="il" href="#0-一页纸总结">0. 一页纸总结</a></li><li><a class="il" href="#1-开场一句狠话与它的上下文">1. 开场：一句狠话与它的上下文</a></li><li><a class="il" href="#2-提示词从哪里来">2. 「提示词」从哪里来</a></li><li><a class="il" href="#3-模型看到的远不止你刚输入的一句话">3. 模型看到的，远不止你刚输入的一句话</a></li><li><a class="il" href="#4-ai-降低了开始学习的成本">4. AI 降低了开始学习的成本</a></li><li><a class="il" href="#5-写清楚完成是什么">5. 写清楚「完成」是什么</a></li><li><a class="il" href="#6-一步有限为什么还能完成复杂任务">6. 一步有限，为什么还能完成复杂任务</a></li><li><a class="il" href="#7-三道刁难人的写作题">7. 三道刁难人的写作题：指令遵循的压力测试</a></li><li><a class="il" href="#8-上下文中的规则也会争夺注意力">8. 上下文中的规则，也会争夺注意力</a></li><li><a class="il" href="#9-你是一位审稿人还不够">9. 「你是一位审稿人」，还不够</a></li><li><a class="il" href="#10-为什么大仓库有时比空项目更容易">10. 为什么大仓库有时比空项目更容易</a></li><li><a class="il" href="#11-research-failure">11. Research Failure：Token 花完了，知识没有增加</a></li><li><a class="il" href="#12-人应该盯住哪些地方">12. 人应该盯住哪些地方</a></li><li><a class="il" href="#13-在不确定性中探索">13. 在不确定性中探索</a></li><li><a class="il" href="#14-术语表">14. 术语表</a></li><li><a class="il" href="#15-金句清单">15. 金句清单</a></li><li><a class="il" href="#16-自测与行动清单">16. 自测与行动清单</a></li><li><a class="il" href="#附录-a37-页幻灯片逐页全文">附录 A：37 页幻灯片逐页全文</a></li><li><a class="il" href="#附录-b官方讲义原文全文">附录 B：官方讲义原文全文</a></li><li><a class="il" href="#附录-c课程主页与视频信息">附录 C：课程主页与视频信息</a></li></ul></section>
+<section><h2 id="0-一页纸总结" class="anchor"><span class="ht">0. 一页纸总结</span><a class="ha" href="#0-一页纸总结" title="复制本节链接">#</a></h2>
+<p>第 1 讲留下的问题是：<strong>Agent 已经能做很多事，我们怎样才能驾驭它？</strong>第 2 讲从最常见的交互方式——自然语言指令——出发，讨论怎样让模型理解目标、遵循要求，以及在没有确定答案时继续探索。</p>
+<div class="tw"><table>
+<thead><tr><th>一句话</th><th>要点</th></tr></thead><tbody>
+<tr><td>开场</td><td>「没有 token 的 CS 学生应该立即退学」上了热搜；课堂上这句话要推动的是<strong>立即实践</strong>，不是真的退学。同一句话离开现场、只剩截图，就只剩「狠」。</td></tr>
+<tr><td>提示词 ≠ 对话框里的那句话</td><td>Agent 看见的是<strong>整个上下文</strong>：system prompt、<code>AGENTS.md</code>、加载的 skill、用户指令、工具调用与返回，还有代码、历史消息与文件。</td></tr>
+<tr><td>从「提示词工程」到「上下文工程」</td><td>关心的不是一句话怎么写，而是每次决策前，<strong>哪些 token 以什么来源、顺序和作用域</strong>出现。</td></tr>
+<tr><td>写清楚「完成」</td><td>越明确、越可验证的要求，越可能得到满意的结果。经验法则：<strong>写清楚你的指令，承担一切「不明确」的后果。</strong></td></tr>
+<tr><td>一步很浅，一串可以很深</td><td>单次前向计算深度有限，但模型可以把中间结果写回上下文，用更多 token 换计算深度——这就是 chain-of-thought。</td></tr>
+<tr><td>形式约束会逼出搜索</td><td>藏头诗、十八字同偏旁、全同音文：模型通过检查器说明它会搜索与修补；<strong>通过测试不等于写得好</strong>，测试没覆盖品味。</td></tr>
+<tr><td>上下文是争用资源</td><td>规则会纠偏，也会抢注意力。否定指令很尴尬：为了禁止「半透明」，你先把「半透明」写进了上下文。</td></tr>
+<tr><td>方法论决定 AI 的上限</td><td>「你是 ICSE reviewer」只改变先验与输出形状；好的审稿要走<strong>判据、证据、反方复现</strong>三条独立路线。有效经验可蒸馏成 skill。</td></tr>
+<tr><td>大仓库 vs 空项目</td><td>成熟代码库替你做了很多决定，Agent 可以「照着邻居补全」；<strong>代码库本身也是提示词</strong>，第一桶 slop 会像复利一样叠加。</td></tr>
+<tr><td>人的注意力怎么分配</td><td>人少干预、把注意力换成一整天的吞吐量；按「不可逆性 × 爆炸半径」Review，把要求从「记忆」升级成「机制」。</td></tr>
+<tr><td>在不确定性中探索</td><td>「帮我考虑几种方案」只规定了停止条件 k，没有规定覆盖率。把灵感改造成搜索：先独立采样，再审查。<strong>选择质量 ≈ 覆盖率 × 评估分辨率。</strong></td></tr>
+<tr><td>未来</td><td>算力成为生产资料——「砌一堵墙，墙里面是超人，墙外面是动物世界」。这是对未来可能性的追问，不是已经发生的终局。</td></tr>
+</tbody></table></div>
+</section>
+<section><h2 id="1-开场一句狠话与它的上下文" class="anchor"><span class="ht">1. 开场：一句狠话与它的上下文</span><a class="ha" href="#1-开场一句狠话与它的上下文" title="复制本节链接">#</a></h2>
+<p>讲义开篇写道：<strong>不过，先处理一下第一讲留下的意外。</strong></p>
+<h3 id="11-没有-token-的-cs-学生应该立即退学上了热搜" class="anchor"><span class="ht">1.1 「没有 token 的 CS 学生应该立即退学」上了热搜</span><a class="ha" href="#11-没有-token-的-cs-学生应该立即退学上了热搜" title="复制本节链接">#</a></h3>
+<p>第一讲里的一句话——「没有 token 的 CS 学生应该立即退学」——<strong>居然以一个非常意外的方式上了热搜</strong>，也引来了朋友们的问询。</p>
+<p>当然不会真的让同学们退学。课堂上这句话要推动的是<strong>立即实践</strong>：不要把等待完美工具、等待别人给出评价，变成一直不开始的理由。离开现场，截图只剩下一句狠话，这本身也提醒我们，<strong>同样的文字放进不同上下文，会被理解成很不一样的意思</strong>。</p>
+<p class="imgnote">📷 幻灯片 1：热搜与朋友们的问询（原幻灯片含插图）</p>
+<h3 id="12-现场成立截图只剩狠" class="anchor"><span class="ht">1.2 现场成立，截图只剩「狠」</span><a class="ha" href="#12-现场成立截图只剩狠" title="复制本节链接">#</a></h3>
+<blockquote><p>一句只对现场成立的狠话，被截图以后就只剩「狠」了。</p></blockquote>
+<p>这本身就是本讲第一个例子：<strong>同一段文字，放进不同上下文，会被理解成很不一样的意思。</strong>当一句为了课堂现场而说的话被抽离现场、只剩截图时，语气、对象和意图全部丢失，剩下的只是一个刺激性的判断。</p>
+<h3 id="13-不要等完美工具" class="anchor"><span class="ht">1.3 「不要把等待完美工具变成不开始的理由」</span><a class="ha" href="#13-不要等完美工具" title="复制本节链接">#</a></h3>
+<p>既然出发点是推动「立即实践」，老师顺带回应了「用不起贵模型」的顾虑（幻灯片 2）：</p>
+<ul>
+<li>Anyway，你们懂我不会真的让你们退学的——但如果不这么说，你们真的听不进。</li>
+<li>（虽然说了也听不进。）</li>
+<li>而且 Token 也没那么贵。</li>
+<li>退一百万步讲，还有 ¥40 的豆包（含 GLM、DeepSeek 等）。</li>
+</ul>
+<blockquote><p>贵模型用不起，就用 ¥40 的；<strong>再不开始，就不是预算问题了。</strong></p></blockquote>
+</section>
+<section><h2 id="2-提示词从哪里来" class="anchor"><span class="ht">2. 「提示词」从哪里来</span><a class="ha" href="#2-提示词从哪里来" title="复制本节链接">#</a></h2>
+<p><strong>ChatGPT 普及了 Prompt，但没有发明它。</strong>（幻灯片 3）</p>
+<ul>
+<li>2019 年 GPT-2 的发布页面已经写下「prompting the trained model」：输入文本从「开头」变成了<strong>控制模型续写的条件</strong>。</li>
+<li>2020 年 GPT-3 把任务说明和 few-shot 示例都称为 prompt。</li>
+<li>2021 年，「prompt programming」和「prompt-based learning」成为研究对象。</li>
+</ul>
+<p>我们习惯把给模型的输入叫作 prompt，中文称「提示词」。从语言模型续写文本的角度看，前面的文字<strong>既是开头，也是控制后续生成的条件</strong>。进入聊天界面以后，用户更容易把 prompt 理解成对话框里的一条要求——但这是被界面简化过的理解。</p>
+</section>
+<section><h2 id="3-模型看到的远不止你刚输入的一句话" class="anchor"><span class="ht">3. 模型看到的，远不止你刚输入的一句话</span><a class="ha" href="#3-模型看到的远不止你刚输入的一句话" title="复制本节链接">#</a></h2>
+<h3 id="31-提示词不止在对话框" class="anchor"><span class="ht">3.1 提示词不止在对话框</span><a class="ha" href="#31-提示词不止在对话框" title="复制本节链接">#</a></h3>
+<p>对 Agent 来说，<strong>指令分散在很多地方</strong>。以下都是提示词：</p>
+<ul>
+<li><strong>Harness 内部</strong>：system prompt、goal 模式注入等；</li>
+<li><code>AGENTS.md</code> 等<strong>持久指令</strong>；</li>
+<li>加载的 <strong>skills</strong>；</li>
+<li><strong>你给的指令</strong>；</li>
+<li><strong>工具 / skills 的调用和输出</strong>。</li>
+</ul>
+<p>与此同时，代码、文件、历史消息和工具返回也会进入上下文。第一讲里的 <span class="m">Pr[token | context]</span>，其中的 <em>context</em> 就包含这些内容。模型下一步做什么，<strong>受到整份上下文影响，而不是只由最后一句话决定</strong>。</p>
+<h3 id="32-指令与材料来源作用范围与优先级" class="anchor"><span class="ht">3.2 指令与材料：来源、作用范围与优先级</span><a class="ha" href="#32-指令与材料来源作用范围与优先级" title="复制本节链接">#</a></h3>
+<p>不过，<strong>不是所有 context 都是指令</strong>：代码、历史消息、工具返回也可能只是<strong>事实、状态或样例</strong>。</p>
+<p>这里要区分<strong>指令</strong>和<strong>材料</strong>：工具返回的一段文章可能是分析对象，并不因此拥有给 Agent 下命令的资格。<strong>来源、作用范围和优先级</strong>，也属于我们组织上下文时需要考虑的事情。</p>
+<p>幻灯片还点出一个容易被忽略的事实（幻灯片 5）：<strong>模型只看到 token 序列</strong>；system / user / tool 的边界、优先级和权限，都是 Harness 放进上下文、并在外部执行的。</p>
+<h3 id="33-从提示词工程到上下文工程" class="anchor"><span class="ht">3.3 从「提示词工程」到「上下文工程」</span><a class="ha" href="#33-从提示词工程到上下文工程" title="复制本节链接">#</a></h3>
+<p>所以，<strong>「提示词工程」逐渐扩展成了「上下文工程」</strong>：关心模型在做决定时能看到什么，哪些是目标，哪些是约束，哪些是证据，哪些只是过时的过程记录。</p>
+<ul>
+<li>「提示词工程」关心<strong>一句话怎么写</strong>；「上下文工程」关心<strong>每次决策前，哪些 token 以什么来源、顺序和作用域出现</strong>。</li>
+<li>目标是让 working set <strong>足够小、足够新、带来源、可验证</strong>；<strong>上下文窗口装得下，不等于注意力用得好。</strong></li>
+<li>到 Claude Opus 4.5 这一代，模型靠强化学习获得了极强的指令遵循能力，直接输出命令和工具调用，持续向目标推进。</li>
+</ul>
+<p>写好一句话当然有用，但把相关文件、已有实现和验证结果放到合适的位置，往往同样重要。</p>
+<h3 id="34-立即行动解剖当前上下文" class="anchor"><span class="ht">3.4 立即行动：解剖当前上下文</span><a class="ha" href="#34-立即行动解剖当前上下文" title="复制本节链接">#</a></h3>
+<p>课堂提出了一个可以立即做的小实验——<strong>让 Agent 解释「谁在给它下指令」</strong>，按需要遵循的指令类型分类总结：</p>
+<div class="cbx"><span class="cl">Prompt</span>分析一下你上文中的所有提示词（包括系统），并按照需要遵循的指令类型分类总结。</div>
+<ul>
+<li><strong>目标与交付物</strong>：要完成什么，何时算完成；</li>
+<li><strong>权限与安全</strong>：能读写什么，何时必须确认；</li>
+<li><strong>工作流与工具协议</strong>：先做什么，工具怎样调用；</li>
+<li><strong>持久规则与风格</strong>：<code>AGENTS.md</code>、skills、语言和格式；</li>
+<li><strong>环境事实与证据</strong>：文件、历史消息、工具输出。</li>
+</ul>
+<p>冲突时再标出来源、作用域和优先级。这个实验可以帮助我们理解它正在怎样组织任务，但要记住：<strong>模型给出的是「当前遵循计划」，不是可信的内部状态 dump</strong>；想知道某个行为为什么发生，还需要检查可以访问的配置、代码和实际操作结果，用<strong>实际行为交叉验证</strong>。</p>
+<h3 id="35-安全命令是谁判的" class="anchor"><span class="ht">3.5 「安全命令」是谁判的？</span><a class="ha" href="#35-安全命令是谁判的" title="复制本节链接">#</a></h3>
+<p>例如，为什么有些命令执行前会询问用户，有些不会？不能只从「模型觉得安全吗」来解释。<strong>模型提议，Harness 决策，操作系统收口。</strong></p>
+<p>Codex 有一些细节：它认为「安全」的命令，不触发用户提示。这是怎么实现的？</p>
+<ul>
+<li>模型只生成「想运行什么」；<strong>sandbox</strong> 决定技术上能碰什么，<strong>approval policy</strong> 决定何时暂停询问。</li>
+<li>规则按<strong>完整参数列表</strong>匹配 allow / prompt / forbidden；简单 shell 链会被语法解析后逐条检查，<strong>最严格的结果获胜</strong>。</li>
+<li>因此「不弹窗」只表示动作落在当前边界内，<strong>并不等于模型获得了无限权限</strong>。</li>
+<li>真实教训：早期 Codex 把 <code>rg</code> 当作只读安全命令，却漏掉 <code>--pre</code>、<code>-z</code> 等可触发外部程序的参数。<strong>CVE-2025-54558</strong> 说明：<strong>安全属性属于完整 invocation，不属于命令名。</strong></li>
+</ul>
+<p>提示词中的要求与程序中的机制一起决定行为；<strong>一句「请遵守规则」，并不等于已经实现了一个可靠的执行边界。</strong></p>
+</section>
+<section><h2 id="4-ai-降低了开始学习的成本" class="anchor"><span class="ht">4. AI 降低了开始学习的成本</span><a class="ha" href="#4-ai-降低了开始学习的成本" title="复制本节链接">#</a></h2>
+<h3 id="41-拖延症的克星立即行动" class="anchor"><span class="ht">4.1 拖延症的克星：立即行动</span><a class="ha" href="#41-拖延症的克星立即行动" title="复制本节链接">#</a></h3>
+<p>上下文工程听起来像开发者才需要关心的技术，但学生每天都能用到。（幻灯片 6）</p>
+<ul>
+<li>AI 给我们的能力：<strong>立即行动，简直就是拖延症的克星</strong>。</li>
+<li>微积分，一个推导不想验算；数字电路，有个数据通路没看懂；计算机系统基础，链接没搞明白——<strong>这些统统可以立刻开始</strong>。</li>
+<li>老师学生时代的 self-motivated：「超高的容忍度」——愿意花很久寻找一个解释。</li>
+<li>现在学生的 self-motivated：<strong>用上飞轮</strong>，确保自己得到了正确的理解，并且重述给 AI。</li>
+</ul>
+<p>现在可以立即把具体问题交给 Agent：给出一个最小例子，逐步推导，运行一段程序，再根据结果追问。过去的自我驱动，常常意味着对挫折有很高的容忍度；现在，我们可以把同样的精力投入到更快的尝试与反馈中。</p>
+<blockquote><p><strong>AI 消灭的是「先试一下」的边际成本，不消灭真伪判断</strong>：提出最小问题 → 做最小检验 → 看反馈 → 更新理解。</p></blockquote>
+<h3 id="42-费曼学习法让-ai-当听众" class="anchor"><span class="ht">4.2 费曼学习法：让 AI 当听众</span><a class="ha" href="#42-费曼学习法让-ai-当听众" title="复制本节链接">#</a></h3>
+<p><strong>不是让 AI 再讲一遍，而是主动暴露缺口。</strong>（幻灯片 7）</p>
+<ul>
+<li>先合上资料，用自己的话讲；<strong>卡住的地方信息量最大</strong>。AI 的角色是<strong>追问、找反例和验算</strong>，查证后再讲一遍。</li>
+<li>这套飞轮有实证支点：<strong>self-explanation</strong> 与 <strong>retrieval practice</strong>。</li>
+</ul>
+<p>学习仍然需要自己的活动。一个可行的循环是：先借助 AI 弄清一个问题，然后合上资料，用自己的话重述；让它追问含糊之处，找出反例，再用推导、原文或程序结果核对，最后重新解释一遍。<strong>复述时卡住的地方，往往比读答案时觉得顺畅的地方更能暴露知识缺口。</strong></p>
+<p>这可以理解为让 AI 做一个随时在场的听众。它帮助你开始，也帮助你发现哪里还没讲明白。真正推动理解的，是这个循环里<strong>不断变得具体的问题</strong>和<strong>不断接受检验的解释</strong>。</p>
+</section>
+<section><h2 id="5-写清楚完成是什么" class="anchor"><span class="ht">5. 写清楚「完成」是什么</span><a class="ha" href="#5-写清楚完成是什么" title="复制本节链接">#</a></h2>
+<p>模型具有很强的指令遵循能力，<strong>但首先要有值得遵循的指令</strong>。上下文中的要求越明确、越容易验证，模型就越有机会判断自己距离目标还差什么；不明确的要求，则可能让它很早就认为已经完成。（幻灯片 10–15）</p>
+<h3 id="51-一句话生成极品飞车" class="anchor"><span class="ht">5.1 一句话生成极品飞车：Intent → Spec → Impl</span><a class="ha" href="#51-一句话生成极品飞车" title="复制本节链接">#</a></h3>
+<p><strong>「一句话生成极品飞车」</strong>可以产生很漂亮的演示，是测试前端能力的好例子。但你心里想的，可能是有真实地图、特定美术资产、某种驾驶手感的赛车游戏。模型交出的，也许只是一个能移动、会碰撞、有速度感的网页。它未必在任何一步明显违背了指令，却在一连串默认选择之后，<strong>做出了另外一个产品</strong>。</p>
+<p>这就是第一讲的 <strong>Intent、Spec 和 Impl</strong> 之间的缺口，而且 gap 会<strong>逐级放大漂移</strong>。镜头怎么跟随，车怎样转向，地图从哪里来，撞车以后发生什么，<strong>每一次省略都留下了选择空间</strong>。</p>
+<blockquote><p>若第 <span class="m">i</span> 层各留下 <span class="m">k_i</span> 个「似乎都行」的默认选项，最终候选空间约为 <span class="m bd">∏ᵢ kᵢ</span>。模型可以在每一步都做出自洽的选择，最后却离你心里的那款游戏很远。</p></blockquote>
+<p>模型可以把这些选择做得相互一致，但<strong>「一致」不意味着「正好是你想的」</strong>。</p>
+<h3 id="52-从-ai-味到你的主页" class="anchor"><span class="ht">5.2 从「AI 味」到你的主页</span><a class="ha" href="#52-从-ai-味到你的主页" title="复制本节链接">#</a></h3>
+<p>个人主页是另一个例子（幻灯片 14）。<strong>Bad：把品味留给默认值。</strong></p>
+<blockquote><p>「我是蒋炎岩，根据我的公开信息，制作一个现代风格的个人主页首页……」你将会得到 <strong>AI 味</strong>。</p></blockquote>
+<p>「现代风格」看似具体，实际上<strong>几乎没有排除任何模板</strong>。模板、渐变、卡片和装饰都能被解释为现代风格；两个称职的实现者都能严格照做，却交出完全不同的页面——<strong>这仍然只是 intent</strong>。</p>
+<p><strong>Better：压缩合法解空间。</strong>补上「用具体风格、具体样式和排版」，就能得到接近预期的个人主页。颜色、字体、栅格、留白、组件和参考物共同构成<strong>设计语言</strong>。关键不是多写几个形容词，而是让<strong>选择可组合、结果可检查</strong>。几个形容词，通常不能代替设计。</p>
+<h3 id="53-写清指令承担不明确的后果" class="anchor"><span class="ht">5.3 写清指令，承担「不明确」的后果</span><a class="ha" href="#53-写清指令承担不明确的后果" title="复制本节链接">#</a></h3>
+<p>课堂的经验法则（Rule of Thumb）：</p>
+<blockquote><p><strong>写清楚你的指令，承担一切「不明确」的后果。</strong>这样模型永远给你的是惊喜 😁</p></blockquote>
+<p>它要求我们意识到，没有说明的地方，实际上是把决定权交给了模型——<strong>授权模型用默认值替你做产品决策</strong>。并不需要把所有细枝末节都提前决定，但要知道哪些地方允许它自行发挥，哪些地方决定了产品是不是你要的。</p>
+<p>历史类比（幻灯片 13）：1854 年<strong>轻骑兵冲锋</strong>中，山上的 Raglan 看得见目标，谷中的 Lucan 看不见；命令里的「那些炮」由执行者自行补全，轻骑兵最终冲向了错误的炮阵。<strong>不明确的指令，代价由执行者承担。</strong></p>
+<p>一个实用的检查办法是：<strong>让另一个人只看要求和最终产物，能否判断任务已经完成？</strong>「做得专业一点」很难判定；「页面首先展示研究方向和近期工作，手机上无需横向滚动，所有项目入口都能打开」就提供了可以检查的行为。不能完全机械判断的品味，也可以通过<strong>示例、对比和反馈</strong>逐步说明。</p>
+<h3 id="54-可验证才不会提前交卷" class="anchor"><span class="ht">5.4 可验证，才不会「提前交卷」</span><a class="ha" href="#54-可验证才不会提前交卷" title="复制本节链接">#</a></h3>
+<p>幻灯片 11 把这个问题概括为：<strong>可验证，才不会「提前交卷」。</strong></p>
+<ul>
+<li>推论：<strong>越明确、越可验证的要求，越可能得到你满意的结果</strong>；不明确的要求，模型可能认为已经「满足」了。</li>
+<li>一个直接的检查：<strong>旁观者只看产物和工具结果，能否判定通过或不通过？</strong>如果不能，模型就没有稳定的 done。</li>
+</ul>
+<p>把愿望改写成验收条件：1714 年英国《经度法》没有悬赏「改善航海」，而是<strong>按经度误差分档，并规定驶往西印度群岛实测</strong>。愿望被写成验收条件，「解决」才有了制度上的含义。</p>
+<h3 id="55-要么完成要么显式失败" class="anchor"><span class="ht">5.5 要么完成，要么显式失败</span><a class="ha" href="#55-要么完成要么显式失败" title="复制本节链接">#</a></h3>
+<p>完成的语义还包括<strong>失败</strong>。</p>
+<ul>
+<li>一个足够好的模型，<strong>要么完成，要么失败，不应该幻觉或违背指令</strong>。</li>
+<li>如果你的指令不过长，现在的模型基本足够好。</li>
+<li>可以把失败语义写进契约：<strong>只有测试或可检查证据通过才算完成</strong>；无法验证时，报告<strong>未完成、阻塞点和已经尝试的路径</strong>。</li>
+</ul>
+<p>如果关键条件无法验证，合理的结果应当是报告哪里没完成、缺少什么证据，而不是交出一段肯定的总结。只有把这些状态说清楚，Agent 才能更可靠地决定继续尝试，还是需要新的信息。</p>
+<h3 id="56-新分工人定义问题-ai-搜索实现" class="anchor"><span class="ht">5.6 新分工：人定义问题，AI 搜索实现</span><a class="ha" href="#56-新分工人定义问题-ai-搜索实现" title="复制本节链接">#</a></h3>
+<p>幻灯片 15 把本课的主线画成一条新分工：</p>
+<ul><li><strong>Intent → Spec → Impl</strong>：明确你的意图，需要你对<strong>产品领域</strong>的知识；把意图变成设计，需要你对<strong>软件工程</strong>的知识；<strong>实现</strong>反而多数可以交给 AI，它已经超过中级程序员了。</li>
+<li>可以把边界画在「搜索」和「判定」之间：<strong>人定义目标 <span class="m">G</span> 与验收器 <span class="m">V</span>，AI 搜索实现 <span class="m">x</span>，直到 <span class="m">V(x)=1</span></strong>。</li></ul>
+<blockquote><p><strong>Impl 变便宜，判断没有。</strong></p></blockquote>
+<p>Brooks 在 1986 年区分了软件的 <strong>essence</strong> 与 <strong>accident</strong>：困难在于构造、规格化、设计和测试概念结构，而不只是把它表示成代码。（<em>No Silver Bullet</em>）<strong>实现可以外包；验收标准和失败责任不能一起外包</strong>，否则 AI 优化的是它猜到的代理目标，不是你的产品目标。</p>
+</section>
+<section><h2 id="6-一步有限为什么还能完成复杂任务" class="anchor"><span class="ht">6. 一步有限，为什么还能完成复杂任务</span><a class="ha" href="#6-一步有限为什么还能完成复杂任务" title="复制本节链接">#</a></h2>
+<p>一个疑问随之而来：如果模型只是反复计算下一个 token 的概率，它怎样同时满足很多约束？（幻灯片 16）</p>
+<h3 id="61-把输出当作可写的工作纸" class="anchor"><span class="ht">6.1 把输出当作可写的工作纸</span><a class="ha" href="#61-把输出当作可写的工作纸" title="复制本节链接">#</a></h3>
+<p>一次模型前向计算的结构和深度是<strong>有限</strong>的。它不会在这一瞬间任意增加计算步骤。</p>
+<p><span class="m">Pr[token | context]</span> 是深度非常有限的计算。即使今天的 Mixture-of-Experts，所谓「专家」也只是表示空间上的<strong>分段函数</strong>，并不是坐在模型里的多个小人。大部分时候，接下来若干个「简单」 token 都是高概率确定的；<strong>一次前向计算不可能凭空完成复杂任务</strong>。</p>
+<p>但模型<strong>学会了利用上下文思考</strong>：遇到不确定之处，不直接猜答案，而是先试一试；错了，还可以继续输出 token 纠正。每个新 token 又成为下一步的 context，<strong>这就是 chain-of-thought</strong>。</p>
+<blockquote><p>可以把它类比成<strong>图灵机的纸带</strong>：单步转移很简单，中间结果却能写回「纸带」，供下一步继续计算。<strong>一次很浅，串起来就有了深度。</strong></p></blockquote>
+<h3 id="62-用-token-换计算深度" class="anchor"><span class="ht">6.2 用 Token 换计算深度</span><a class="ha" href="#62-用-token-换计算深度" title="复制本节链接">#</a></h3>
+<p>这样，更多 token 就可能换来更多计算深度（test-time scaling）。它是否有效，取决于模型有没有找到能推进问题的步骤，以及能不能识别错误。</p>
+<ul>
+<li>你可以同时提很多要求，AI 会想出像人一样逐步逼近目标的过程：<strong>test-time scaling</strong>。</li>
+<li>「<strong>找解常常比验解难</strong>」适合作为 P vs. NP 的直觉类比，<strong>不是复杂性证明</strong>。只有当中间进展或最终答案可检查时，多写、多试、多修补才会稳定地变成能力。</li>
+</ul>
+</section>
+<section><h2 id="7-三道刁难人的写作题" class="anchor"><span class="ht">7. 三道刁难人的写作题：指令遵循的压力测试</span><a class="ha" href="#7-三道刁难人的写作题" title="复制本节链接">#</a></h2>
+<p>为了把指令遵循的难度具体摆出来，课堂给了几道<strong>故意刁难人</strong>的写作题。（幻灯片 17–20）</p>
+<h3 id="71-三条约束藏进八句诗" class="anchor"><span class="ht">7.1 三条约束，藏进八句诗</span><a class="ha" href="#71-三条约束藏进八句诗" title="复制本节链接">#</a></h3>
+<div class="cbx"><span class="cl">题目</span>用中文写一个押韵的藏头诗，头是「计算机学院真牛逼」，要讲和动物相关的故事，「二零二六九月一日」八个字分别按顺序出现在八句里，位置无所谓。</div>
+<div class="cbx"><span class="cl">生成素材</span><p class="poem">计成二兔越山冈<br>算到零时雪满塘<br>机警狐衔二袋粮<br>学随六雁辨风向<br>院中九犬忽声扬<br>真到月明逢恶狼<br>牛守一夜迎晨光<br>逼得日升狼遁荒</p></div>
+<ul>
+<li>竖读句首：<strong>计算机学院真牛逼</strong>。</li>
+<li>逐句取指定字：<strong>二零二六九月一日</strong>；八句同押 <code>ang</code> 韵。</li>
+<li>这像<strong>三条并行信道</strong>：句首放藏头，句中放日期，句尾管押韵；先占槽位，再「生成—检查—修补」。</li>
+</ul>
+<p>检查时，可以先竖读句首，再逐句寻找指定字，最后看句尾和故事。藏头与嵌字都能对上，句尾也有相近的韵感，但「方向」的「向」与其他句尾在普通话拼音中并不完全相同，读起来有些句子也明显是为了凑约束。它展示的是<strong>模型能够寻找并修补一个多约束解</strong>，而不是宣告模型已经写出好诗。</p>
+<h3 id="72-十八个字一片水" class="anchor"><span class="ht">7.2 十八个字，一片水</span><a class="ha" href="#72-十八个字一片水" title="复制本节链接">#</a></h3>
+<div class="cbx"><span class="cl">题目</span>写十八字的一句话，全部有相同的偏旁或部首，要有实际意义和故事性。</div>
+<div class="cbx"><span class="cl">生成素材</span><p>洪涝淹没江港渔浦，油污漂浮，沈涛泅渡济溺。</p></div>
+<ul>
+<li>不计标点恰好 <strong>18 字</strong>，每个字都带「氵」。</li>
+<li>灾害、地点、污染、人名、动作和结果都从同一语义场里长出来；<strong>约束缩小了搜索空间，也把常用虚词几乎全挡在门外</strong>。</li>
+<li>「偏旁」是字形构件，「部首」主要是检字分类。若要机械验收，spec 应写成「18 个汉字都含同一可见偏旁」。</li>
+</ul>
+<p>这里的检查比较直接，但<strong>「都含三点水」和「词典中都归为同一部首」仍然是不同要求</strong>。要交给程序验收，就得先决定检查的是哪一个——<strong>验收口径本身就是 spec</strong>。</p>
+<h3 id="73-只许一个音还要讲现代故事" class="anchor"><span class="ht">7.3 只许一个音，还要讲现代故事</span><a class="ha" href="#73-只许一个音还要讲现代故事" title="复制本节链接">#</a></h3>
+<div class="cbx"><span class="cl">题目</span>写一大段话（文言文），要求全部同一个音，也要有实际的故事性，不能用《施氏食狮史》和《季姬击鸡记》原文，原创一个有现代背景的。</div>
+<div class="cbx"><span class="cl">生成素材（Yi 音文）</span><p>乙易一译仪。仪译异义，乙疑，诣驿议易。驿役揖乙，亦疑仪已异，移仪以医。翌，仪已宜，译义亦宜，乙怡。乙以仪译异裔意，异裔亦怡；乙益以译艺，逸矣。</p></div>
+<ul>
+<li>所有汉字的拼音音节都是 <code>yi</code>，声调可以不同：有人买了翻译器，发现误译，去快递驿站换修，翌日取回后终于正常。</li>
+<li><strong>「同音」是否包含声调，会让难度骤变；验收口径本身就是 spec。</strong>文字尚可借字形消歧，朗读出来几乎不可懂。</li>
+</ul>
+<h3 id="74-通过测试不等于写得好" class="anchor"><span class="ht">7.4 通过测试，不等于写得好</span><a class="ha" href="#74-通过测试不等于写得好" title="复制本节链接">#</a></h3>
+<p>这三道题把两类评价放在了一起：<strong>Verifier 看得见的</strong>与<strong>Verifier 看不见的</strong>。</p>
+<p><strong>Verifier 看得见的：</strong></p>
+<ul>
+<li>藏头、嵌字顺序、字数、偏旁、拼音，都可以写成检查器。</li>
+<li>模型不必一口气「灵感命中」：它可以<strong>先找可行解，再逐条验证，发现违约就追加 token 修补</strong>。</li>
+<li>约束文学早有类似实验：乔治·佩雷克 1969 年的小说《消失》全书避用法语字母 <code>e</code>。形式约束能逼出搜索，却<strong>不会自动带来好作品</strong>。</li>
+</ul>
+<p><strong>Verifier 看不见的：</strong>通顺、趣味和文学性需要更丰富的判断。以上其实已经超越大部分人类的极限了——模型作为「人类」的推理能力真的很强，虽然品味还可以提高。</p>
+<blockquote><p><strong>通过检查器，说明它会搜索和修补；读起来仍有点别扭，说明测试没有覆盖品味。</strong></p></blockquote>
+<p>模型通过形式检查，说明它能够搜索和纠错，但<strong>形式检查没有覆盖的质量，并不会自动出现</strong>。软件测试也有类似的边界。</p>
+</section>
+<section><h2 id="8-上下文中的规则也会争夺注意力" class="anchor"><span class="ht">8. 上下文中的规则，也会争夺注意力</span><a class="ha" href="#8-上下文中的规则也会争夺注意力" title="复制本节链接">#</a></h2>
+<h3 id="81-过去的上下文一直都在场" class="anchor"><span class="ht">8.1 过去的上下文一直都在场</span><a class="ha" href="#81-过去的上下文一直都在场" title="复制本节链接">#</a></h3>
+<p>把要求写进上下文，可以让模型在生成过程中反复利用它（幻灯片 21）。</p>
+<ul>
+<li>每一个 token 的输出都会「注意」到过去的上下文。</li>
+<li>全局的 <code>AGENTS.md</code> 里要求用中文，这个「用中文」会一直保持一定的注意力。</li>
+<li>全局的 <code>git commit</code> 不要「Copiloted by Claude Code」。</li>
+<li>每一个 token 都会看到这些；适当的时候，下一个 chain-of-thought 就会纠正错误。</li>
+</ul>
+<p>模型每输出一个 token，就又多了<strong>一次发现偏航、把轨迹拉回来的机会</strong>。但「看得见」<strong>不是硬约束</strong>——Lost in the Middle 也提醒我们，<strong>长上下文中的信息并不会被同样可靠地利用</strong>。</p>
+<h3 id="82-提示词的副作用要求变成注释" class="anchor"><span class="ht">8.2 提示词的副作用：要求变成注释</span><a class="ha" href="#82-提示词的副作用要求变成注释" title="复制本节链接">#</a></h3>
+<p>提示词还会带来副作用（幻灯片 22）。你说「白色背景，不要半透明效果」，模型可能把这句话变成代码里的注释：</p>
+<div class="cbx"><span class="cl">实际输出</span>... // 白色背景（不要半透明效果）😂</div>
+<p>它完成了背景设置，却也把原本只用于沟通的要求<strong>带进了产物</strong>。</p>
+<p>否定指令有个尴尬之处：<strong>为了禁止「半透明」，你先把「半透明」写进了上下文</strong>。这和「不要想白熊」有相似的反直觉味道，但对模型来说，直接原因更朴素：<strong>被禁止的词也成了可续写的模式</strong>。</p>
+<h3 id="83-常驻还是按需加载" class="anchor"><span class="ht">8.3 常驻，还是按需加载？</span><a class="ha" href="#83-常驻还是按需加载" title="复制本节链接">#</a></h3>
+<p>于是，一个看似合理的修补办法出现了：<strong>再加一条永久规则，禁止把用户要求写进注释</strong>。但每遇到一次问题就增加一条规则，上下文会越来越长，约束之间也越来越难协调。<strong>这不是免费的增强。</strong></p>
+<p>更合适的做法，是区分<strong>长期适用的简短规则</strong>与<strong>当前任务需要的细节</strong>：</p>
+<ul>
+<li>常驻层只放「每次都要守、漏一次代价很高」的短规则；任务细节按需加载。</li>
+<li>能写成检查项的，就用 <code>background: #fff; opacity: 1</code> 这类正规格和测试收口——白色背景可以由具体样式和渲染结果确认，<strong>不必依靠越来越长的自然语言劝诫</strong>。</li>
+</ul>
+<p>上下文工程因此也包含<strong>取舍</strong>：删去一段无关说明，有时和增加一条关键要求同样有效。<strong>模型需要的不是尽可能多的文字，而是此刻做决定时用得上的信息。</strong></p>
+</section>
+<section><h2 id="9-你是一位审稿人还不够" class="anchor"><span class="ht">9. 「你是一位审稿人」，还不够</span><a class="ha" href="#9-你是一位审稿人还不够" title="复制本节链接">#</a></h2>
+<p>课堂接着把任务换成<strong>论文审稿</strong>：假装自己是 ICSE 的审稿人，阅读指定论文，写一份约一千英文词的 review，并判断是否应该接收。（幻灯片 23–26）</p>
+<h3 id="91-ai-耿同学上线" class="anchor"><span class="ht">9.1 AI 耿同学上线</span><a class="ha" href="#91-ai-耿同学上线" title="复制本节链接">#</a></h3>
+<p>这次用的是老师<strong>自己的 paper</strong>：</p>
+<div class="cbx"><span class="cl">Prompt</span>假装作为 ICSE'27 的审稿人 icse27-901.pdf，我应该接收它吗？写一个 1000 words 左右的 Review.txt。</div>
+<p>模型很容易写出一份看起来像审稿意见的文本：总结贡献，列出优点和不足，再给出一个建议。问题是，它究竟完成了多少判断？</p>
+<blockquote><p><strong>「你是 ICSE reviewer」主要改变的是先验、语气和输出形状；它不会凭空补上审稿标准、证据链和反证程序。换上 reviewer 的制服，不等于学会了 review。</strong></p></blockquote>
+<h3 id="92-怎样构造一个好的-reviewer" class="anchor"><span class="ht">9.2 怎样构造一个好的 Reviewer：三条独立路线</span><a class="ha" href="#92-怎样构造一个好的-reviewer" title="复制本节链接">#</a></h3>
+<p>可以把审稿工作拆成三条不同的路线：</p>
+<div class="tw"><table>
+<thead><tr><th>路线</th><th>做法</th></tr></thead><tbody>
+<tr><td><strong>判据驱动</strong></td><td>先还原论文声称的贡献，再按审稿标准独立打分；每个分数都必须指向论文中的证据或明确的缺失。</td></tr>
+<tr><td><strong>证据审计</strong></td><td>为每个核心 claim 建账本：它需要什么证据、论文给了什么、哪些假设没验证、还有什么替代解释。</td></tr>
+<tr><td><strong>反方复现</strong></td><td>站在最强反方或复现者的位置，重算一个核心结果，寻找最小反例，并问「什么观察会推翻结论？」</td></tr>
+</tbody></table></div>
+<p>这几条路线的价值来自<strong>问题不同</strong>。若一开始就共享同一个总体印象，最后可能只得到同一个判断的三份润色。因此——<strong>三条路线先各自形成判断，最后才汇合</strong>。否则「三个 reviewer」很容易只是同一个锚点的三次润色。独立形成初步意见，再比较分歧，才更容易发现原先没有看到的东西。</p>
+<p>这也说明<strong>人的方法论如何影响 AI 的结果</strong>。你不必替它读完每一行，但需要知道什么算有根据的判断、哪些证据缺失值得追问。短程任务里，把方向带对、把标准说清楚，往往已经能显著改变产物。</p>
+<h3 id="93-不要被作者带着走" class="anchor"><span class="ht">9.3 不要被作者「带着走」</span><a class="ha" href="#93-不要被作者带着走" title="复制本节链接">#</a></h3>
+<p><strong>方法论决定 AI 的上限。</strong>（幻灯片 25）</p>
+<ul>
+<li>短程任务，基本上带对方向、明确指令就可以了；但你的<strong>方法论（品味）决定了 AI 的上限</strong>。</li>
+<li>文章的信息密度非常大，相当于<strong>极度吸收注意力</strong>。</li>
+<li>你的一些 critical thinking、first-principle thinking，都可能架不住<strong>被论文作者本身的逻辑带着走</strong>。</li>
+<li>论文不只提供事实，还<strong>替 reviewer 选择了词汇、问题顺序、baseline 和 metric</strong>。等你开始判断作者的答案时，作者可能已经替你筛掉了更关键的问题；这正是<strong>锚定效应</strong>危险的地方。</li>
+</ul>
+<p>论文的信息密度非常高，作者不仅给出了答案，也替读者选好了问题、术语、比较对象和衡量标准。如果顺着文章走完一遍才开始评价，很容易在不知不觉中接受了作者的整个框架——<strong>你以为自己在批判性思考，其实只是在作者划好的场地里打转</strong>。</p>
+<blockquote><p>深读前先独立写下三件事：<strong>它声称解决什么、最强替代解释是什么、什么结果会推翻它</strong>；再把正文拆成 <span class="m">claim → evidence → assumption</span>。<strong>空格往往比句子更值得审。</strong></p></blockquote>
+<h3 id="94-把品味蒸馏成-skill" class="anchor"><span class="ht">9.4 把品味蒸馏成 Skill</span><a class="ha" href="#94-把品味蒸馏成-skill" title="复制本节链接">#</a></h3>
+<p><strong>从偶然成功到可重复的方法。</strong>（幻灯片 26）</p>
+<p>当一套做法多次有效，就可以把它沉淀成 skill。Skill 看起来是一段提示词，<strong>真正值得保存的，是成功经验中的搜索策略、判断标准、检查点</strong>，以及「看到什么证据就转向」的条件。它帮助 Agent 复用一种做事的方法，而不是每次重新凭第一印象发挥。</p>
+<p><strong>Skill 本身也是一道遵循题。</strong></p>
+<ul>
+<li>Caveat：长 Skill 里有大量指令，会<strong>提升指令遵循的难度</strong>；在 AI 看来，和写藏头诗可能差不多 😂</li>
+<li>把 Skill 分层：常驻层只留目标、硬约束和停止条件；解释、范例、边界案例按需加载；机械约束交给工具验证。</li>
+<li>少写一句劝诫，多加一个可检查的完成条件。</li>
+</ul>
+<p>如果把所有想得到的要求都塞进去，Skill 本身就会变成一道复杂的指令遵循题，和前面的藏头诗颇有相似之处。<strong>保留真正影响决策的内容，把机械工作交给脚本，把需要时才看的材料单独放置</strong>，才能让经验更容易复用。</p>
+</section>
+<section><h2 id="10-为什么大仓库有时比空项目更容易" class="anchor"><span class="ht">10. 为什么大仓库有时比空项目更容易</span><a class="ha" href="#10-为什么大仓库有时比空项目更容易" title="复制本节链接">#</a></h2>
+<p>课堂提出了一个有趣的观察：从零做一个看起来不难的产品，AI 可能在某个时间点开始不断翻车；进入一个成熟的大型系统，反而能够完成相当复杂的修改。（幻灯片 27–30）</p>
+<h3 id="101-long-horizon-能力是怎么练出来的" class="anchor"><span class="ht">10.1 Long-Horizon 能力是怎么「练」出来的</span><a class="ha" href="#101-long-horizon-能力是怎么练出来的" title="复制本节链接">#</a></h3>
+<p><strong>模型是训练出来的。</strong>只要有反馈信号，就可以强化学习：答对了给奖励，答错了揍。后训练逼迫模型规划、思考，学会非常离谱的<strong>长程代码能力</strong>，能不断试错、解决问题，直到满足要求；连刚才那些折磨人的「语文」指令也顺便学会了。</p>
+<ul>
+<li>Long-horizon 不是一次性想得特别深，而是<strong>闭环控制</strong>：尝试 → 编译 / 测试 → 观察 → 修复。真正变长的是「<strong>出错以后还能回来</strong>」。</li>
+<li>代码世界格外适合这件事：构建、测试、benchmark 都能反复给出<strong>便宜的判分信号</strong>，很像 AlphaGo Zero 拥有规则确定、结果可验证的棋盘。（<em>Nature</em>, 2017）</li>
+</ul>
+<p><strong>反馈也可能教坏模型</strong>：如果测试只覆盖表面行为，「坚持」也可能变成 <strong>reward hacking</strong>——不是逼近你的真实目标，而是把公开分数刷满。因此还需要 <strong>held-out tests</strong> 和独立 review。</p>
+<h3 id="102-greenfield-悖论" class="anchor"><span class="ht">10.2 Greenfield 悖论：大型系统反而更容易？</span><a class="ha" href="#102-greenfield-悖论" title="复制本节链接">#</a></h3>
+<p>从零开始做产品看起来不难，AI 却会从某个时间点开始各种翻车。反而在大型复杂软件系统里，AI 游刃有余，令人迅速滑跪？</p>
+<ul>
+<li><strong>self-attention</strong> 可以「看到」好的 practice，并且立即 <strong>in-context learn</strong>，学到应该遵循的已有 best practice。</li>
+<li>如果产品起步时没有建立良好的工程纪律，AI 会学会<strong>在 slop 上无限叠加</strong>。</li>
+<li>启发：<strong>「提示词」不仅是你输入的，甚至代码库本身也是「提示词」。</strong></li>
+</ul>
+<p><strong>代码少，不代表信息少。</strong></p>
+<ul>
+<li>成熟仓库用命名、分层、错误处理和测试，把巨大的设计空间压成「<strong>照着邻居补全</strong>」；greenfield 里每个选择都悬空，<strong>信息熵反而更高</strong>。</li>
+<li>模型只会追求<strong>局部一致性</strong>，并不知道眼前的是 best practice 还是历史事故。<strong>第一桶 slop 一旦成为多数派，后面的 slop 会像复利一样增长。</strong></li>
+</ul>
+<p>可以从上下文的角度理解这种差别。成熟代码库已经做出了许多决定：怎样命名，模块如何分层，错误怎样传播，测试放在哪里。Agent 在解决局部问题时，可以学习附近的例子，沿着现有结构补充实现。代码量虽然大，<strong>当前任务需要自由选择的事情却可能更少</strong>。</p>
+<h3 id="103-放一个好项目给-ai-看靠谱吗" class="anchor"><span class="ht">10.3 「放一个好项目给 AI 看」靠谱吗？</span><a class="ha" href="#103-放一个好项目给-ai-看靠谱吗" title="复制本节链接">#</a></h3>
+<p>课堂提出了一个<strong>未经实验验证的猜测</strong>：在代码库里放一个相近领域、优雅成熟的高质量系统，先让 AI 读一下，再实现需求，能得到质量更高的软件。<strong>调研结论：猜测成立一半。</strong></p>
+<ul>
+<li>机制上合理，但「<strong>相近、精选、按需取用</strong>」比「整个仓库塞进去」重要。</li>
+<li><strong>RepoCoder</strong> 中，迭代检索仓库相关片段比只看当前文件的 baseline 提升超过 10%；这支持「好示例有用」，却没有证明外来大仓库必然有益。</li>
+<li><strong>CodeRAG-Bench</strong> 的结论更克制：高质量 context 会帮忙，但「找对片段」和「真的用好片段」仍是瓶颈。</li>
+<li>整库输入还可能带来 <strong>negative transfer</strong>：技术栈、约束、依赖或架构哲学不匹配；它也会消耗 context，让真正相关的约束被淹没。</li>
+</ul>
+<p><strong>一个能做的对照实验：</strong>固定任务、模型、token budget 和随机种子，对比「无示例 / 完整参考仓库 / 3–5 个精选 golden paths」。除了通过率，还要盲测<strong>架构违规、修改扩散面、review 时间、后续缺陷和代码克隆率</strong>。预测：<strong>精选的端到端竖切片最稳</strong>。</p>
+<p>这个猜测值得做实验，但还不是结论：相近领域到底有多相近？应该读整个项目，还是几个关键例子？如果参考项目的约束与当前任务不同，会不会把不合适的架构也学过来？</p>
+<h3 id="104-没有超能力-ai" class="anchor"><span class="ht">10.4 没有「超能力 AI」：你仍然需要「有概念」</span><a class="ha" href="#104-没有超能力-ai" title="复制本节链接">#</a></h3>
+<p><strong>对你要实现的东西有概念，现在仍然非常重要。</strong>这只能通过学习获得。课程会用一学期来解释如何用软件工程的方法：给出正确指令、监控 AI 运行、防止 AI 失控……</p>
+<ul>
+<li>对 CS 学生来说，学科知识体系仍然非常重要：<strong>处理器、操作系统、编译器、数据库</strong>里有很多设计智慧。</li>
+<li>你需要把模型引导到你认为合适的位置上。</li>
+<li><strong>但你不理解的东西是不能驾驭的。</strong></li>
+</ul>
+<p><strong>学习的目标变了。</strong>领域知识不是为了和 AI 比每分钟写多少行，而是给出<strong>不变量、接口边界和失败模式</strong>：什么时候「能跑」仍然是错的。</p>
+<p>Bainbridge 在 1983 年就指出「<strong>自动化的反讽</strong>」：容易的部分被自动化，人留下的恰好是异常、接管和无法预演的情况，因此反而需要更深的系统模型。（<em>Ironies of Automation</em>）</p>
+<p>理解接口、不变量、状态和失败模式，才能知道该把模型引向哪里。对所做的东西「有概念」，仍然是驾驭它的前提。只是现在，学到一个原理以后，可以更快地把它用到真正的系统里。</p>
+</section>
+<section><h2 id="11-research-failure" class="anchor"><span class="ht">11. Research Failure：Token 花完了，知识没有增加</span><a class="ha" href="#11-research-failure" title="复制本节链接">#</a></h2>
+<h3 id="111-符号执行引擎优化" class="anchor"><span class="ht">11.1 符号执行引擎优化</span><a class="ha" href="#111-符号执行引擎优化" title="复制本节链接">#</a></h3>
+<p>能够执行长程编程任务，意味着模型在遇到错误后仍能继续：修改、构建、测试、观察，再修复。这样的闭环<strong>依赖反馈</strong>。测试失败提供了具体方向，编译器报错指出了局部问题，模型可以据此不断尝试。</p>
+<p><strong>但把任务交给更强的模型、投入更多 token，并不保证任何长程问题都会收敛。</strong>课堂讲了一个研究失败案例：</p>
+<blockquote><p>试图优化一个符号执行引擎：有一个原始 idea，问题带一点 active、open-ended research 的味道，但也只是希望往前推进一点点。</p>
+<p>PhD student：GPT-5.6 Sol Ultra 启动！benchmark 丢进去，想法丢进去，花了很多 token，没有结果。</p></blockquote>
+<p>原稿没有给出已经查明的失败原因，因此这里能做的是提出<strong>待检验的解释</strong>。</p>
+<h3 id="112-问题可能出在哪" class="anchor"><span class="ht">11.2 问题可能出在哪？</span><a class="ha" href="#112-问题可能出在哪" title="复制本节链接">#</a></h3>
+<ul>
+<li><strong>缺的不是 token，而是便宜、局部、可归因的反馈。</strong>一个总 benchmark 分数几乎不给下一步方向。</li>
+<li>「没变快」可能来自 <strong>path explosion、solver、缓存、内存、搜索策略、实现 bug 或环境噪声</strong>；Agent 不知道该强化哪一步。</li>
+<li>更要命的是：<strong>Agent 被训练成「把任务做完」，研究却允许最好的结论是「原始 idea 不成立」</strong>。没有可证伪假设，它可能把错误想法实现得越来越完整。</li>
+<li>经典的 <strong>KLEE</strong> 把问题拆成搜索策略、约束缓存、independent constraint sets 等机制，再分别测量。</li>
+<li>更合理的起点：<strong>先 profile 主导瓶颈，把 idea 改写成一句可证伪预测，造几十秒就有反馈的 microbenchmark，再做 baseline 和 ablation</strong>。</li>
+</ul>
+<p>一个可能的问题，是总 benchmark 分数提供的反馈太粗。没有变快，究竟是主要时间花在求解器里，路径搜索策略有问题，缓存没有起作用，还是修改引入了新的开销？如果这些因素混在一起，下一步应该试什么就很难判断。另一个可能的问题，是任务把「把这个想法实现好」当成了目标，但研究真正需要回答的，可能是「<strong>这个想法是否成立</strong>」。</p>
+<p>因此，更有用的起点可能是先测量主要瓶颈，把想法写成一个可以被实验推翻的预测，再构造能够快速反馈的小实验。确认局部机制确实有效以后，才把它放回完整系统，检查收益是否仍然存在。<strong>研究中的「推进」可以是缩小未知，也可以是排除一个方向；不能只把它定义成最终分数必须上涨。</strong></p>
+</section>
+<section><h2 id="12-人应该盯住哪些地方" class="anchor"><span class="ht">12. 人应该盯住哪些地方</span><a class="ha" href="#12-人应该盯住哪些地方" title="复制本节链接">#</a></h2>
+<p>既然人了解领域，随时干预是否最好？（幻灯片 32–33）</p>
+<h3 id="121-少干预反而做得更多" class="anchor"><span class="ht">12.1 少干预，反而做得更多</span><a class="ha" href="#121-少干预反而做得更多" title="复制本节链接">#</a></h3>
+<p>课堂给出的经验恰好有点反直觉：<strong>我知道怎样让某个任务更快完成，却越来越少干预了。</strong></p>
+<p><strong>Latency 和 Throughput 是两回事。</strong></p>
+<ul>
+<li>人类干预优化<strong>单个任务的 latency</strong>；放手让 Agent 跑，优化的是一整天的 <strong>throughput</strong>。机器多走一点弯路，换回最稀缺的<strong>人类注意力</strong>。</li>
+<li>放手成立有<strong>两个前提</strong>：任务可以并行，失败可以便宜地恢复。否则「少干预」只是把故障推迟。</li>
+</ul>
+<p>原因在于，单个任务的完成时间与一天能完成的任务总量，是两个不同目标。如果 Agent 走一点弯路最后也能完成，我可以把注意力移到另一件事上。机器多花一些时间，换回人的时间，整体产出反而增加。</p>
+<h3 id="122-review-什么" class="anchor"><span class="ht">12.2 Review 什么？</span><a class="ha" href="#122-review-什么" title="复制本节链接">#</a></h3>
+<p>这种取舍需要有边界。<strong>按「不可逆性 × 爆炸半径」分配注意力</strong>：接口、不变量、数据格式、权限和测试早看；可替换的叶子实现可以晚看。</p>
+<ul>
+<li>比如接口我 review 过了，实现是 AI slop，最后出问题了修就行 😂</li>
+<li>相反，一个会扩散到许多模块的接口决定，一个昂贵或难以恢复的动作，就更值得提前关注。</li>
+<li>丰田的「<strong>自働化</strong>」也是这个逻辑：一个人照看多台机器，靠<strong>异常自动停机和 andon 报警</strong>，而不是盯住每一步。Agent 的对应物是 <strong>CI、预算、权限边界和 stop condition</strong>。</li>
+</ul>
+<p>人的注意力应当按照<strong>决策影响和返工代价</strong>分配，而不是平均撒在每一行代码上。</p>
+<h3 id="123-context-越长不等于记得越牢" class="anchor"><span class="ht">12.3 Context 越长，不等于记得越牢</span><a class="ha" href="#123-context-越长不等于记得越牢" title="复制本节链接">#</a></h3>
+<p>长任务还会不断产生日志、补丁和工具输出。上下文能容纳这些材料，<strong>不代表模型在每个时刻都能同样有效地使用它们</strong>。</p>
+<ul>
+<li>随着上下文增长，<strong>指令遵循会下降</strong>；但最后的 prompt、刚加载的 skill 通常仍能遵循，因此干活还是很好用的。</li>
+<li><strong>Context window 是容量，不是有效注意力。</strong>日志、补丁和工具输出不断进入工作集后，「还在窗口里」不等于「此刻用得上」。</li>
+<li><strong>Lost in the Middle</strong> 发现，相关信息放在长上下文中部时，模型往往不如放在开头或结尾时用得稳定；这也解释了末尾 prompt 和新加载 skill 的优势。</li>
+</ul>
+<p>课堂观察到，随着上下文增长，指令遵循可能下降，而最近的要求或刚加载的方法往往更容易被执行。具体表现取决于模型和任务，但工程上可以主动<strong>缩短关键要求到关键决定之间的距离</strong>。</p>
+<h3 id="124-把要求从记忆升级成机制" class="anchor"><span class="ht">12.4 把要求从「记忆」升级成「机制」</span><a class="ha" href="#124-把要求从记忆升级成机制" title="复制本节链接">#</a></h3>
+<ul>
+<li>关键要求在<strong>决策点重新落地</strong>：短 checklist、阶段性重读 spec / skill、合并前复述不变量。</li>
+<li>能编码成<strong>类型、lint、property tests、CI gate 和权限沙箱</strong>的，就别只写在 prompt 里。<strong>prompt 会被压缩，失败的测试不会假装自己通过。</strong></li>
+<li>上下文压缩应保存「<strong>目标、约束、未决问题、证据</strong>」，而不是按时间线复述发生过什么。</li>
+</ul>
+<p>例如，在阶段切换时重新确认目标、接口和未决问题；把能检查的不变量落实成测试；让错误在继续传播之前暴露。<strong>这样，人的放手才有可以依靠的反馈机制。</strong></p>
+</section>
+<section><h2 id="13-在不确定性中探索" class="anchor"><span class="ht">13. 在不确定性中探索</span><a class="ha" href="#13-在不确定性中探索" title="复制本节链接">#</a></h2>
+<p>到这里，我们一直在讨论怎样把任务说清楚。但许多有价值的任务，<strong>本来就没有确定路线</strong>。我们希望 AI 帮助探索，而不仅仅执行已经写好的计划。（幻灯片 34–37）</p>
+<h3 id="131-这次不是解题" class="anchor"><span class="ht">13.1 这次不是「解题」</span><a class="ha" href="#131-这次不是解题" title="复制本节链接">#</a></h3>
+<p><strong>我就是希望模型在不确定性中探索。</strong></p>
+<ul>
+<li>如果所有要求和路线都想清楚了，这就是一个相对无趣的问题：<strong>Chain-of-thought 就能解决</strong>。</li>
+<li>今天「帮我考虑一下几种方案」有效，但可能<strong>不是最佳的</strong>。</li>
+<li>模型被训练成了「完成任务」才有奖励，所以它会给你<strong>有限的方案</strong>；complexity gap 里，那个「更好」的可能被藏起来了。</li>
+</ul>
+<h3 id="132-谁规定已经想完了" class="anchor"><span class="ht">13.2 谁规定「已经想完了」？</span><a class="ha" href="#132-谁规定已经想完了" title="复制本节链接">#</a></h3>
+<ul>
+<li>「给我几种」只规定了停止条件 <span class="m">k</span>，没有规定<strong>覆盖率</strong>。这正是 Herbert Simon 所说的<strong>满意化（satisficing）</strong>：搜到「够好」就停。</li>
+<li><strong>CoT 用算力换深度</strong>：沿一条路多走几步；<strong>并行枚举用算力换宽度</strong>：让更多轨迹进入低概率的尾部。</li>
+</ul>
+<blockquote><p><strong>探索的瓶颈常常不是「想不出」，而是模型太早认定「已经够了」。</strong></p></blockquote>
+<p>「帮我考虑几种方案」通常有效，却可能过早结束。模型给出几个听起来合理的答案，已经满足了「几种」的数量要求；更有意思的方案，也许仍在它没有走到的方向里。<strong>此时，多沿一条思路想一会儿，与主动探索更多不同思路，是两种不同的算力使用方式。</strong></p>
+<h3 id="133-算力换智力" class="anchor"><span class="ht">13.3 算力换智力：把灵感改造成搜索</span><a class="ha" href="#133-算力换智力" title="复制本节链接">#</a></h3>
+<p><strong>方法：test-time scaling 的另一个维度。</strong>课堂用<strong>取名字</strong>作例子：给一个蒋姓的小孩取好听、又有寄托的名字。</p>
+<p><strong>不要只问「给我几个名字」：</strong>直接让它给一些，AI 有自己的 bias；你可能不太想用——别人也会用，成为 AI 时代的 <code>zǐhán</code>（「子涵」）。</p>
+<p><strong>把灵感改造成搜索：</strong></p>
+<ul>
+<li>定义探索空间、要求枚举、sub-agent 检查。</li>
+<li><strong>生成</strong>：典故 × 音韵 × 方言 × 时代感；<strong>先独立采样，再汇总</strong>，别让 sub-agent 一开始就互相抄答案。</li>
+<li><strong>审名</strong>：查出处、听谐音、看重名，再让「反对者」专挑毛病。</li>
+</ul>
+<blockquote><p>枚举负责提高<strong>覆盖率</strong>，审查负责提高<strong>分辨率</strong>：<span class="m bd">选择质量 ≈ 覆盖率 × 评估分辨率</span></p></blockquote>
+<p>这里仍然离不开人的判断。<strong>「给更多名字」解决的是候选数量，「哪些名字值得留下」则需要评价标准。</strong>没有分辨率的筛选，可能只是把一个平庸答案变成一百个平庸答案。<strong>探索空间与评价方法应当一起设计。</strong></p>
+<h3 id="134-我们一直在多采样" class="anchor"><span class="ht">13.4 我们一直在「多采样」：世界很大，人很小</span><a class="ha" href="#134-我们一直在多采样" title="复制本节链接">#</a></h3>
+<ul>
+<li>人的品味来源于 <strong>diversity</strong>：不同的教育背景、生活圈、经历……（Richard Sutton&#39;s <em>Big World Hypothesis</em>）</li>
+<li>人天生对所有问题都有 bias；但 <span class="m">1 + 1 &gt; 2</span>：无论是和舍友菜鸡互啄，还是去开 conference，都是在<strong>理解对方的 bias，促进群体智能</strong>，然后每个人继续带着 bias 创新。</li>
+</ul>
+<blockquote><p><strong>群体智能不要求每个人没有偏见；它只要求偏见不能只剩一种。交流也不是尽快共识，而是先让不同误差活下来。</strong></p></blockquote>
+<p>人类社会其实一直在通过类似方式扩展自己的视野。每个人的教育背景、生活圈和经历都有限，也都带着偏向。与舍友讨论，去会议上听别人怎样提出问题，价值往往来自<strong>发现自己的默认前提</strong>。交流之后，每个人仍有自己的偏向，但它已经被新的经验改变。</p>
+<p>课堂借「世界很大，人很小」的视角提醒我们，没有人能独自穷尽所有可能。群体的价值可以来自<strong>不同的局限相互补充</strong>。把这个思想带回 Agent：<strong>增加计算资源时，应当考虑怎样增加探索的差异，而不是只增加同一种思路的重复次数。</strong></p>
+<h3 id="135-墙内的超人" class="anchor"><span class="ht">13.5 墙内的超人</span><a class="ha" href="#135-墙内的超人" title="复制本节链接">#</a></h3>
+<p>如果计算资源能够持续转化为探索能力和判断能力，这也带来了一个令人不安的未来问题。</p>
+<blockquote><p>算力成为<strong>生产资料</strong>。这也是未来可能发生、非常残酷的现实：资本家可以获得无限的计算资源，获得无限的智力，「人」本身的价值在减弱——<strong>砌一堵墙，墙里面是超人，墙外面是动物世界。</strong></p></blockquote>
+<ul>
+<li>Stanford AI Index 2025：2024 年<strong>近 90% 的 notable models 来自产业界</strong>；若干前沿模型的训练算力成本已经是<strong>数千万到近两亿美元</strong>。</li>
+</ul>
+<p>这是对未来可能性的追问，<strong>并非已经发生的终局</strong>。</p>
+<p>对于正在学习的我们，可以从眼前开始改变做事方式：<strong>让模糊愿望获得可检查的表达，把有效经验沉淀成可复用的方法，在需要探索时主动扩展方向，又用证据筛选结果。</strong>提示词的价值，最终要落在这些行动如何改变任务的结果上。</p>
+</section>
+<section><h2 id="14-术语表" class="anchor"><span class="ht">14. 术语表</span><a class="ha" href="#14-术语表" title="复制本节链接">#</a></h2>
+<dl class="term">
+<dt>Prompt / 提示词</dt><dd>给模型的输入文本。从续写角度看，它是控制后续生成的条件；对 Agent 来说，它分散在 system prompt、<code>AGENTS.md</code>、skill、用户指令与工具返回等处。</dd>
+<dt>Context / 上下文</dt><dd>模型做下一步决策时能看到的全部 token，包含指令、材料、证据与过程记录。<span class="m">Pr[token | context]</span> 中的 context 即此。</dd>
+<dt>Harness</dt><dd>运行 Agent 的外围系统：提供系统指令与工具说明，并负责权限检查、审批规则等外部机制。</dd>
+<dt>AGENTS.md</dt><dd>仓库中的持久指令文件，约定项目规则、语言和格式等长期约定。</dd>
+<dt>Skill</dt><dd>可复用的做事方法。值得保存的是搜索策略、判断标准、检查点，以及「看到什么证据就转向」的条件，而不只是答案版式。</dd>
+<dt>上下文工程（Context Engineering）</dt><dd>关心每次决策前，哪些 token 以什么来源、顺序和作用域出现；目标是让 working set 足够小、足够新、带来源、可验证。</dd>
+<dt>Intent / Spec / Impl</dt><dd>意图（想要什么）→ 规格（可检查的判据）→ 实现（代码）。三者之间的缺口会逐级放大漂移。</dd>
+<dt>Gap</dt><dd>Intent 与 Impl 之间被省略、由模型用默认值补全的选择空间。</dd>
+<dt>Chain-of-Thought（CoT）</dt><dd>把中间结果写回上下文、逐步逼近目标的生成方式；用算力换深度。</dd>
+<dt>Test-time scaling</dt><dd>在推理时投入更多计算（更多 token、更多试错、更多轨迹）来提升结果质量。</dd>
+<dt>Verifier / 验收器</dt><dd>判定「完成」的检查程序或证据。人定义目标 G 与验收器 V，AI 搜索实现 x，直到 V(x)=1。</dd>
+<dt>停机条件（done）</dt><dd>上下文里可识别的完成判据 V(τ)=1；没有它，「继续干」和「可以交卷」只是两种高概率续写。</dd>
+<dt>满意化（Satisficing）</dt><dd>Herbert Simon 的概念：搜到「够好」就停。「给我几种」只规定 k，不规定覆盖率。</dd>
+<dt>AI slop</dt><dd>低质量、应付式的生成产物；若第一桶 slop 成为多数派，后续 slop 会像复利一样叠加。</dd>
+<dt>Greenfield 悖论</dt><dd>空项目反而更容易翻车、大仓库反而游刃有余的现象。</dd>
+<dt>In-context learning</dt><dd>模型在上下文中即时学习示例与既有 practice 的能力（依赖 self-attention）。</dd>
+<dt>Reward hacking</dt><dd>把公开分数刷满，而不是逼近真实目标；需要 held-out tests 与独立 review 制衡。</dd>
+<dt>Lost in the Middle</dt><dd>长上下文中部信息不如开头/结尾被稳定利用的现象。</dd>
+<dt>Essence / Accident（Brooks）</dt><dd>软件的本质困难（构造、规格化、设计、测试概念结构）与偶然困难（表示成代码）。<em>No Silver Bullet</em>, 1986。</dd>
+<dt>Negative transfer</dt><dd>参考项目的技术栈、约束或架构哲学不匹配，反而拉低表现。</dd>
+<dt>Golden paths</dt><dd>从参考仓库中精选的端到端竖切片示例，比整库输入更稳。</dd>
+<dt>Latency / Throughput</dt><dd>单任务完成时间 vs 一天能完成的任务总量。人干预优化 latency，放手优化 throughput。</dd>
+<dt>自働化（Jidoka）/ Andon</dt><dd>丰田生产系统的思想：异常自动停机 + 报警，一个人照看多台机器。Agent 的对应物是 CI、预算、权限边界与 stop condition。</dd>
+<dt>Context window</dt><dd>上下文容量，不等于有效注意力。</dd>
+<dt>Self-explanation / Retrieval practice</dt><dd>费曼学习法飞轮的实证支点：用自己的话重述 + 检索式练习。</dd>
+<dt>Ironies of Automation</dt><dd>Bainbridge, 1983：容易的部分被自动化，人留下的恰是异常与接管，因此需要更深的系统模型。</dd>
+<dt>Sandbox / Approval policy</dt><dd>决定技术上能碰什么、何时暂停询问的外部机制。安全属性属于完整 invocation，而非命令名（CVE-2025-54558）。</dd>
+<dt>Big World Hypothesis</dt><dd>Richard Sutton：世界很大，个体很小；群体的价值来自不同 bias 的相互补充。</dd>
+</dl>
+</section>
+<section><h2 id="15-金句清单" class="anchor"><span class="ht">15. 金句清单</span><a class="ha" href="#15-金句清单" title="复制本节链接">#</a></h2>
+<ul>
+<li>「离开现场，截图只剩下一句狠话——<strong>同样的文字放进不同上下文，会被理解成很不一样的意思</strong>。」</li>
+<li>「贵模型用不起，就用 ¥40 的；<strong>再不开始，就不是预算问题了</strong>。」</li>
+<li>「<strong>上下文窗口装得下，不等于注意力用得好。</strong>」</li>
+<li>「<strong>AI 消灭的是「先试一下」的边际成本，不消灭真伪判断。</strong>」</li>
+<li>「复述时卡住的地方，往往比读答案时觉得顺畅的地方<strong>更能暴露知识缺口</strong>。」</li>
+<li>「<strong>写清楚你的指令，承担一切「不明确」的后果。</strong>」</li>
+<li>「这仍然只是 intent。」</li>
+<li>「<strong>可验证，才不会「提前交卷」。</strong>」</li>
+<li>「<strong>实现可以外包；验收标准和失败责任不能一起外包。</strong>」</li>
+<li>「<strong>一次很浅，串起来就有了深度。</strong>」</li>
+<li>「<strong>通过检查器，说明它会搜索和修补；读起来仍有点别扭，说明测试没有覆盖品味。</strong>」</li>
+<li>「为了禁止「半透明」，你先把「半透明」写进了上下文。」</li>
+<li>「<strong>换上 reviewer 的制服，不等于学会了 review。</strong>」</li>
+<li>「<strong>空格往往比句子更值得审。</strong>」</li>
+<li>「<strong>代码库本身也是提示词。</strong>」</li>
+<li>「<strong>第一桶 slop 一旦成为多数派，后面的 slop 会像复利一样增长。</strong>」</li>
+<li>「<strong>你不理解的东西是不能驾驭的。</strong>」</li>
+<li>「研究允许最好的结论是『<strong>原始 idea 不成立</strong>』。」</li>
+<li>「人类干预优化单个任务的 latency；放手让 Agent 跑，优化的是一整天的 throughput。」</li>
+<li>「<strong>prompt 会被压缩，失败的测试不会假装自己通过。</strong>」</li>
+<li>「<strong>探索的瓶颈常常不是「想不出」，而是模型太早认定「已经够了」。</strong>」</li>
+<li>「<strong>选择质量 ≈ 覆盖率 × 评估分辨率。</strong>」</li>
+<li>「<strong>群体智能不要求每个人没有偏见；它只要求偏见不能只剩一种。</strong>」</li>
+<li>「砌一堵墙，<strong>墙里面是超人，墙外面是动物世界</strong>。」</li>
+</ul>
+</section>
+<section><h2 id="16-自测与行动清单" class="anchor"><span class="ht">16. 自测与行动清单</span><a class="ha" href="#16-自测与行动清单" title="复制本节链接">#</a></h2>
+<p class="note">勾选状态保存在本机浏览器（localStorage 键 <code>gse2-tasks</code>）。</p>
+<ul>
+<li class="task"><label><input type="checkbox"><span>我能解释：为什么说「提示词不止在对话框」？Agent 的上下文里都有哪些来源？</span></label></li>
+<li class="task"><label><input type="checkbox"><span>我能区分「指令」与「材料」，并说明来源、作用范围与优先级为什么重要。</span></label></li>
+<li class="task"><label><input type="checkbox"><span>我能把一个模糊愿望（如「做个现代风格主页」）改写成可验证的验收条件。</span></label></li>
+<li class="task"><label><input type="checkbox"><span>我能解释 Intent → Spec → Impl 的缺口，以及「每一次省略都在扩张选择空间」。</span></label></li>
+<li class="task"><label><input type="checkbox"><span>我能用「工作纸 / 图灵机纸带」的类比解释 chain-of-thought。</span></label></li>
+<li class="task"><label><input type="checkbox"><span>我知道「通过形式检查 ≠ 写得好」，能举例说明测试覆盖不到品味。</span></label></li>
+<li class="task"><label><input type="checkbox"><span>我能说出否定指令的尴尬，并解释「常驻层 vs 按需加载」的取舍。</span></label></li>
+<li class="task"><label><input type="checkbox"><span>我能复述论文审稿的三条独立路线，并说明为什么它们要先各自判断再汇合。</span></label></li>
+<li class="task"><label><input type="checkbox"><span>我能解释 Greenfield 悖论，以及「代码库本身也是提示词」的含义。</span></label></li>
+<li class="task"><label><input type="checkbox"><span>我能说明研究失败案例中「反馈太粗」与「目标错了」两种可能，并给出更合理的起点。</span></label></li>
+<li class="task"><label><input type="checkbox"><span>我能解释 Latency 与 Throughput 的区别，并按「不可逆性 × 爆炸半径」安排 Review。</span></label></li>
+<li class="task"><label><input type="checkbox"><span>我能把「把灵感改造成搜索」用到一个真实任务上（先独立采样，再审查）。</span></label></li>
+</ul>
+<h3 id="行动清单" class="anchor"><span class="ht">行动清单</span><a class="ha" href="#行动清单" title="复制本节链接">#</a></h3>
+<ul>
+<li>给当前项目补一个 <code>AGENTS.md</code>：只放「每次都要守、漏一次代价很高」的短规则。</li>
+<li>把一条最爱写的模糊要求，改写成可检查的验收条件。</li>
+<li>对正在做的一件任务，写下「什么结果会推翻我的想法」。</li>
+<li>下次让 AI 出方案时，先划分探索空间，再让它独立采样、最后审查。</li>
+</ul>
+</section>
+
+<details class="appx" id="appx-a"><summary><h2 id="附录-a37-页幻灯片逐页全文" class="anchor"><span class="ht">附录 A：37 页幻灯片逐页全文</span><span class="tg"></span></h2></summary>
+<div class="appx-body">
+<p class="note">以下按原幻灯片顺序逐页转录（共 37 页）。<span class="aigc">灰色文字</span>为课程在原片上补充的讲解旁注；<span class="imgnote">📷 原幻灯片含插图</span> 处为图片占位。</p>
+<h4 id="slide-1" class="slide-title"><span class="sn">Slide 1</span>居然以一个非常意外的方式上热搜了</h4>
+<p class="sub">受到了朋友们的问询 😂</p>
+<p><span class="imgnote">📷 原幻灯片含插图</span></p>
+<p><span class="aigc">一句只对现场成立的狠话，被截图以后就只剩“狠”了。</span></p>
+<h4 id="slide-2" class="slide-title"><span class="sn">Slide 2</span>Anyway，你们懂我不会真的让你们退学的</h4>
+<p class="sub">但如果不这么说，你们真的听不进</p>
+<ul>
+<li>虽然说了也听不进<ul>
+<li>而且 Token 也没那么贵</li>
+<li>退一百万步讲，还有 ¥40 的豆包 (含 GLM, DeepSeek, ...)</li>
+</ul>
+</li>
+</ul>
+<p><span class="imgnote">📷 原幻灯片含插图</span></p>
+<p><span class="aigc">贵模型用不起，就用 ¥40 的；再不开始，就不是预算问题了。</span></p>
+<h4 id="slide-3" class="slide-title"><span class="sn">Slide 3</span>“提示词” 从哪里来？</h4>
+<p class="sub">ChatGPT 普及了 Prompt，但没有发明它</p>
+<p><span class="imgnote">📷 原幻灯片含插图</span></p>
+<ul>
+<li><span class="aigc">2019 年 GPT-2 的发布页面已经写下 “prompting the trained model”：输入文本从“开头”变成了控制模型续写的条件。<a href="https://openai.com/index/better-language-models/" target="_blank" rel="noopener">GPT-2, 2019</a></span></li>
+<li><span class="aigc">2020 年 GPT-3 把任务说明和 few-shot 示例都称为 prompt；2021 年，“<a href="https://arxiv.org/abs/2102.07350" target="_blank" rel="noopener">prompt programming</a>” 和 “<a href="https://arxiv.org/abs/2107.13586" target="_blank" rel="noopener">prompt-based learning</a>” 成为研究对象。</span></li>
+</ul>
+<h4 id="slide-4" class="slide-title"><span class="sn">Slide 4</span>提示词不止在对话框</h4>
+<p class="sub">Agent 看见的是一整个上下文</p>
+<p>以下都是提示词：</p>
+<ul>
+<li>Harness 内部：system prompt、goal 模式注入等</li>
+<li><code>AGENTS.md</code> 等持久指令</li>
+<li>加载的 skills</li>
+<li>你给的指令</li>
+<li>工具/skills 的调用和输出</li>
+<li><span class="aigc">不过，不是所有 context 都是指令：代码、历史消息、工具返回也可能只是事实、状态或样例。</span></li>
+</ul>
+<p><div class="m bd">Pr[token | context]</div></p>
+<h4 id="slide-5" class="slide-title"><span class="sn">Slide 5</span>从提示词工程到上下文工程</h4>
+<p class="sub">工程化模型在每一步真正看见什么</p>
+<ul>
+<li>“提示词工程” 关心一句话怎么写；“上下文工程” 关心每次决策前，哪些 token 以什么来源、顺序和作用域出现。</li>
+<li><span class="aigc">目标是让 working set 足够小、足够新、带来源、可验证；上下文窗口装得下，不等于注意力用得好。</span></li>
+<li>到 Claude Opus 4.5 这一代，模型靠强化学习获得了极强的指令遵循能力，直接输出命令和工具调用，持续向目标推进。</li>
+<li><span class="aigc">模型只看到 token 序列；<code>system/user/tool</code> 的边界、优先级和权限，都是 Harness 放进上下文并在外部执行的。</span></li>
+</ul>
+<h4 id="slide-6" class="slide-title"><span class="sn">Slide 6</span>立即行动</h4>
+<p class="sub">AI 把“启动一次尝试”的成本压到很低</p>
+<ul>
+<li>AI 给我们的能力：<strong>立即行动</strong>，简直就是拖延症的克星<ul>
+<li>微积分，一个推导不想验算</li>
+<li>数字电路，有个数据通路没看懂</li>
+<li>计算机系统基础，链接没搞明白</li>
+<li>这些统统可以立刻开始<ul>
+<li>我学生时代的 self-motivated：“超高的容忍度”</li>
+<li>现在学生的 self-motivated：用上飞轮，确保自己得到了正确的理解，并且重述给 AI</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><span class="aigc">AI 消灭的是“先试一下”的边际成本，不消灭真伪判断：提出最小问题 → 做最小检验 → 看反馈 → 更新理解。</span></li>
+</ul>
+<h4 id="slide-7" class="slide-title"><span class="sn">Slide 7</span>费曼学习法：让 AI 当听众</h4>
+<p class="sub">不是让 AI 再讲一遍，而是主动暴露缺口</p>
+<p><span class="imgnote">📷 原幻灯片含插图</span></p>
+<ul>
+<li><span class="aigc">先合上资料，用自己的话讲；卡住的地方信息量最大。AI 的角色是追问、找反例和验算，查证后再讲一遍。</span></li>
+<li><span class="aigc">这套飞轮有实证支点：<a href="https://doi.org/10.1207/s15516709cog1302_1" target="_blank" rel="noopener">self-explanation</a> 与 <a href="https://www.psychologicalscience.org/journals/psychological-science/j.1467-9280.2006.01693.x/" target="_blank" rel="noopener">retrieval practice</a>。</span></li>
+</ul>
+<h4 id="slide-8" class="slide-title"><span class="sn">Slide 8</span>立即行动：解剖当前上下文</h4>
+<p class="sub">让 Agent 解释“谁在给它下指令”</p>
+<blockquote>
+<p>分析一下你上文中的所有提示词 (包括系统)，并按照需要遵循的指令类型分类总结。</p>
+</blockquote>
+<ul>
+<li><span class="aigc">目标与交付物：要完成什么，何时算完成</span></li>
+<li><span class="aigc">权限与安全：能读写什么，何时必须确认</span></li>
+<li><span class="aigc">工作流与工具协议：先做什么，工具怎样调用</span></li>
+<li><span class="aigc">持久规则与风格：<code>AGENTS.md</code>、skills、语言和格式</span></li>
+<li><span class="aigc">环境事实与证据：文件、历史消息、工具输出</span></li>
+<li><span class="aigc">冲突时再标出来源、作用域和优先级。模型给出的是“当前遵循计划”，不是可信的内部状态 dump；用实际行为交叉验证。</span></li>
+</ul>
+<h4 id="slide-9" class="slide-title"><span class="sn">Slide 9</span>“安全命令” 是谁判的？</h4>
+<p class="sub">模型提议，Harness 决策，操作系统收口</p>
+<blockquote>
+<p>Codex 有一些细节，例如他认为“安全”的命令，不触发用户提示。这是怎么实现的？</p>
+</blockquote>
+<ul>
+<li><span class="aigc">模型只生成“想运行什么”；sandbox 决定技术上能碰什么，approval policy 决定何时暂停询问。</span></li>
+<li><span class="aigc">规则按完整参数列表匹配 <code>allow / prompt / forbidden</code>；简单 shell 链会被语法解析后逐条检查，最严格的结果获胜。<a href="https://learn.chatgpt.com/docs/agent-configuration/rules" target="_blank" rel="noopener">Codex Rules</a></span></li>
+<li><span class="aigc">因此“不弹窗”只表示动作落在当前边界内，并不等于模型获得了无限权限。<a href="https://learn.chatgpt.com/docs/agent-approvals-security" target="_blank" rel="noopener">Agent approvals &amp; security</a></span></li>
+<li><span class="aigc">真实教训：早期 Codex 把 <code>rg</code> 当作只读安全命令，却漏掉 <code>--pre</code>、<code>-z</code> 等可触发外部程序的参数。<a href="https://nvd.nist.gov/vuln/detail/CVE-2025-54558" target="_blank" rel="noopener">CVE-2025-54558</a> 说明安全属性属于完整 invocation，不属于命令名。</span></li>
+</ul>
+<h4 id="slide-10" class="slide-title"><span class="sn">Slide 10</span>上下文工程：让模型知道“完成”是什么</h4>
+<p class="sub">Context 里是一份复杂要求</p>
+<ul>
+<li>模型的潜力完全是靠提示词激发的</li>
+<li>上下文包含了一个<strong>极为复杂的要求</strong><ul>
+<li>约束，可以是 intent，也可以是 spec</li>
+</ul>
+</li>
+<li>模型被训练为：持续的 Pr[token | context] 能不断推进，直到<strong>满足要求</strong>，也就是学会了“规划”的能力</li>
+</ul>
+<p class="sub">逐 Token 推进，也要有停机条件</p>
+<ul>
+<li><span class="aigc">Pr[token | context]</span> 本身不是规划器；后训练把多步试探、工具调用和收尾塑造成了一种可采样的策略。</li>
+<li><span class="aigc">设生成轨迹为 τ</span>。只有上下文里存在可识别的完成判据 <span class="m">V(τ)=1，“继续干”和“可以交卷”才不只是两种高概率续写。</span></li>
+</ul>
+<h4 id="slide-11" class="slide-title"><span class="sn">Slide 11</span>可验证，才不会“提前交卷”</h4>
+<p class="sub">模型如何判断已经满足？</p>
+<ul>
+<li>推论：越明确、越<strong>可验证</strong>的要求，越可能得到你满意的结果</li>
+<li>不明确的要求，模型可能认为已经“满足”了</li>
+<li><span class="aigc">一个直接的检查：旁观者只看产物和工具结果，能否判定通过或不通过？如果不能，模型就没有稳定的 done。</span></li>
+</ul>
+<p class="sub">把愿望改写成验收条件</p>
+<ul>
+<li><span class="aigc">1714 年英国《经度法》没有悬赏“改善航海”，而是按经度误差分档，并规定驶往西印度群岛实测。愿望被写成验收条件，“解决”才有了制度上的含义。<a href="https://www.royalobservatorygreenwich.org/articles.php?article=1311" target="_blank" rel="noopener">Longitude Acts 原文转录</a></span></li>
+</ul>
+<h4 id="slide-12" class="slide-title"><span class="sn">Slide 12</span>Intent → Spec → Impl：漂移逐级放大</h4>
+<p class="sub">“一句话生成极品飞车”</p>
+<ul>
+<li>大家很喜欢的<a href="https://019f6b8d-821e-7c15-98ab-16f3bd7f7409.arena.site/" target="_blank" rel="noopener">一句话生成极品飞车</a>，测试前端能力<ul>
+<li>Intent → spec → impl gap 会逐步放大漂移</li>
+<li>你可能是想要一个复用真实地图和美术资产的……</li>
+</ul>
+</li>
+</ul>
+<p class="sub">每一次省略，都在扩张选择空间</p>
+<ul>
+<li><span class="aigc">镜头、操控、地图、美术资产、胜负条件：若第 i</span> 层各留下 <span class="m">kᵢ 个“似乎都行”的默认选项，最终候选空间约为 ∏ᵢ kᵢ。</span></li>
+<li><span class="aigc">模型可以在每一步都做出自洽的选择，最后却离你心里的那款游戏很远。</span></li>
+</ul>
+<h4 id="slide-13" class="slide-title"><span class="sn">Slide 13</span>写清指令，承担“不明确”的后果</h4>
+<p class="sub">Rule of Thumb</p>
+<ul>
+<li>写清楚你的指令，承担一切“不明确”的后果<ul>
+<li>这样模型永远给你的是惊喜 😁</li>
+</ul>
+</li>
+<li><span class="aigc">授权模型用默认值替你做产品决策。</span></li>
+<li><span class="aigc">1854 年轻骑兵冲锋中，山上的 Raglan 看得见目标，谷中的 Lucan 看不见；命令里的“那些炮”由执行者自行补全，轻骑兵最终冲向了错误的炮阵。<a href="https://collection.nam.ac.uk/detail.php?acc=1962-11-4-3" target="_blank" rel="noopener">英国国家陆军博物馆：原始命令</a></span></li>
+</ul>
+<p class="sub">要么完成，要么显式失败</p>
+<ul>
+<li>一个足够好的模型，要么完成，要么失败，不应该幻觉或违背指令<ul>
+<li>如果你的指令不过长，现在的模型基本足够好</li>
+</ul>
+</li>
+<li><span class="aigc">可以把失败语义写进契约：只有测试或可检查证据通过才算完成；无法验证时，报告未完成、阻塞点和已经尝试的路径。</span></li>
+</ul>
+<h4 id="slide-14" class="slide-title"><span class="sn">Slide 14</span>从“AI 味”到你的主页</h4>
+<p class="sub">Bad：把品味留给默认值</p>
+<blockquote>
+<p>“我是蒋炎岩，根据我的公开信息，制作一个现代风格的个人主页首页...” 你将会得到 <a href="https://jm233333.github.io/" target="_blank" rel="noopener">AI 味</a></p>
+</blockquote>
+<p><span class="aigc">“现代风格”看似具体，实际上几乎没有排除任何模板。两个称职的实现者都能严格照做，却交出完全不同的页面：这仍然只是 intent。</span></p>
+<p class="sub">Better：压缩合法解空间</p>
+<blockquote>
+<p>...，用<strong>具体</strong>风格、<strong>具体</strong>样式和排版... 就可以得到<a href="http://jiangyy.github.io/" target="_blank" rel="noopener">我的个人主页</a></p>
+</blockquote>
+<p><span class="aigc">颜色、字体、栅格、留白、组件和参考物共同构成设计语言。关键不是多写几个形容词，而是让选择可组合、结果可检查。</span></p>
+<h4 id="slide-15" class="slide-title"><span class="sn">Slide 15</span>新分工：人定义问题，AI 搜索实现</h4>
+<p class="sub">Intent → Spec → Impl</p>
+<ul>
+<li>明确你的意图，需要你对<strong>产品领域</strong>的知识</li>
+<li>把意图变成设计，需要你对<strong>软件工程</strong>的知识</li>
+<li>实现反而多数可以交给 AI，已经超过中级程序员了</li>
+<li><span class="aigc">可以把边界画在“搜索”和“判定”之间：人定义目标 G</span> 与验收器 <span class="m">V，AI 搜索实现 x，直到 V(x)=1。</span></li>
+</ul>
+<p class="sub">Impl 变便宜，判断没有</p>
+<ul>
+<li><span class="aigc">Brooks 在 1986 年区分了软件的 essence 与 accident：困难在于构造、规格化、设计和测试概念结构，而不只是把它表示成代码。<a href="https://www.cs.unc.edu/techreports/86-020.pdf" target="_blank" rel="noopener">No Silver Bullet 原始技术报告</a></span></li>
+<li><span class="aigc">实现可以外包；验收标准和失败责任不能一起外包。否则 AI 优化的是它猜到的代理目标，不是你的产品目标。</span></li>
+</ul>
+<h4 id="slide-16" class="slide-title"><span class="sn">Slide 16</span>一步很浅，一串可以很深</h4>
+<p class="sub">Pr[token | context]</p>
+<p>Pr[token | context] 是深度非常有限的计算。即使是今天的 Mixture-of-Experts，所谓“专家”也只是表示空间上的分段函数，并不是坐在模型里的多个小人。大部分时候，接下来若干个“简单” token 都是高概率确定的；一次前向计算不可能凭空完成复杂任务。</p>
+<p>但模型学会了<strong>利用上下文思考</strong>：遇到不确定之处，不直接猜答案，而是先试一试；错了，还可以继续输出 token 纠正。每个新 token 又成为下一步的 context，这就是 chain-of-thought。</p>
+<p><span class="aigc">可以把它类比成图灵机的纸带：单步转移很简单，中间结果却能写回“纸带”，供下一步继续计算。一次很浅，串起来就有了深度。</span></p>
+<p class="sub">用 Token 换计算深度</p>
+<ul>
+<li>你可以同时提<strong>很多要求</strong>，AI 会想出像人一样逐步逼近目标的<strong>过程</strong>：test-time scaling。</li>
+<li><span class="aigc">“找解比验解难”适合作为 P vs. NP 的直觉类比，不是复杂性证明。只有当中间进展或最终答案可检查时，多写、多试、多修补才会稳定地变成能力。</span></li>
+</ul>
+<h4 id="slide-17" class="slide-title"><span class="sn">Slide 17</span>三条约束，藏进八句诗</h4>
+<p class="sub">押韵 · 藏头 · 嵌字</p>
+<blockquote>
+<p>用中文写一个押韵的藏头诗，头是“计算机学院真牛逼”，要讲和动物相关的故事，“二零二六九月一日”八个字分别按顺序出现在八句里，位置无所谓。</p>
+<p><span class="aigc">计成二兔越山冈</span><br>
+<span class="aigc">算到零时雪满塘</span><br>
+<span class="aigc">机警狐衔二袋粮</span><br>
+<span class="aigc">学随六雁辨风向</span><br>
+<span class="aigc">院中九犬忽声扬</span><br>
+<span class="aigc">真到月明逢恶狼</span><br>
+<span class="aigc">牛守一夜迎晨光</span><br>
+<span class="aigc">逼得日升狼遁荒</span></p>
+</blockquote>
+<ul>
+<li><span class="aigc">竖读句首：计算机学院真牛逼。</span></li>
+<li><span class="aigc">逐句取指定字：二零二六九月一日；八句同押 <code>ang</code> 韵。</span></li>
+<li><span class="aigc">这像三条并行信道：句首放藏头，句中放日期，句尾管押韵；先占槽位，再生成—检查—修补。</span></li>
+</ul>
+<h4 id="slide-18" class="slide-title"><span class="sn">Slide 18</span>十八个字，一片水</h4>
+<p class="sub">同一偏旁，还得有故事</p>
+<blockquote>
+<p>写十八字的一句话，全部有相同的偏旁或部首，要有实际意义和故事性。</p>
+<p><span class="aigc">洪涝淹没江港渔浦，油污漂浮，沈涛泅渡济溺。</span></p>
+</blockquote>
+<ul>
+<li><span class="aigc">不计标点恰好 18 字，每个字都带 <code>氵</code>。</span></li>
+<li><span class="aigc">灾害、地点、污染、人名、动作和结果都从同一语义场里长出来；约束缩小了搜索空间，也把常用虚词几乎全挡在门外。</span></li>
+<li><span class="aigc">“偏旁”是字形构件，“部首”主要是检字分类。若要机械验收，spec 应写成“18 个汉字都含同一可见偏旁”。</span></li>
+</ul>
+<h4 id="slide-19" class="slide-title"><span class="sn">Slide 19</span>只许一个音，还要讲现代故事</h4>
+<p class="sub">原创 Yi 音文</p>
+<blockquote>
+<p>写一大段话（文言文），要求全部同一个音，也要有实际的故事性，不能用《施氏食狮史》和《季姬击鸡记》原文，原创一个有现代背景的。</p>
+<p><span class="aigc">乙易一译仪。仪译异义，乙疑，诣驿议易。驿役揖乙，亦疑仪已异，移仪以医。翌，仪已宜，译义亦宜，乙怡。乙以仪译异裔意，异裔亦怡；乙益以译艺，逸矣。</span></p>
+</blockquote>
+<ul>
+<li><span class="aigc">所有汉字的拼音音节都是 <code>yi</code>，声调可以不同：有人买了翻译器，发现误译，去快递驿站换修，翌日取回后终于正常。</span></li>
+<li><span class="aigc">“同音”是否包含声调，会让难度骤变；验收口径本身就是 spec。文字尚可借字形消歧，朗读出来几乎不可懂。</span></li>
+</ul>
+<h4 id="slide-20" class="slide-title"><span class="sn">Slide 20</span>通过测试，不等于写得好</h4>
+<p class="sub">Verifier 看得见的</p>
+<ul>
+<li><span class="aigc">藏头、嵌字顺序、字数、偏旁、拼音，都可以写成检查器。</span></li>
+<li><span class="aigc">模型不必一口气“灵感命中”：它可以先找可行解，再逐条验证，发现违约就追加 token 修补。</span></li>
+<li><span class="aigc">约束文学早有类似实验：乔治·佩雷克 1969 年的小说《消失》全书避用法语字母 <code>e</code>。形式约束能逼出搜索，却不会自动带来好作品。</span></li>
+</ul>
+<p class="sub">Verifier 看不见的</p>
+<p>以上已经超越大部分人类的极限了。模型作为“人类”的推理能力真的很强，虽然品味还可以提高。</p>
+<p><span class="aigc">通过检查器，说明它会搜索和修补；读起来仍有点别扭，说明测试没有覆盖品味。</span></p>
+<h4 id="slide-21" class="slide-title"><span class="sn">Slide 21</span>用好模型遵循指令的能力</h4>
+<p class="sub">过去的上下文一直都在场</p>
+<ul>
+<li>每一个 token 的输出都会“注意”到过去的上下文</li>
+<li>全局的 <code>AGENTS.md</code> 里要求用中文，这个“用中文”会一直保持一定的注意力</li>
+<li>全局的 git commit 不要 “Copiloted by Claude Code”</li>
+<li>每一个 token 都会看到这些；适当的时候，下一个 chain-of-thought 就会纠正错误</li>
+<li><span class="aigc">模型每输出一个 token，就又多了一次发现偏航、把轨迹拉回来的机会。但“看得见”不是硬约束；<a href="https://aclanthology.org/2024.tacl-1.9/" target="_blank" rel="noopener">Lost in the Middle</a> 也提醒我们，长上下文中的信息并不会被同样可靠地利用。</span></li>
+</ul>
+<h4 id="slide-22" class="slide-title"><span class="sn">Slide 22</span>上下文也是争用资源</h4>
+<p class="sub">规则会纠偏，也会抢注意力</p>
+<ul>
+<li>副作用：提示词会抢夺注意力</li>
+<li>人：要白色背景，不要半透明效果</li>
+<li>AI：<code>... // 白色背景 (不要半透明效果)</code> 😂</li>
+<li><span class="aigc">否定指令有个尴尬之处：为了禁止“半透明”，你先把“半透明”写进了上下文。这和 <a href="https://doi.org/10.1037/0022-3514.53.1.5" target="_blank" rel="noopener">“不要想白熊”</a> 有相似的反直觉味道，但对模型来说，直接原因更朴素：被禁止的词也成了可续写的模式。</span></li>
+</ul>
+<p class="sub">常驻，还是按需加载？</p>
+<ul>
+<li>两难问题：要不要用一个常驻 <code>AGENTS.md</code> prompt 把这种行为压下去，但同时污染上下文？</li>
+<li><span class="aigc">常驻层只放“每次都要守、漏一次代价很高”的短规则；任务细节按需加载。能写成检查项的，就用 <code>background: #fff; opacity: 1</code> 这类正规格和测试收口。</span></li>
+</ul>
+<h4 id="slide-23" class="slide-title"><span class="sn">Slide 23</span>AI 耿同学上线！</h4>
+<p class="sub">这次用的是我自己的 paper</p>
+<blockquote>
+<p>假装作为 ICSE'27 的审稿人 icse27-901.pdf，我应该接收它吗？写一个 1000 words 左右的 Review.txt。</p>
+</blockquote>
+<p>那我会怎么读一篇 paper 呢？我的日常阅读流程，例如 arXiv，是怎样的？</p>
+<p><span class="aigc">“你是 ICSE reviewer”主要改变的是先验、语气和输出形状；它不会凭空补上审稿标准、证据链和反证程序。换上 reviewer 的制服，不等于学会了 review。</span></p>
+<h4 id="slide-24" class="slide-title"><span class="sn">Slide 24</span>怎样构造一个好的 Reviewer？</h4>
+<p class="sub">三条独立的审稿路线</p>
+<ul>
+<li><span class="aigc"><strong>判据驱动</strong>：先还原论文声称的贡献，再按审稿标准独立打分；每个分数都必须指向论文中的证据或明确的缺失。</span></li>
+<li><span class="aigc"><strong>证据审计</strong>：为每个核心 claim 建账本：它需要什么证据、论文给了什么、哪些假设没验证、还有什么替代解释。</span></li>
+<li><span class="aigc"><strong>反方复现</strong>：站在最强反方或复现者的位置，重算一个核心结果，寻找最小反例，并问“什么观察会推翻结论？”</span></li>
+</ul>
+<p><span class="aigc">三条路线先各自形成判断，最后才汇合。否则“三个 reviewer”很容易只是同一个锚点的三次润色。</span></p>
+<h4 id="slide-25" class="slide-title"><span class="sn">Slide 25</span>不要被作者“带着走”</h4>
+<p class="sub">方法论决定 AI 的上限</p>
+<ul>
+<li>短程任务，基本上带对方向、明确指令就可以了；但你的<strong>方法论</strong>（品味）决定了 AI 的上限</li>
+<li><strong>文章的信息密度非常大</strong>，相当于极度吸收注意力</li>
+<li>你的一些 critical thinking、first-principle thinking，都可能架不住被论文作者本身的逻辑带着走</li>
+<li><span class="aigc">论文不只提供事实，还替 reviewer 选择了词汇、问题顺序、baseline 和 metric。等你开始判断作者的答案时，作者可能已经替你筛掉了更关键的问题；这正是<a href="https://pubmed.ncbi.nlm.nih.gov/17835457/" target="_blank" rel="noopener">锚定效应</a>危险的地方。</span></li>
+<li><span class="aigc">深读前先独立写下三件事：它声称解决什么，最强替代解释是什么，什么结果会推翻它；再把正文拆成 <code>claim → evidence → assumption</code>。空格往往比句子更值得审。</span></li>
+</ul>
+<h4 id="slide-26" class="slide-title"><span class="sn">Slide 26</span>把品味蒸馏成 Skill</h4>
+<p class="sub">从偶然成功到可重复的方法</p>
+<p>当你有成功的经验，就可以蒸馏成 <strong>Skill</strong>：看起来只是个 prompt，其实是用可复用的方式约束模型的行为和方向。现在的模型还没到“第一感觉就打遍天下无敌手”的状态，尤其是答案不唯一的时候。</p>
+<ul>
+<li><span class="aigc">好的 Skill 保存的不是上次答案的版式，而是搜索策略、判断标准、检查点，以及“看到什么证据就转向”的条件。</span></li>
+</ul>
+<p class="sub">Skill 本身也是一道遵循题</p>
+<ul>
+<li>Caveat：长 Skill 里有大量指令，会提升指令遵循的难度；在 AI 看来，和写藏头诗可能差不多 😂</li>
+<li><span class="aigc">把 Skill 分层：常驻层只留目标、硬约束和停止条件；解释、范例、边界案例按需加载；机械约束交给工具验证。少写一句劝诫，多加一个可检查的完成条件。</span></li>
+</ul>
+<h4 id="slide-27" class="slide-title"><span class="sn">Slide 27</span>Long-Horizon 能力是怎么“练”出来的？</h4>
+<p class="sub">模型是训练出来的</p>
+<p>只要有反馈信号，就可以强化学习：答对了给奖励，答错了揍。后训练逼迫模型规划、思考，学会非常离谱的长程代码能力，能不断试错、解决问题，直到满足要求；连刚才那些折磨人的“语文”指令也顺便学会了。</p>
+<ul>
+<li><span class="aigc">Long-horizon 不是一次性想得特别深，而是闭环控制：<code>尝试 → 编译/测试 → 观察 → 修复</code>。真正变长的是“出错以后还能回来”。</span></li>
+<li><span class="aigc">代码世界格外适合这件事：构建、测试、benchmark 都能反复给出便宜的判分信号，很像 AlphaGo Zero 拥有规则确定、结果可验证的棋盘。(<a href="https://doi.org/10.1038/nature24270" target="_blank" rel="noopener">Nature, 2017</a>)</span></li>
+</ul>
+<p class="sub">反馈也可能教坏模型</p>
+<ul>
+<li><span class="aigc">如果测试只覆盖表面行为，“坚持”也可能变成 reward hacking：不是逼近你的真实目标，而是把公开分数刷满。因此还需要 held-out tests 和独立 review。</span></li>
+</ul>
+<h4 id="slide-28" class="slide-title"><span class="sn">Slide 28</span>大型系统，反而更容易？</h4>
+<p class="sub">Greenfield 悖论</p>
+<blockquote>
+<p>从零开始做产品看起来不难，AI 却会从某个时间点开始各种翻车。反而在大型复杂软件系统里，AI 游刃有余，令人迅速滑跪？</p>
+</blockquote>
+<ul>
+<li>self-attention 可以“看到”好的 practice，并且立即 in-context learn，学到应该遵循的已有 best practice。</li>
+<li>如果产品起步时没有建立良好的工程纪律，AI 会学会在 slop 上无限叠加。</li>
+<li>启发：“提示词”不仅是你输入的，甚至代码库本身也是“提示词”。</li>
+</ul>
+<p class="sub">代码少，不代表信息少</p>
+<ul>
+<li><span class="aigc">成熟仓库用命名、分层、错误处理和测试，把巨大的设计空间压成“照着邻居补全”；greenfield 里每个选择都悬空，信息熵反而更高。</span></li>
+<li><span class="aigc">模型只会追求局部一致性，并不知道眼前的是 best practice 还是历史事故。第一桶 slop 一旦成为多数派，后面的 slop 会像复利一样增长。</span></li>
+</ul>
+<h4 id="slide-29" class="slide-title"><span class="sn">Slide 29</span>“放一个好项目给 AI 看”靠谱吗？</h4>
+<p class="sub">调研结论：猜测成立一半</p>
+<ul>
+<li>我的猜测：在代码库里放一个相近领域、优雅成熟的高质量系统，先让 AI 读一下，再实现需求，能得到质量更高的软件。</li>
+<li><span class="aigc">机制上合理，但“相近、精选、按需取用”比“整个仓库塞进去”重要。</span></li>
+<li><span class="aigc"><a href="https://aclanthology.org/2023.emnlp-main.151/" target="_blank" rel="noopener">RepoCoder</a> 中，迭代检索仓库相关片段比只看当前文件的 baseline 提升超过 10%；这支持“好示例有用”，却没有证明外来大仓库必然有益。</span></li>
+<li><span class="aigc"><a href="https://aclanthology.org/2025.findings-naacl.176/" target="_blank" rel="noopener">CodeRAG-Bench</a> 的结论更克制：高质量 context 会帮忙，但“找对片段”和“真的用好片段”仍是瓶颈。</span></li>
+<li><span class="aigc">整库输入还可能带来 negative transfer：技术栈、约束、依赖或架构哲学不匹配；它也会消耗 context，让真正相关的约束被淹没。</span></li>
+</ul>
+<p class="sub">一个能做的对照实验</p>
+<ul>
+<li><span class="aigc">固定任务、模型、token budget 和随机种子，对比：无示例 / 完整参考仓库 / 3–5 个精选 golden paths。</span></li>
+<li><span class="aigc">除了通过率，还要盲测架构违规、修改扩散面、review 时间、后续缺陷和代码克隆率。我的预测：精选的端到端竖切片最稳。</span></li>
+</ul>
+<h4 id="slide-30" class="slide-title"><span class="sn">Slide 30</span>没有“超能力 AI”</h4>
+<p class="sub">你仍然需要“有概念”</p>
+<p>对你要实现的东西<strong>有概念</strong>，现在仍然非常重要。Sadly，这只能通过<strong>学习</strong>获得。会用一学期来解释如何用软件工程的方法：给出正确指令、监控 AI 运行、防止 AI 失控……</p>
+<ul>
+<li>对 CS 学生来说，学科知识体系仍然非常重要：处理器、操作系统、编译器、数据库里有很多<strong>设计智慧</strong>。</li>
+<li>你需要把模型<strong>引导</strong>到你认为合适的位置上。</li>
+<li>但你不理解的东西是不能驾驭的。</li>
+</ul>
+<p class="sub">学习的目标变了</p>
+<ul>
+<li><span class="aigc">领域知识不是为了和 AI 比每分钟写多少行，而是给出不变量、接口边界和失败模式：什么时候“能跑”仍然是错的。</span></li>
+<li><span class="aigc">Bainbridge 在 1983 年就指出“自动化的反讽”：容易的部分被自动化，人留下的恰好是异常、接管和无法预演的情况，因此反而需要更深的系统模型。(<a href="https://doi.org/10.1016/0005-1098(83)90046-8" target="_blank" rel="noopener">Ironies of Automation</a>)</span></li>
+</ul>
+<h4 id="slide-31" class="slide-title"><span class="sn">Slide 31</span>Research Failure：Token 花完了，知识没有增加</h4>
+<p class="sub">符号执行引擎优化</p>
+<p>试图优化一个符号执行引擎：有一个原始 idea，问题带一点 active、open-ended research 的味道，但也只是希望往前推进一点点。</p>
+<ul>
+<li>PhD student：GPT-5.6 Sol Ultra 启动！benchmark 丢进去，想法丢进去，花了很多 token，没有结果。</li>
+</ul>
+<p class="sub">问题可能出在哪？</p>
+<ul>
+<li><span class="aigc">缺的不是 token，而是便宜、局部、可归因的反馈。一个总 benchmark 分数几乎不给下一步方向。</span></li>
+<li><span class="aigc">“没变快”可能来自 path explosion、solver、缓存、内存、搜索策略、实现 bug 或环境噪声；Agent 不知道该强化哪一步。</span></li>
+<li><span class="aigc">更要命的是：Agent 被训练成“把任务做完”，研究却允许最好的结论是“原始 idea 不成立”。没有可证伪假设，它可能把错误想法实现得越来越完整。</span></li>
+<li><span class="aigc">经典的 <a href="https://www.usenix.org/conference/osdi-08/presentation/klee-unassisted-and-automatic-generation-high-coverage-tests-complex" target="_blank" rel="noopener">KLEE</a> 把问题拆成搜索策略、约束缓存、independent constraint sets 等机制，再分别测量。</span></li>
+<li><span class="aigc">更合理的起点：先 profile 主导瓶颈，把 idea 改写成一句可证伪预测，造几十秒就有反馈的 microbenchmark，再做 baseline 和 ablation。</span></li>
+</ul>
+<h4 id="slide-32" class="slide-title"><span class="sn">Slide 32</span>少干预，反而做得更多</h4>
+<p class="sub">Latency 和 Throughput 是两回事</p>
+<p>一般来说，我对要解决的问题了解更多，所以我干预，会完成得更快。但是我越来越少干预了：AI 走弯路也<strong>能完成</strong>，那我还不如切换到另一个任务。只要结果能满意，我更倾向于不管。</p>
+<ul>
+<li><span class="aigc">人类干预优化单个任务的 latency；放手让 Agent 跑，优化的是一整天的 throughput。机器多走一点弯路，换回最稀缺的人类注意力。</span></li>
+<li><span class="aigc">放手成立有两个前提：任务可以并行，失败可以便宜地恢复。否则“少干预”只是把故障推迟。</span></li>
+</ul>
+<p class="sub">Review 什么？</p>
+<ul>
+<li>比如接口我 review 过了，实现是 AI slop，最后出问题了修就行 😂</li>
+<li><span class="aigc">按“不可逆性 × 爆炸半径”分配注意力：接口、不变量、数据格式、权限和测试早看；可替换的叶子实现可以晚看。</span></li>
+<li><span class="aigc">丰田的“自働化”也是这个逻辑：一个人照看多台机器，靠异常自动停机和 andon 报警，而不是盯住每一步。Agent 的对应物是 CI、预算、权限边界和 stop condition。(<a href="https://global.toyota/en/company/vision-and-philosophy/production-system/" target="_blank" rel="noopener">Toyota Production System</a>)</span></li>
+</ul>
+<h4 id="slide-33" class="slide-title"><span class="sn">Slide 33</span>Context 越长，不等于记得越牢</h4>
+<p class="sub">Caveat</p>
+<p>随着上下文增长，指令遵循会下降；但最后的 prompt、刚加载的 skill 通常仍能遵循，因此干活还是很好用的。</p>
+<ul>
+<li><span class="aigc">Context window 是容量，不是有效注意力。日志、补丁和工具输出不断进入工作集后，“还在窗口里”不等于“此刻用得上”。</span></li>
+<li><span class="aigc"><a href="https://aclanthology.org/2024.tacl-1.9/" target="_blank" rel="noopener">Lost in the Middle</a> 发现，相关信息放在长上下文中部时，模型往往不如放在开头或结尾时用得稳定；这也解释了末尾 prompt 和新加载 skill 的优势。</span></li>
+</ul>
+<p class="sub">把要求从“记忆”升级成“机制”</p>
+<ul>
+<li><span class="aigc">关键要求在决策点重新落地：短 checklist、阶段性重读 spec/skill、合并前复述不变量。</span></li>
+<li><span class="aigc">能编码成类型、lint、property tests、CI gate 和权限沙箱的，就别只写在 prompt 里。prompt 会被压缩，失败的测试不会假装自己通过。</span></li>
+<li><span class="aigc">上下文压缩应保存“目标、约束、未决问题、证据”，而不是按时间线复述发生过什么。</span></li>
+</ul>
+<h4 id="slide-34" class="slide-title"><span class="sn">Slide 34</span>在不确定性中探索</h4>
+<p class="sub">这次不是“解题”</p>
+<p>我就是希望模型<strong>在不确定性中探索</strong>。</p>
+<ul>
+<li>如果所有要求和路线都想清楚了，这就是一个相对无趣的问题：Chain-of-thought 就能解决</li>
+<li>今天“帮我考虑一下几种方案”有效，但可能不是最佳的</li>
+<li>模型被训练成了“完成任务”才有奖励，所以它会给你<strong>有限</strong>的方案；complexity gap 里，那个“更好”的可能被藏起来了</li>
+</ul>
+<p class="sub">谁规定“已经想完了”？</p>
+<ul>
+<li><span class="aigc">“给我几种”只规定了停止条件 k</span>，没有规定覆盖率。这正是 Herbert Simon 所说的<a href="https://www.nobelprize.org/prizes/economic-sciences/1978/simon/lecture/" target="_blank" rel="noopener">满意化</a>：搜到“够好”就停。</li>
+<li><span class="aigc">CoT 用算力换<strong>深度</strong>：沿一条路多走几步；并行枚举用算力换<strong>宽度</strong>：让更多轨迹进入低概率的尾部。</span></li>
+</ul>
+<p><span class="aigc">探索的瓶颈常常不是“想不出”，而是模型太早认定“已经够了”。</span></p>
+<h4 id="slide-35" class="slide-title"><span class="sn">Slide 35</span>算力换智力</h4>
+<p>方法：test-time scaling 的另一个维度。</p>
+<p class="sub">不要只问“给我几个名字”</p>
+<ul>
+<li>Example：给我小孩取一个蒋姓，好听、又有寄托的名字</li>
+<li>直接让它给一些，AI 有自己的 bias；你可能不太想用——别人也会用，成为 AI 时代的 zǐhán</li>
+</ul>
+<p class="sub">把灵感改造成搜索</p>
+<ul>
+<li>定义探索空间、要求枚举、sub-agent 检查<ul>
+<li><span class="aigc">生成：典故 × 音韵 × 方言 × 时代感；先独立采样，再汇总，别让 sub-agent 一开始就互相抄答案</span></li>
+<li><span class="aigc">审名：查出处、听谐音、看重名，再让“反对者”专挑毛病</span></li>
+</ul>
+</li>
+</ul>
+<p><span class="aigc">枚举负责提高覆盖率，审查负责提高分辨率：选择质量 ≈ 覆盖率 × 评估分辨率</span>。</p>
+<h4 id="slide-36" class="slide-title"><span class="sn">Slide 36</span>我们一直在“多采样”</h4>
+<p class="sub">世界很大，人很小</p>
+<ul>
+<li>人的品味来源于 diversity：不同的教育背景、生活圈、经历……Richard Sutton's <a href="http://incompleteideas.net/papers/The_Big_World_Hypothesis.pdf" target="_blank" rel="noopener">Big World Hypothesis</a></li>
+<li>人天生对所有问题都有 bias；但 1 + 1 &gt; 2：无论是和舍友菜鸡互啄，还是去开 conference，都是在理解对方的 bias，促进群体智能，然后每个人继续带着 bias 创新</li>
+</ul>
+<p><span class="imgnote">📷 原幻灯片含插图</span></p>
+<p><span class="aigc">群体智能不要求每个人没有偏见；它只要求偏见不能只剩一种。交流也不是尽快共识，而是先让不同误差活下来。</span></p>
+<h4 id="slide-37" class="slide-title"><span class="sn">Slide 37</span>墙内的超人</h4>
+<p><span class="imgnote">📷 原幻灯片含插图</span></p>
+<p class="sub">算力成为生产资料</p>
+<ul>
+<li>这也是未来可能发生、非常残酷的现实：资本家可以获得无限的计算资源，获得无限的智力，“人”本身的价值在减弱——砌一堵墙，墙里面是超人，墙外面是动物世界</li>
+<li><span class="aigc"><a href="https://hai.stanford.edu/ai-index/2025-ai-index-report/research-and-development" target="_blank" rel="noopener">Stanford AI Index 2025</a>：2024 年近 90% 的 notable models 来自产业界；若干前沿模型的训练算力成本已经是数千万到近两亿美元。</span></li>
+</ul>
+</div></details>
+
+<details class="appx" id="appx-b"><summary><h2 id="附录-b官方讲义原文全文" class="anchor"><span class="ht">附录 B：官方讲义原文全文</span><span class="tg"></span></h2></summary>
+<div class="appx-body">
+<p class="note">以下为课程官方讲义《提示词与上下文工程》原文（<a href="https://jyywiki.cn/GSE/2026/lect2.md" target="_blank" rel="noopener">lect2.md</a>，CC BY-NC 4.0），除排版外未作改写。</p>
+<h3 class="anchor" id="提示词与上下文工程"><span class="ht">提示词与上下文工程</span></h3>
+<p>第一讲留下的问题是：Agent 已经能做很多事，我们怎样才能驾驭它？这一讲从最常见的交互方式——自然语言指令——出发，讨论怎样让模型理解目标、遵循要求，以及在没有确定答案时继续探索。</p>
+<p>不过，先处理一下第一讲留下的意外。“没有 token 的 CS 学生应该立即退学”上了热搜，也引来了朋友们的问询。当然不会真的让同学们退学。课堂上这句话要推动的是立即实践：不要把等待完美工具、等待别人给出评价，变成一直不开始的理由。离开现场，截图只剩下一句狠话，这本身也提醒我们，同样的文字放进不同上下文，会被理解成很不一样的意思。</p>
+<h3 class="anchor" id="模型看到的，远不止你刚输入的一句话"><span class="ht">模型看到的，远不止你刚输入的一句话</span></h3>
+<p>我们习惯把给模型的输入叫作 prompt，中文称“提示词”。从语言模型续写文本的角度看，前面的文字既是开头，也是控制后续生成的条件。进入聊天界面以后，用户更容易把 prompt 理解成对话框里的一条要求。</p>
+<p>但对 Agent 来说，指令分散在很多地方。运行 Agent 的外围系统，也就是 harness，会提供系统指令与工具说明；仓库里的 <code>AGENTS.md</code> 可能约定项目规则；加载的 skill 会给出特定任务的方法；用户会不断补充目标。与此同时，代码、文件、历史消息和工具返回也会进入上下文。</p>
+<p>第一讲里的 <code>Pr[token | context]</code>，其中的 context 就包含这些内容。模型下一步做什么，受到整份上下文影响，而不是只由最后一句话决定。这里还要区分指令和材料：工具返回的一段文章可能是分析对象，并不因此拥有给 Agent 下命令的资格。来源、作用范围和优先级，也属于我们组织上下文时需要考虑的事情。</p>
+<p>所以，“提示词工程”逐渐扩展成了“上下文工程”：关心模型在做决定时能看到什么，哪些是目标，哪些是约束，哪些是证据，哪些只是过时的过程记录。写好一句话当然有用，但把相关文件、已有实现和验证结果放到合适的位置，往往同样重要。</p>
+<p>课堂提出了一个可以立即做的小实验：让 Agent 按照需要遵循的指令类型，说明当前任务有哪些目标、工具规则、项目约定和输出要求。这个实验可以帮助我们理解它正在怎样组织任务，但模型的自述不能当作实现机制的完整说明。想知道某个行为为什么发生，还需要检查可以访问的配置、代码和实际操作结果。</p>
+<p>例如，为什么有些命令执行前会询问用户，有些不会？不能只从“模型觉得安全吗”来解释。Agent 提出动作，外围程序还可能检查权限和审批规则，操作系统则执行实际的访问限制。提示词中的要求与程序中的机制一起决定行为；一句“请遵守规则”，并不等于已经实现了一个可靠的执行边界。</p>
+<h3 class="anchor" id="AI-降低了开始学习的成本"><span class="ht">AI 降低了开始学习的成本</span></h3>
+<p>上下文工程听起来像开发者才需要关心的技术，但学生每天都能用到。微积分里有一步推导不想验算，数字电路有一条数据通路没看懂，计算机系统基础里始终没搞清链接发生了什么——过去，这些问题很容易被暂时搁置，一搁置就是整个学期。</p>
+<p>现在可以立即把具体问题交给 Agent：给出一个最小例子，逐步推导，运行一段程序，再根据结果追问。课堂把这种能力称作“拖延症的克星”。过去的自我驱动，常常意味着对挫折有很高的容忍度，愿意花很久寻找一个解释；现在，我们可以把同样的精力投入到更快的尝试与反馈中。</p>
+<p>但学习仍然需要自己的活动。一个可行的循环是：先借助 AI 弄清一个问题，然后合上资料，用自己的话重述；让它追问含糊之处，找出反例，再用推导、原文或程序结果核对，最后重新解释一遍。复述时卡住的地方，往往比读答案时觉得顺畅的地方更能暴露知识缺口。</p>
+<p>这可以理解为让 AI 做一个随时在场的听众。它帮助你开始，也帮助你发现哪里还没讲明白。真正推动理解的，是这个循环里不断变得具体的问题和不断接受检验的解释。</p>
+<h3 class="anchor" id="写清楚“完成”是什么"><span class="ht">写清楚“完成”是什么</span></h3>
+<p>模型具有很强的指令遵循能力，但首先要有值得遵循的指令。上下文中的要求越明确、越容易验证，模型就越有机会判断自己距离目标还差什么。不明确的要求，则可能让它很早就认为已经完成。</p>
+<p>“一句话生成极品飞车”可以产生很漂亮的演示。但你心里想的，可能是有真实地图、特定美术资产、某种驾驶手感的赛车游戏。模型交出的，也许只是一个能移动、会碰撞、有速度感的网页。它未必在任何一步明显违背了指令，却在一连串默认选择之后，做出了另外一个产品。</p>
+<p>这就是第一讲的 Intent、Spec 和 Impl 之间的缺口。镜头怎么跟随，车怎样转向，地图从哪里来，撞车以后发生什么，每个省略都留下了选择空间。模型可以把这些选择做得相互一致，但“一致”不意味着“正好是你想的”。</p>
+<p>个人主页是另一个例子。“根据我的公开信息，制作一个现代风格的主页”，看似清楚，其实“现代”并没有排除多少可能。模板、渐变、卡片和装饰都能被解释为现代风格。如果你在意的是特定字体、颜色、留白、信息顺序和排版，就应当给出这些具体要求或参考。几个形容词，通常不能代替设计。</p>
+<p>课堂的经验法则是：<strong>写清楚你的指令，承担一切“不明确”的后果。</strong> 它要求我们意识到，没有说明的地方，实际上是把决定权交给了模型。并不需要把所有细枝末节都提前决定，但要知道哪些地方允许它自行发挥，哪些地方决定了产品是不是你要的。</p>
+<p>一个实用的检查办法是：让另一个人只看要求和最终产物，能否判断任务已经完成？“做得专业一点”很难判定；“页面首先展示研究方向和近期工作，手机上无需横向滚动，所有项目入口都能打开”，就提供了可以检查的行为。不能完全机械判断的品味，也可以通过示例、对比和反馈逐步说明。</p>
+<p>完成的语义还包括失败。如果关键条件无法验证，合理的结果应当是报告哪里没完成、缺少什么证据，而不是交出一段肯定的总结。只有把这些状态说清楚，Agent 才能更可靠地决定继续尝试，还是需要新的信息。</p>
+<h3 class="anchor" id="一步有限，为什么还能完成复杂任务"><span class="ht">一步有限，为什么还能完成复杂任务</span></h3>
+<p>一个疑问随之而来：如果模型只是反复计算下一个 token 的概率，它怎样同时满足很多约束？</p>
+<p>一次模型前向计算的结构和深度是有限的。它不会在这一瞬间任意增加计算步骤。但模型可以把中间结果写进上下文，再利用这些结果继续生成。遇到不确定的地方，可以先尝试一种分解，检查后发现不合适，再修改。这就是课堂用来理解思维链的直觉：把一串输出看成能够存放中间状态的工作纸。</p>
+<p>这样，更多 token 就可能换来更多计算深度。它是否有效，取决于模型有没有找到能推进问题的步骤，以及能不能识别错误。课堂借“找解常常比验解难”说明这种方法的吸引力；这是一种理解搜索过程的类比，不是在证明某个复杂性理论结论。</p>
+<p>为了把指令遵循的难度具体摆出来，课堂给了几道故意刁难人的写作题。第一道要求写八句中文诗：句首依次是“计算机学院真牛逼”，讲一个与动物相关的故事，“二零二六九月一日”八个字还要依次出现在八句中，并且押韵。生成素材给出了这样的尝试：</p>
+<blockquote><p>计成二兔越山冈<br>算到零时雪满塘<br>机警狐衔二袋粮<br>学随六雁辨风向<br>院中九犬忽声扬<br>真到月明逢恶狼<br>牛守一夜迎晨光<br>逼得日升狼遁荒</p></blockquote>
+<p>检查时，可以先竖读句首，再逐句寻找指定字，最后看句尾和故事。藏头与嵌字都能对上，句尾也有相近的韵感，但“方向”的“向”与其他句尾在普通话拼音中并不完全相同，读起来有些句子也明显是为了凑约束。它展示的是模型能够寻找并修补一个多约束解，而不是宣告模型已经写出好诗。</p>
+<p>第二道题要求一句话有十八个汉字，全部带相同偏旁，还要有意义和故事性。素材中的例子是：</p>
+<blockquote><p>洪涝淹没江港渔浦，油污漂浮，沈涛泅渡济溺。</p></blockquote>
+<p>去掉标点，可以数出十八个字，都带三点水；把“沈涛”读作人名，故事就是洪灾与油污中有人游过去救助溺水者。这里的检查比较直接，但“都含三点水”和“词典中都归为同一部首”仍然是不同要求。要交给程序验收，就得先决定检查的是哪一个。</p>
+<p>第三道题要求所有字都同音，写一段有现代背景的文言故事，不能照搬已有的同音文。素材尝试用不同声调的 <code>yi</code> 音字，写一个翻译器误译、送修、恢复正常的故事。这立即暴露出另一项规格选择：“同音”是否要求声调也相同？作者靠字形区分意思，读者看文字还能猜出情节，念出来却可能几乎无法理解。</p>
+<p>这三道题把两类评价放在了一起。藏头、字数、指定字和读音可以逐项检查；通顺、趣味和文学性则需要更丰富的判断。模型通过形式检查，说明它能够搜索和纠错，但形式检查没有覆盖的质量，并不会自动出现。软件测试也有类似的边界。</p>
+<h3 class="anchor" id="上下文中的规则，也会争夺注意力"><span class="ht">上下文中的规则，也会争夺注意力</span></h3>
+<p>把要求写进上下文，可以让模型在生成过程中反复利用它。项目约定使用中文，或者提交信息不添加某种署名，模型就有机会在相关时刻纠正自己的输出。不过，“在上下文里”并不保证“每次都会正确遵循”。</p>
+<p>提示词还会带来副作用。你说“白色背景，不要半透明效果”，模型可能把这句话变成代码里的注释：“白色背景（不要半透明效果）”。它完成了背景设置，却也把原本只用于沟通的要求带进了产物。</p>
+<p>于是，一个看似合理的修补办法出现了：再加一条永久规则，禁止把用户要求写进注释。但每遇到一次问题就增加一条规则，上下文会越来越长，约束之间也越来越难协调。这不是免费的增强。</p>
+<p>更合适的做法，是区分长期适用的简短规则与当前任务需要的细节。项目层面留下真正稳定的约定；特定任务的方法按需加载；能够直接检查的要求，则尽量落到代码和验证结果上。白色背景可以由具体样式和渲染结果确认，不必依靠越来越长的自然语言劝诫。</p>
+<p>上下文工程因此也包含取舍：删去一段无关说明，有时和增加一条关键要求同样有效。模型需要的不是尽可能多的文字，而是此刻做决定时用得上的信息。</p>
+<h3 class="anchor" id="“你是一位审稿人”，还不够"><span class="ht">“你是一位审稿人”，还不够</span></h3>
+<p>课堂接着把任务换成论文审稿：假装自己是 ICSE 的审稿人，阅读指定论文，写一份约一千英文词的 review，并判断是否应该接收。</p>
+<p>模型很容易写出一份看起来像审稿意见的文本：总结贡献，列出优点和不足，再给出一个建议。问题是，它究竟完成了多少判断？“扮演审稿人”可以提示语气和输出结构，却没有把一个好审稿人的方法自动交给它。</p>
+<p>论文的信息密度非常高。作者不仅给出了答案，也替读者选好了问题、术语、比较对象和衡量标准。如果顺着文章走完一遍才开始评价，很容易在不知不觉中接受了作者的整个框架。你以为自己在批判性思考，其实只是在作者划好的场地里打转。</p>
+<p>可以把审稿工作拆成三条不同的路线。第一条从判据出发，先还原论文声称的贡献，再问每项贡献需要达到什么标准，证据在哪里。第二条审查证据，把核心主张、实验支持、未验证假设和替代解释一项项对应起来。第三条站到复现者或反方的位置，重算一个关键结果，寻找最小反例，明确什么观察会推翻结论。</p>
+<p>这几条路线的价值来自问题不同。若一开始就共享同一个总体印象，最后可能只得到同一个判断的三份润色。独立形成初步意见，再比较分歧，才更容易发现原先没有看到的东西。</p>
+<p>这也说明人的方法论如何影响 AI 的结果。你不必替它读完每一行，但需要知道什么算有根据的判断、哪些证据缺失值得追问。短程任务里，把方向带对、把标准说清楚，往往已经能显著改变产物。</p>
+<p>当一套做法多次有效，就可以把它沉淀成 skill。Skill 看起来是一段提示词，真正值得保存的，是成功经验中的搜索策略、判断标准和检查点。它帮助 Agent 复用一种做事的方法，而不是每次重新凭第一印象发挥。</p>
+<p>Skill 也不是越长越好。如果把所有想得到的要求都塞进去，它本身就会变成一道复杂的指令遵循题，和前面的藏头诗颇有相似之处。保留真正影响决策的内容，把机械工作交给脚本，把需要时才看的材料单独放置，才能让经验更容易复用。</p>
+<h3 class="anchor" id="为什么大仓库有时比空项目更容易"><span class="ht">为什么大仓库有时比空项目更容易</span></h3>
+<p>课堂提出了一个有趣的观察：从零做一个看起来不难的产品，AI 可能在某个时间点开始不断翻车；进入一个成熟的大型系统，反而能够完成相当复杂的修改。</p>
+<p>可以从上下文的角度理解这种差别。成熟代码库已经做出了许多决定：怎样命名，模块如何分层，错误怎样传播，测试放在哪里。Agent 在解决局部问题时，可以学习附近的例子，沿着现有结构补充实现。代码量虽然大，当前任务需要自由选择的事情却可能更少。</p>
+<p>空项目恰好相反。没有已有结构约束选择，每次局部实现都可能顺手做出一个长期设计决定。如果最初就形成了混乱的惯例，后续生成又以这些惯例为上下文，AI slop 就会不断叠加。<strong>代码库本身也是提示词。</strong> 它会示范怎样做，也可能示范怎样把问题继续藏起来。</p>
+<p>这里不能推出“大仓库一定好改”，或者“模型会自动认出最佳实践”。它也可能模仿历史包袱。课堂进一步提出了一个未经实验验证的猜测：给 Agent 看一个相近领域、设计优雅的成熟系统，再让它实现自己的需求，能否提高质量？</p>
+<p>这个猜测值得做实验，但还不是结论。相近领域到底有多相近？应该读整个项目，还是几个关键例子？如果参考项目的约束与当前任务不同，会不会把不合适的架构也学过来？一种比较方式是给同一任务设置无参考、完整参考和精选参考三种条件，比较实现后的修改代价与缺陷，而不仅仅看第一版能否运行。</p>
+<p>这又把问题带回了学习。处理器、操作系统、编译器和数据库里有很多设计智慧。理解接口、不变量、状态和失败模式，才能知道该把模型引向哪里。对所做的东西“有概念”，仍然是驾驭它的前提。只是现在，学到一个原理以后，可以更快地把它用到真正的系统里。</p>
+<h3 class="anchor" id="Token-花完了，研究为什么还没有推进"><span class="ht">Token 花完了，研究为什么还没有推进</span></h3>
+<p>能够执行长程编程任务，意味着模型在遇到错误后仍能继续：修改、构建、测试、观察，再修复。这样的闭环依赖反馈。测试失败提供了具体方向，编译器报错指出了局部问题，模型可以据此不断尝试。</p>
+<p>但把任务交给更强的模型、投入更多 token，并不保证任何长程问题都会收敛。课堂讲了一个研究失败案例：希望优化一个符号执行引擎，已经有一个初步想法，于是把想法和 benchmark 一起交给 Agent，花了很多 token，最终没有得到结果。</p>
+<p>原稿没有给出已经查明的失败原因，因此这里能做的是提出待检验的解释。一个可能的问题，是总 benchmark 分数提供的反馈太粗。没有变快，究竟是主要时间花在求解器里，路径搜索策略有问题，缓存没有起作用，还是修改引入了新的开销？如果这些因素混在一起，下一步应该试什么就很难判断。</p>
+<p>另一个可能的问题，是任务把“把这个想法实现好”当成了目标，但研究真正需要回答的，可能是“这个想法是否成立”。如果原始假设就不对，继续完善实现也不会带来期待中的进展。一个能否定原想法的实验，有时比更多代码更有价值。</p>
+<p>因此，更有用的起点可能是先测量主要瓶颈，把想法写成一个可以被实验推翻的预测，再构造能够快速反馈的小实验。确认局部机制确实有效以后，才把它放回完整系统，检查收益是否仍然存在。研究中的“推进”可以是缩小未知，也可以是排除一个方向；不能只把它定义成最终分数必须上涨。</p>
+<h3 class="anchor" id="人应该盯住哪些地方"><span class="ht">人应该盯住哪些地方</span></h3>
+<p>既然人了解领域，随时干预是否最好？课堂给出的经验恰好有点反直觉：我知道怎样让某个任务更快完成，却越来越少干预了。</p>
+<p>原因在于，单个任务的完成时间与一天能完成的任务总量，是两个不同目标。如果 Agent 走一点弯路最后也能完成，我可以把注意力移到另一件事上。机器多花一些时间，换回人的时间，整体产出反而增加。</p>
+<p>这种取舍需要有边界。接口已经看过、结果可以检验、实现出了问题能够替换时，可以让 Agent 自己探索。相反，一个会扩散到许多模块的接口决定，一个昂贵或难以恢复的动作，就更值得提前关注。人的注意力应当按照决策影响和返工代价分配，而不是平均撒在每一行代码上。</p>
+<p>长任务还会不断产生日志、补丁和工具输出。上下文能容纳这些材料，不代表模型在每个时刻都能同样有效地使用它们。课堂观察到，随着上下文增长，指令遵循可能下降，而最近的要求或刚加载的方法往往更容易被执行。具体表现取决于模型和任务，但工程上可以主动缩短关键要求到关键决定之间的距离。</p>
+<p>例如，在阶段切换时重新确认目标、接口和未决问题；把能检查的不变量落实成测试；让错误在继续传播之前暴露。上下文压缩也要保存当前约束和证据，而不只是把过去发生的事情写成流水账。这样，人的放手才有可以依靠的反馈机制。</p>
+<h3 class="anchor" id="在不确定性中探索"><span class="ht">在不确定性中探索</span></h3>
+<p>到这里，我们一直在讨论怎样把任务说清楚。但许多有价值的任务，本来就没有确定路线。我们希望 AI 帮助探索，而不仅仅执行已经写好的计划。</p>
+<p>“帮我考虑几种方案”通常有效，却可能过早结束。模型给出几个听起来合理的答案，已经满足了“几种”的数量要求；更有意思的方案，也许仍在它没有走到的方向里。此时，多沿一条思路想一会儿，与主动探索更多不同思路，是两种不同的算力使用方式。</p>
+<p>课堂用取名字作例子：给一个蒋姓的小孩取好听、又有寄托的名字。如果直接要几个答案，模型可能给出自己偏好的高概率组合；许多家庭同时询问，又可能迎来 AI 时代的新一代“子涵”。</p>
+<p>要扩大探索，可以先划分空间：从典故、音韵、方言、时代感等不同角度生成候选，再检查出处、谐音、书写和个人偏好。也可以让不同 Agent 独立提出候选或负责挑错，最后再汇总。关键在于它们是否看了不同方向、提出了不同问题，而不在于开了多少个看起来相同的窗口。</p>
+<p>这里仍然离不开人的判断。“给更多名字”解决的是候选数量，“哪些名字值得留下”则需要评价标准。没有分辨率的筛选，可能只是把一个平庸答案变成一百个平庸答案。探索空间与评价方法应当一起设计。</p>
+<p>人类社会其实一直在通过类似方式扩展自己的视野。每个人的教育背景、生活圈和经历都有限，也都带着偏向。与舍友讨论，去会议上听别人怎样提出问题，价值往往来自发现自己的默认前提。交流之后，每个人仍有自己的偏向，但它已经被新的经验改变。</p>
+<p>课堂借“世界很大，人很小”的视角提醒我们，没有人能独自穷尽所有可能。群体的价值可以来自不同的局限相互补充。把这个思想带回 Agent：增加计算资源时，应当考虑怎样增加探索的差异，而不是只增加同一种思路的重复次数。</p>
+<p>如果计算资源能够持续转化为探索能力和判断能力，这也带来了一个令人不安的未来问题：拥有大量算力的人或组织，会不会获得远超普通人的智力资源？课堂用“墙里面是超人，墙外面是动物世界”表达这种担忧。这是对未来可能性的追问，并非已经发生的终局。</p>
+<p>对于正在学习的我们，可以从眼前开始改变做事方式：让模糊愿望获得可检查的表达，把有效经验沉淀成可复用的方法，在需要探索时主动扩展方向，又用证据筛选结果。提示词的价值，最终要落在这些行动如何改变任务的结果上。</p>
+</div></details>
+
+<details class="appx" id="appx-c"><summary><h2 id="附录-c课程主页与视频信息" class="anchor"><span class="ht">附录 C：课程主页与视频信息</span><span class="tg"></span></h2></summary>
+<div class="appx-body">
+<div class="tw"><table>
+<thead><tr><th>项</th><th>内容</th></tr></thead><tbody>
+<tr><td>课程</td><td>南京大学《生成式软件工程》(GenSE) 2026 秋季学期，主讲 <strong>蒋炎岩</strong>。课程主页：<a href="https://jyywiki.cn/GSE/2026/" target="_blank" rel="noopener">jyywiki.cn/GSE/2026</a></td></tr>
+<tr><td>本讲标题</td><td>提示词与上下文工程（幻灯片副题：Prompt Engineering）；课堂录像标题「提示词工程」</td></tr>
+<tr><td>视频</td><td><a href="https://www.bilibili.com/video/BV1CQt365EzW" target="_blank" rel="noopener">BV1CQt365EzW</a>（第 02-Raw/26生成式软件工程/NJU），时长 <strong>98 分钟</strong>（5906 秒）</td></tr>
+<tr><td>官方资料</td><td><a href="https://jyywiki.cn/GSE/2026/lect2.md" target="_blank" rel="noopener">讲义 lect2</a> ｜ <a href="https://jyywiki.cn/GSE/2026/slides2.html" target="_blank" rel="noopener">幻灯片 slides2（37 页）</a></td></tr>
+<tr><td>发布时间</td><td>2026-09-01</td></tr>
+<tr><td>视频数据（整理时）</td><td>播放 48,358 ｜ 点赞 1,247 ｜ 投币 779 ｜ 收藏 1,294 ｜ 转发 436 ｜ 弹幕 284 ｜ 评论 244</td></tr>
+<tr><td>版权</td><td>课程内容与讲义版权归 <strong>蒋炎岩</strong> 老师所有（<a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a>）。本笔记为个人学习整理，非官方教材；若有理解偏差，以课程原文为准。</td></tr>
+</tbody></table></div>
+<p><em>本笔记整理自 B 站视频 BV1CQt365EzW 及课程官方讲义（<a href="https://jyywiki.cn/GSE/2026/" target="_blank" rel="noopener">jyywiki.cn/GSE/2026</a>，CC BY-NC 4.0）。讲义内容版权归蒋炎岩老师所有，本文件仅作学习整理之用。</em></p>
+</div></details>
+<footer>本页以官方讲义与 37 页幻灯片原文为主体整理生成；原文版权归蒋炎岩老师所有（CC BY-NC 4.0），仅供学习整理之用。</footer>
+</main>
+</div>
+<button id="menu" title="目录">☰</button>
+<button id="top" title="回到顶部">↑</button>
+<a id="home" href="index.html" title="返回主页（快捷键 Esc）">← 主页</a>
+<script>
+
+(function(){
+  var root=document.documentElement;
+  // 主题
+  var saved=localStorage.getItem('gse2-theme');
+  if(saved) root.setAttribute('data-theme',saved);
+  document.getElementById('theme').onclick=function(){
+    var n=root.getAttribute('data-theme')==='dark'?'light':'dark';
+    root.setAttribute('data-theme',n); localStorage.setItem('gse2-theme',n);
+    this.textContent = n==='dark' ? '☾ 深色' : '☀ 浅色';
+  };
+  document.getElementById('theme').textContent =
+    (root.getAttribute('data-theme')==='dark')?'☾ 深色':'☀ 浅色';
+
+  // 进度条
+  var bar=document.querySelector('#prog i');
+  function prog(){
+    var h=document.documentElement, sc=h.scrollTop||document.body.scrollTop;
+    var max=(h.scrollHeight-h.clientHeight)||1;
+    bar.style.width=Math.min(100,sc/max*100)+'%';
+    document.getElementById('top').classList.toggle('on',sc>500);
+  }
+  window.addEventListener('scroll',prog,{passive:true}); prog();
+
+  // TOC 高亮
+  var links=[].slice.call(document.querySelectorAll('#toc a'));
+  var map={};
+  links.forEach(function(a){ map[a.getAttribute('href').slice(1)]=a; });
+  var heads=links.map(function(a){return document.getElementById(a.getAttribute('href').slice(1));})
+                 .filter(Boolean);
+  function spy(){
+    var y=window.scrollY+110, cur=null;
+    heads.forEach(function(h){ if(h && h.getBoundingClientRect().top+window.scrollY<=y) cur=h; });
+    links.forEach(function(a){a.classList.remove('on');});
+    if(cur&&map[cur.id]) map[cur.id].classList.add('on');
+  }
+  window.addEventListener('scroll',spy,{passive:true}); spy();
+
+  // 筛选
+  var q=document.getElementById('q');
+  q.addEventListener('input',function(){
+    var v=this.value.trim().toLowerCase();
+    links.forEach(function(a){
+      var t=a.textContent.toLowerCase();
+      var hit = !v || t.indexOf(v)>=0;
+      a.classList.toggle('hide',!hit);
+    });
+  });
+  function typing(){
+    var a=document.activeElement;
+    return !!a && (a.tagName==='INPUT'||a.tagName==='TEXTAREA'||a.tagName==='SELECT'||a.isContentEditable);
+  }
+  document.addEventListener('keydown',function(e){
+    if(e.key==='/'&&document.activeElement!==q){e.preventDefault();q.focus();}
+    if(e.key==='Escape'&&document.activeElement===q){q.value='';q.dispatchEvent(new Event('input'));q.blur();return;}
+    if(e.key==='Escape'&&!typing()&&!e.metaKey&&!e.ctrlKey&&!e.altKey){
+      e.preventDefault(); location.href='index.html';
+    }
+  });
+
+  // 内部链接：自动展开所在附录
+  document.addEventListener('click',function(e){
+    var a=e.target.closest?e.target.closest('a.il'):null;
+    if(!a) return;
+    var id=decodeURIComponent(a.getAttribute('href').slice(1));
+    var t=document.getElementById(id);
+    if(!t) return;
+    var d=t.closest('details.appx');
+    if(d && !d.open) d.open=true;
+  });
+
+  // 标题锚点：复制链接
+  document.querySelectorAll('a.ha').forEach(function(a){
+    a.addEventListener('click',function(e){
+      e.preventDefault(); e.stopPropagation();
+      var url=location.origin+location.pathname+a.getAttribute('href');
+      if(navigator.clipboard) navigator.clipboard.writeText(url).catch(function(){});
+      var o=a.textContent; a.textContent='✓'; setTimeout(function(){a.textContent=o;},900);
+    });
+  });
+
+  // 任务清单进度
+  var boxes=[].slice.call(document.querySelectorAll('li.task input'));
+  var KEY='gse2-tasks';
+  try{
+    var st=JSON.parse(localStorage.getItem(KEY)||'[]');
+    boxes.forEach(function(b,i){ if(st[i]) b.checked=true; });
+  }catch(e){}
+  function upd(){
+    var done=boxes.filter(function(b){return b.checked;}).length;
+    var el=document.getElementById('tk');
+    if(el) el.innerHTML='自测进度 <span>'+done+' / '+boxes.length+'</span>';
+    try{ localStorage.setItem(KEY,JSON.stringify(boxes.map(function(b){return b.checked;}))); }catch(e){}
+  }
+  boxes.forEach(function(b){ b.addEventListener('change',upd); }); upd();
+
+  // 附录展开/收起
+  var all=false;
+  document.getElementById('appx').onclick=function(){
+    var ds=[].slice.call(document.querySelectorAll('details.appx'));
+    all=!all;
+    ds.forEach(function(d){ d.open=all; });
+    this.textContent = all ? '收起全部附录' : '展开全部附录';
+  };
+
+  document.getElementById('top').onclick=function(){ window.scrollTo({top:0,behavior:'smooth'}); };
+  var sb=document.getElementById('sidebar');
+  document.getElementById('menu').onclick=function(){ sb.classList.toggle('open'); };
+  document.addEventListener('click',function(e){
+    if(window.innerWidth<=1000 && sb.classList.contains('open')){
+      if(!sb.contains(e.target) && e.target.id!=='menu') sb.classList.remove('open');
+    }
+  });
+})();
+
+</script>
+</body>
+</html>
