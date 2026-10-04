@@ -4,14 +4,21 @@
 
 ## 在线阅读
 
-站点采用「单仓库双分支 → 一个 Pages 站点」的结构：根路径为跳转入口，本分支（`AI_Reader`）的内容发布在 **`/AI_Reader/`** 路径下。
+站点采用「单仓库三分支 → 一个 Pages 站点」的结构：根路径为跳转入口，三个分支的内容分别发布在 **`/main/`、`/AI_Reader/`、`/View_Rich/`** 路径下。
 
 **站点入口：<https://wangchenglong-0712.github.io/Generative-Software-Engineering/>**（自动跳转到 `/main/`）
-**本分支首页：<https://wangchenglong-0712.github.io/Generative-Software-Engineering/AI_Reader/>**
+
+| 分支版本 | 说明 | 链接 |
+| --- | --- | --- |
+| **main** | 基础笔记索引首页 | [点击进入](https://wangchenglong-0712.github.io/Generative-Software-Engineering/main/) |
+| **AI_Reader** | 含播客模块（多音色播放、视觉同步、断点续播） | [点击进入](https://wangchenglong-0712.github.io/Generative-Software-Engineering/AI_Reader/) |
+| **View_Rich** | 图文并茂版：讲义插图直接取自官方幻灯片 | [点击进入](https://wangchenglong-0712.github.io/Generative-Software-Engineering/View_Rich/) |
+
+> 以下为本分支（`AI_Reader`）页面链接；其它分支的讲义与习题入口规则相同（把路径中的 `/AI_Reader/` 换成对应分支即可）。
 
 | 页面 | 链接 |
 | --- | --- |
-| 笔记索引首页 | [点击进入](https://wangchenglong-0712.github.io/Generative-Software-Engineering/AI_Reader/) |
+| 本分支笔记索引首页 | [点击进入](https://wangchenglong-0712.github.io/Generative-Software-Engineering/AI_Reader/) |
 | 播客（本分支特色） | [点击进入](https://wangchenglong-0712.github.io/Generative-Software-Engineering/AI_Reader/podcast.html) |
 | 第 1 讲《欢迎来到未来》 | [点击进入](https://wangchenglong-0712.github.io/Generative-Software-Engineering/AI_Reader/NJU-%E7%94%9F%E6%88%90%E5%BC%8F%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B-%E7%AC%AC01%E8%AE%B2-%E6%AC%A2%E8%BF%8E%E6%9D%A5%E5%88%B0%E6%9C%AA%E6%9D%A5.html) |
 | 第 2 讲《提示词与上下文工程》 | [点击进入](https://wangchenglong-0712.github.io/Generative-Software-Engineering/AI_Reader/NJU-%E7%94%9F%E6%88%90%E5%BC%8F%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B-%E7%AC%AC02%E8%AE%B2-%E6%8F%90%E7%A4%BA%E8%AF%8D%E4%B8%8E%E4%B8%8A%E4%B8%8B%E6%96%87%E5%B7%A5%E7%A8%8B.html) |
@@ -113,7 +120,7 @@ NJU-生成式软件工程-第NN讲-标题.html
 
 - 纯 HTML / CSS / 原生 JavaScript，**无框架、无构建、无外部 CDN 依赖**，可离线打开。
 - 深浅色主题统一使用 localStorage 键 `gse-theme`（首页与习题页）；讲义按讲次存主题与自测进度：第 1 讲 `gse1-theme` / `gse1-tasks`，第 2 讲 `gse2-theme` / `gse2-tasks`；习题作答按讲次：`gse1-exercise`、`gse2-exercise`。
-- 托管方式：GitHub Pages（Settings → Pages → Source → **GitHub Actions**），由 `.github/workflows/deploy-branches.yml` 将 `main`、`AI_Reader` 两分支内容分别发布到 `/main/`、`/AI_Reader/`，根路径为跳转入口。
+- 托管方式：GitHub Pages（Settings → Pages → Source → **GitHub Actions**），由 `.github/workflows/deploy-branches.yml` 将 `main`、`AI_Reader`、`View_Rich` 三分支内容分别发布到 `/main/`、`/AI_Reader/`、`/View_Rich/`，根路径为跳转入口。
 
 ## 版权与致谢
 

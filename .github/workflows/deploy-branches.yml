@@ -1,12 +1,13 @@
-# 单仓库双分支 → 一个 Pages 站点，两个路径：
+# 单仓库三分支 → 一个 Pages 站点，三个路径：
 #   /             → 入口重定向页
 #   /main/        → main 分支内容
 #   /AI_Reader/   → AI_Reader 分支内容
-name: 双分支部署到 Pages
+#   /View_Rich/   → View_Rich 分支内容
+name: 三分支部署到 Pages
 
 on:
   push:
-    branches: [main, AI_Reader]
+    branches: [main, AI_Reader, View_Rich]
   workflow_dispatch:          # 支持手动触发
 
 permissions:
@@ -34,14 +35,21 @@ jobs:
           path: src-ai
           ref: AI_Reader
 
+      - name: 检出 View_Rich 分支
+        uses: actions/checkout@v4
+        with:
+          path: src-view
+          ref: View_Rich
+
       - name: 组装发布目录
         run: |
-          mkdir -p dist/main dist/AI_Reader
+          mkdir -p dist/main dist/AI_Reader dist/View_Rich
           cp -r src-main/. dist/main/
           cp -r src-ai/. dist/AI_Reader/
+          cp -r src-view/. dist/View_Rich/
           touch dist/.nojekyll
           # 站点根放一个跳转首页，否则直接访问根路径会 404
-          printf '<!doctype html><meta http-equiv="refresh" content="0;url=./main/"><p>GitHub Pages 双分支站点：<a href="./main/">main</a> · <a href="./AI_Reader/">AI_Reader</a></p>' > dist/index.html
+          printf '<!doctype html><meta http-equiv="refresh" content="0;url=./main/"><p>GitHub Pages 三分支站点：<a href="./main/">main</a> · <a href="./AI_Reader/">AI_Reader</a> · <a href="./View_Rich/">View_Rich</a></p>' > dist/index.html
 
       - name: 上传 Pages 产物
         uses: actions/upload-pages-artifact@v4
