@@ -1,4 +1,4 @@
-# 南京大学《生成式软件工程》2026 秋 · 课堂笔记（AI_Reader 分支）
+# 南京大学《生成式软件工程》（AI_Reader 分支）
 
 **站点入口**：<https://wangchenglong-0712.github.io/Generative-Software-Engineering/AI_Reader/>
 
