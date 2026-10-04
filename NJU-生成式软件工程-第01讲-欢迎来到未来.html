@@ -230,6 +230,13 @@ footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--line);
   body{background:#fff;color:#000;font-size:11pt}
 }
 
+
+.fig{margin:1.3rem 0 1.4rem;text-align:center}
+.fig img{max-width:100%;height:auto;border:1px solid var(--line);border-radius:10px;background:#fff;box-shadow:var(--shadow)}
+.fig img.portrait{max-width:min(430px,100%)}
+.fig figcaption{font-size:.82rem;color:var(--fg2);margin-top:.5rem;line-height:1.75}
+.fig .src{display:inline-block;font-size:.72rem;color:var(--fg3);background:var(--bg3);border:1px solid var(--line);border-radius:999px;padding:.02rem .55rem;margin-left:.35rem;vertical-align:.12em}
+
 </style>
 </head>
 <body>
@@ -374,7 +381,7 @@ footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--line);
 <h3 id="11-四次把昂贵能力变成日用品" class="anchor"><span class="ht">1.1 四次把昂贵能力变成日用品</span><a class="ha" href="#11-四次把昂贵能力变成日用品" title="复制本节链接">#</a></h3>
 <p>课堂用四个节点回看计算机改变生活的过程：</p>
 <div class="tw"><table><thead><tr><th>年份</th><th>节点</th><th>变便宜的能力</th></tr></thead><tbody><tr><td>1975</td><td>Altair 8800</td><td>个人计算</td></tr><tr><td>1993</td><td>Mosaic</td><td>互联网</td></tr><tr><td>2007</td><td>iPhone</td><td>移动互联网</td></tr><tr><td>2022</td><td>ChatGPT</td><td>AI</td></tr></tbody></table></div>
-<p>把它们放在一起看，规律不是“机器又强了一点”，而是如下这句话：</p>
+<p>把它们放在一起看，规律不是<figure class="fig"><img src="img/lect1-crossroads.webp" alt="四个节点：PC、互联网、移动互联网、AI 的技术拐点" loading="lazy"><figcaption>四个把昂贵能力变成日用品的节点：PC (1975) → 互联网 (1993) → 移动互联网 (2007) → AI (2022)。<span class="src">图源：官方幻灯片 slides1</span></figcaption></figure>“机器又强了一点”，而是如下这句话：</p>
 <blockquote class="bq"><p><strong>真正的拐点，不是机器又强了一点；而是某种昂贵能力，突然变成了日用品。</strong></p></blockquote>
 <p>今天正在变便宜的，是“<strong>把一个想法变成能运行的软件</strong>”。当实现本身不再是门槛，这门课也就不能再按原来的方式上——所以它是<strong>一门非常实验性的课程</strong>。</p>
 <h3 id="12-狼来了作业完成了学习发生了吗" class="anchor"><span class="ht">1.2 “狼来了”：作业完成了，学习发生了吗？</span><a class="ha" href="#12-狼来了作业完成了学习发生了吗" title="复制本节链接">#</a></h3>
@@ -410,7 +417,7 @@ footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--line);
 <section><h2 id="4-课程-policy" class="anchor"><span class="ht">4. 课程 Policy</span><a class="ha" href="#4-课程-policy" title="复制本节链接">#</a></h2><p>两条 Policy 都很不寻常，但它们服务的目标是一致的：<strong>把学习的动力从分数，移回到作品与判断上。</strong></p>
 <h3 id="41-token-自费" class="anchor"><span class="ht">4.1 Token 自费</span><a class="ha" href="#41-token-自费" title="复制本节链接">#</a></h3>
 <blockquote class="bq"><p><strong>“没有 token 的 CS 学生应该立即退学”</strong>（课件首页原话，“立即退学”标红）</p></blockquote>
-<ul><li>这是<strong>个人观点 + 夸张表达</strong>：第二讲老师已说明不会真的让人退学（“不这么说，你们真的听不进”），并补充确有经济困难可以找他（详见附录 D）。</li><li>课堂全程使用 <strong>deepseek-v4-flash</strong>——一个便宜但相对智能的模型；选它正是为了让“自费”这件事可行。</li><li><strong>Token 是 AI 时代的实验耗材</strong>：像化学系的试剂、物理系的器材，只有亲自掏钱用，才能建立<strong>成本—质量—延迟</strong>的意识。</li><li><strong>不需要 tokenmaxxing</strong>——不以消耗更多 token 为目标去攀比；值得投入的是问题与实践。</li><li>成本参考：去 DeepSeek 充 100 块基本够一学期；在 token 便宜的时间段做作业；确实有困难可以找老师。</li><li><strong>真正稀缺的不是 token</strong>，而是值得花 token 的问题、清晰的约束和可靠的验收。</li></ul>
+<ul><li>这是<strong>个人观点 + 夸张表达</strong><figure class="fig"><img src="img/lect1-token-policy.webp" alt="课程 Policy：Token 自费的幻灯片配图" loading="lazy"><figcaption>课程 Policy「Token 自费」的幻灯片配图。<span class="src">图源：官方幻灯片 slides1</span></figcaption></figure>：第二讲老师已说明不会真的让人退学（“不这么说，你们真的听不进”），并补充确有经济困难可以找他（详见附录 D）。</li><li>课堂全程使用 <strong>deepseek-v4-flash</strong>——一个便宜但相对智能的模型；选它正是为了让“自费”这件事可行。</li><li><strong>Token 是 AI 时代的实验耗材</strong>：像化学系的试剂、物理系的器材，只有亲自掏钱用，才能建立<strong>成本—质量—延迟</strong>的意识。</li><li><strong>不需要 tokenmaxxing</strong>——不以消耗更多 token 为目标去攀比；值得投入的是问题与实践。</li><li>成本参考：去 DeepSeek 充 100 块基本够一学期；在 token 便宜的时间段做作业；确实有困难可以找老师。</li><li><strong>真正稀缺的不是 token</strong>，而是值得花 token 的问题、清晰的约束和可靠的验收。</li></ul>
 <h3 id="42-尽量通过-不通过" class="anchor"><span class="ht">4.2 尽量“通过 / 不通过”</span><a class="ha" href="#42-尽量通过-不通过" title="复制本节链接">#</a></h3>
 <ul><li><strong>不验收作业，不评分</strong>，只有建议的实验和反馈。</li><li>理由很直接：“服从性考试没有意义”——大家都一样，职场见；而且现在越来越难找到客观的衡量标准。</li><li><strong>不评分 ≠ 不评价</strong>：去掉排名信号，把反馈留给下一次迭代。</li><li>最终证据不是分数，而是<strong>别人可以打开、运行、质疑并继续使用的作品</strong>。一个公开项目可以持续修改，也会持续接受现实检验；它记录的成长，比一次验收更长。</li><li>目标句式：<em>“在《生成式软件工程》课程中实现了 A, B, C, D…（github.io 链接）”</em> —— github.io 是一条可审计的成长轨迹。</li></ul>
 <h3 id="43-课程项目方向官网列出" class="anchor"><span class="ht">4.3 课程项目方向（官网列出）</span><a class="ha" href="#43-课程项目方向官网列出" title="复制本节链接">#</a></h3>
@@ -437,7 +444,7 @@ footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--line);
 <ul><li>Agent 可以调用工具：读文件、执行命令、查询网页，观察结果，再决定下一步。</li><li>语言模型与运行它的程序、工具和环境共同形成一个反馈循环；承载这个循环的外围系统叫 <strong>harness</strong>。</li><li>区别可以这样体会：一次对话告诉你<strong>怎样</strong>安装系统；一个 Agent 可能<strong>真的开始安装</strong>，遇到报错继续排查，直到拿到可验收的结果。</li><li>所以理解 Agent 不能只看模型答题有多聪明，还要看：<strong>它能观察什么、操作什么、操作后能否知道自己做对了没有。</strong></li><li>模型未来是否仍以逐 token 生成为主要计算方式，课堂把它留给开放设想——我们可以从已有工具出发，先学会使用这个不断演进的系统。</li></ul>
 <hr></section>
 <section><h2 id="6-实操1普通人视角用-agent" class="anchor"><span class="ht">6. 实操（1）：普通人视角用 Agent</span><a class="ha" href="#6-实操1普通人视角用-agent" title="复制本节链接">#</a></h2><h3 id="61-从回答问题到把事情推进" class="anchor"><span class="ht">6.1 从“回答问题”到“把事情推进”</span><a class="ha" href="#61-从回答问题到把事情推进" title="复制本节链接">#</a></h3>
-<p>“AI-native 的一代人，你真的应该用过。”课堂 demo 就摆在桌上：<strong>一个最小的树莓派（Pi）</strong>，跑着 DeepSeek harness（它会在后续某节课专门讲；首批内测，于是有了一个梗图）。</p>
+<p>“AI-native 的一代人，你真的应该用过。”课堂 demo 就摆在桌上：<strong>一个最小的树莓派（Pi）</strong>，跑着 DeepSeek harness（它会在后续某节课专门讲；首批内测，于是有了一个梗图）。</p><figure class="fig"><img src="img/lect1-using-agents.webp" alt="课堂 demo 用的最小树莓派（Pi）设备图" loading="lazy" class="portrait"><figcaption>课堂 demo 用的「最小的 Pi」（树莓派）——跑着 DeepSeek harness。<span class="src">图源：官方幻灯片 slides1</span></figcaption></figure>
 <p>很多人第一次用 Agent，仍然把它当成“更会聊天的搜索框”。真正的变化在这里：</p>
 <blockquote class="bq"><p><strong>最小跃迁：AI 不只给答案，还会观察结果、采取动作、继续推进。</strong></p></blockquote>
 <h3 id="62-想象力是上限" class="anchor"><span class="ht">6.2 想象力是上限</span><a class="ha" href="#62-想象力是上限" title="复制本节链接">#</a></h3>
@@ -480,7 +487,7 @@ footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--line);
 <p><strong>关键不在 OCR，而在证据链：</strong></p>
 <ul><li>照片是<strong>原始凭证</strong>，小分是<strong>中间表示</strong>，总分与 Excel 是<strong>派生结果</strong>——形成可回查的链。</li><li><strong>“反序 + 报算式”</strong> 像航空管制的 <strong>readback</strong>：用不同表示制造冗余，专门截获错位、漏项和误识别。</li><li>机器承担吞吐量，<strong>人只驻守最窄的高风险接口</strong>：用一次复核，把错误挡在教务系统之外。</li><li>这件事的意义超出统分本身：<strong>需求描述得足够清楚，一个只临时用一次的工具，也有机会被当场造出来。</strong></li></ul>
 <h3 id="83-quiz只进不出的机器怎么偷出文件" class="anchor"><span class="ht">8.3 Quiz：只进不出的机器，怎么偷出文件？</span><a class="ha" href="#83-quiz只进不出的机器怎么偷出文件" title="复制本节链接">#</a></h3>
-<p>课堂提出了一个思考题。假设一台机器上的<strong>文件只进不出</strong>：不能执行不信任的程序，不能显示不信任的网页；但远处可以悄悄摄屏——只是复杂文件“就有点麻烦”。</p>
+<p>课堂提出了一个思考题。假设一台机器上的<strong>文件只进不出</strong>：不能执行不信任的程序，不能显示不信任的网页；但远处可以悄悄摄屏——只是复杂文件“就有点麻烦”。</p><figure class="fig"><img src="img/lect1-quiz-leak.webp" alt="只进不出的机器 Quiz 示意图" loading="lazy"><figcaption>「只进不出的机器」Quiz 示意图：文件只进不出，但像素仍可被观察。<span class="src">图源：官方幻灯片 slides1</span></figcaption></figure>
 <ul><li>关键在于：<strong>安全边界限制了“文件”，却没有限制信息</strong>。只要像素仍然可被观察，出口容量就不为零。</li></ul>
 <p><strong>老师的解法：把远程桌面变成内网</strong></p>
 <div class="tw"><table><thead><tr><th>角色</th><th>载体</th></tr></thead><tbody><tr><td><strong>Rx（接收）</strong></td><td>鼠标（抖鼠标）—— 鼠标也是输入线路</td></tr><tr><td><strong>Tx（发送）</strong></td><td>二维码（<strong>qrgen.xlsx</strong>，用 Excel 公式算 QR Code）—— Excel 是可编程显示设备</td></tr></tbody></table></div>
@@ -512,13 +519,13 @@ footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--line);
 <ul><li>仅通过<strong>少量 prompt</strong>，GLM-5.3 在 200K 上下文内完成了<strong>第一个正确且可维护的版本</strong>：<ul><li>公式可复用；</li><li>工作表<strong>不因为文本长度膨胀</strong>。</li></ul></li><li>关键不是“再多想一会”，而是从“<strong>生成一个能跑的文件</strong>”切换到“<strong>设计一个可复用的计算结构</strong>”。</li><li><strong>架构检查题：输入从 1 KB 变成 10 KB 时，究竟有哪些东西必须增长？</strong><ul><li>相对文本长度，公式模板和工作表结构应保持 <strong>O(1)</strong>；</li><li>只有数据、计算量和帧数按 <strong>O(n)</strong> 增长。</li></ul></li></ul>
 <h3 id="95-intentspec-与-impl本课主线" class="anchor"><span class="ht">9.5 Intent、Spec 与 Impl（本课主线）</span><a class="ha" href="#95-intentspec-与-impl本课主线" title="复制本节链接">#</a></h3>
 <div class="tw"><table><thead><tr><th>层次</th><th>含义</th></tr></thead><tbody><tr><td><strong>Intent Space</strong></td><td>你真正想达成的目标。提出者自己往往也不 100% 确定（“帮我弄一个好用的工具”“做个国民级应用”）</td></tr><tr><td><strong>Spec Space</strong></td><td>把意图具体化后，能描述行为与约束的规格。从 Intent 到 Spec 已经曲解了很多</td></tr><tr><td><strong>Impl Space</strong></td><td>程序实际执行的计算。<strong>计算机程序只接受 100% 无歧义的指令</strong>，不能留一句“到时候看着办”</td></tr></tbody></table></div>
-<ul><li>从 Intent → Spec 需要<strong>产品判断</strong>；从 Spec → Impl 需要<strong>设计与实现判断</strong>。</li><li>同一个意图允许许多规格，同一个规格又允许许多实现。</li><li><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.999em;vertical-align:-0.249em;"></span><span class="mord"><span class="mord mathrm">Impl</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">⊨</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8778em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathrm">Spec</span></span></span></span></span> 只说明“<strong>按规格正确</strong>”，<strong>并不推出“满足意图”</strong>；测试可以证明前者，却无法替人决定后者。</li><li><strong>spec 不是真相，只是对 intent 的一次有损观测。</strong></li></ul>
+<ul><li>从 Intent → Spec 需要<strong>产品判断</strong><figure class="fig"><img src="img/lect1-intent-spec-impl.webp" alt="Intent、Spec 与 Impl 三个空间的示意图" loading="lazy"><figcaption>Intent / Spec / Impl 三个空间：意图 → 规格 → 实现之间存在缺口。<span class="src">图源：官方幻灯片 slides1</span></figcaption></figure>；从 Spec → Impl 需要<strong>设计与实现判断</strong>。</li><li>同一个意图允许许多规格，同一个规格又允许许多实现。</li><li><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.999em;vertical-align:-0.249em;"></span><span class="mord"><span class="mord mathrm">Impl</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">⊨</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8778em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathrm">Spec</span></span></span></span></span> 只说明“<strong>按规格正确</strong>”，<strong>并不推出“满足意图”</strong>；测试可以证明前者，却无法替人决定后者。</li><li><strong>spec 不是真相，只是对 intent 的一次有损观测。</strong></li></ul>
 <h3 id="96-模型如何补-gap猜" class="anchor"><span class="ht">9.6 模型如何补 Gap？——猜</span><a class="ha" href="#96-模型如何补-gap猜" title="复制本节链接">#</a></h3>
 <ul><li>无穷多 spec “满足” intent，也有无穷多 impl “满足” spec。</li><li>模型靠<strong>猜</strong>来填补空白——总不能每选一种颜色、每命名一个变量都问用户。</li><li>模型训练的目标是“<strong>在有限的 token 内完成任务</strong>”，太容易“立即遵循指令”；正确的软件工程动作是：<strong>先别急，再讨论一下</strong>。</li><li>一旦在重大决策上犯错，就需要巨大成本来补；<strong>模型不像人一样有重构意识</strong>。</li></ul>
 <p><strong>人机协同的决策题</strong>：目标不是消灭猜测，而是让猜测<strong>显式、可逆、可验证</strong>。</p>
 <blockquote class="bq"><p>当 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="mopen">(</span><span class="mord text"><span class="mord cjk_fallback">猜错</span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="mopen">(</span><span class="mord text"><span class="mord cjk_fallback">返工</span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&gt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="mopen">(</span><span class="mord text"><span class="mord cjk_fallback">澄清</span></span><span class="mclose">)</span></span></span></span> 时，应当提问；否则先做最小实验。<br>—— 低影响决策先猜后验；高影响、难回滚的决策先停下来问。</p></blockquote>
 <h3 id="97-焦油坑the-mythical-man-month" class="anchor"><span class="ht">9.7 焦油坑（The Mythical Man-Month）</span><a class="ha" href="#97-焦油坑the-mythical-man-month" title="复制本节链接">#</a></h3>
-<blockquote class="bq"><p>大型动物一旦陷入焦油坑就很难逃脱，而濒死的动物又会引来各种掠食者。（也是《死亡搁浅》的原型）</p></blockquote>
+<blockquote class="bq"><p>大型动物一旦陷入焦油坑就很难逃脱，而濒死的动物又会引来各种掠食者。（也是《死亡搁浅》的原型）</p></blockquote><figure class="fig"><img src="img/lect1-software-engineering.webp" alt="《人月神话》焦油坑插画" loading="lazy"><figcaption>《人月神话》焦油坑插画：大型动物一旦陷入就很难逃脱。<span class="src">图源：官方幻灯片 slides1</span></figcaption></figure>
 <ul><li><strong>qrgen 已经进入焦油坑</strong>：增加一点功能，都需要消耗巨额 token。</li><li><strong>焦油不是代码量，而是耦合、隐含知识和验证债</strong>：功能是局部的，约束却是全局的。</li><li>越挣扎越消耗；加入更多生成能力，也可能只是更快地把自己埋进去。</li></ul>
 <h3 id="98-软件工程研究什么" class="anchor"><span class="ht">9.8 软件工程研究什么？</span><a class="ha" href="#98-软件工程研究什么" title="复制本节链接">#</a></h3>
 <p><strong>怎么把一件大事，在人和工具的共同协作下做成？</strong></p>
@@ -539,7 +546,7 @@ footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--line);
 <section><h2 id="10-成本结构变了验证成为瓶颈" class="anchor"><span class="ht">10. 成本结构变了：验证成为瓶颈</span><a class="ha" href="#10-成本结构变了验证成为瓶颈" title="复制本节链接">#</a></h2><h3 id="101-一道乘法题" class="anchor"><span class="ht">10.1 一道乘法题</span><a class="ha" href="#101-一道乘法题" title="复制本节链接">#</a></h3>
 <ul><li>“干能明确描述体力活的码农”变得非常便宜，而且可以 <strong>1000× 并行</strong>。</li><li><strong>算术</strong>：<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">1000</span><span class="mord">×</span></span></span></span> 产量 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.0833em;"></span><span class="mord">×</span><span class="mord">1%</span></span></span></span> 垃圾率 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.3669em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">10</span><span class="mord">×</span></span></span></span> 旧时代全部产量的垃圾（而实际比例可能更大）。<br>→ <strong>错误率很小</strong> 与 <strong>维护负担很小</strong>，并不是一回事；<strong>99% 正确，在规模面前仍然是灾难。</strong></li><li><strong>生成可以并行，逐行 review 却不能。</strong></li><li>于是新的工程任务是：<strong>让 spec、oracle、门控、观测和抽样本身也能扩展</strong>——让“判断”也具备规模效应。</li><li>瓶颈不再是“生产”，而是“验证”：让判断跟上生产，让人的注意力花在最值得判断的地方。</li><li>时代红利也在这里：<strong>每个人都有机会去解决之前 long-horizon 的问题</strong>（以前连开始都不敢想的问题）。</li></ul>
 <h3 id="102-当-ai-连品味也学会以后" class="anchor"><span class="ht">10.2 当 AI 连“品味”也学会以后？</span><a class="ha" href="#102-当-ai-连品味也学会以后" title="复制本节链接">#</a></h3>
-<ul><li>人的稀缺性继续向上游迁移：从<strong>亲手生产</strong>转向<strong>选择“什么值得存在”</strong>。</li><li class="warn">⚠️ 能力可以迁移，<strong>正当性与问责不会自动迁移</strong>。</li><li>课堂并没有给人类留下一块永远安全的领地；老师把它作为一个值得认真面对的问题提出来：如果设计、品味和工程判断也继续变便宜，我们如何决定什么值得做？</li><li>真正困难的问题也许不再是“怎么做”，而是“<strong>为何做、为谁做、后果由谁承担</strong>”。</li></ul>
+<ul><li>人的稀缺性继续向上游迁移：从<strong>亲手生产</strong>转向<strong>选择“什么值得存在”</strong>。</li><li class="warn">⚠️ 能力可以迁移，<strong>正当性与问责不会自动迁移</strong>。</li><li>课堂并没有给人类留下一块永远安全的领地；老师把它作为一个值得认真面对的问题提出来：如果设计、品味和工程判断也继续变便宜，我们如何决定什么值得做？</li><li>真正困难的问题也许不再是“怎么做”，而是“<strong>为何做、为谁做、后果由谁承担</strong>”。</li></ul><figure class="fig"><img src="img/lect1-ai-taste.webp" alt="当 AI 连品味也学会以后？的示意图" loading="lazy"><figcaption>「当 AI 连‘品味’也学会以后？」的配图：人的稀缺性继续向上游迁移。<span class="src">图源：官方幻灯片 slides1</span></figcaption></figure>
 <hr></section>
 <section><h2 id="11-古法编程死了软件工程还没死" class="anchor"><span class="ht">11. 古法编程死了，软件工程还没死</span><a class="ha" href="#11-古法编程死了软件工程还没死" title="复制本节链接">#</a></h2><h3 id="111-古法编程死了死掉的是手写实现的稀缺性" class="anchor"><span class="ht">11.1 “古法编程”死了：死掉的是手写实现的稀缺性</span><a class="ha" href="#111-古法编程死了死掉的是手写实现的稀缺性" title="复制本节链接">#</a></h3>
 <ul><li>Agent 在完成单个具体任务上已经无人能敌。</li><li>更准确的分界线：<strong>边界清楚、上下文装得下、结果能低成本验收</strong> —— 这样的任务已经进入机器的领地。</li><li>历史类比：<strong>“Computer” 原本是一种职业</strong>；电子计算机出现后，优秀的 human computers 转向编程和研究。<strong>历史不奖励把旧动作做得更快的人，而奖励会把问题交给新机器的人。</strong></li><li>所以“禁止古法编程”不是禁止理解：<strong>先让 Agent 生产，把人的注意力押在定义问题、设计验收和解释失败上。</strong></li></ul>
@@ -611,12 +618,12 @@ footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--line);
 6 道论述题 + 5 道解答题（共 100 分），附作答要点与参考答案，作答会自动保存在本机浏览器。<br>
 建议：先独立写完，再展开要点对照。</p></blockquote>
 <hr></section>
-<details class="appx"><summary><h2 id="附录-a44-页幻灯片逐页全文" class="anchor"><span class="ht">附录 A：44 页幻灯片逐页全文</span><a class="ha" href="#附录-a44-页幻灯片逐页全文" title="复制本节链接">#</a></h2><span class="tg"></span></summary><div class="appx-body"><blockquote class="bq bq-note"><p>逐页转录自 <a href="https://jyywiki.cn/GSE/2026/slides1.html" target="_blank" rel="noopener"><code>slides1.html</code></a>（页面的 <code>slides-data</code> JSON），保留原始公式与列表结构。<br>标记约定：<strong>※</strong> = 幻灯片上标注为 <code>aigc</code> 的补充批注（由 Agent 根据讲义扩写）；<strong>[图：…]</strong> = 页内插图。<br>幻灯片编号与课堂讲解顺序一致，可与正文各节对照阅读。</p></blockquote>
+<details class="appx"><summary><h2 id="附录-a44-页幻灯片逐页全文" class="anchor"><span class="ht">附录 A：44 页幻灯片逐页全文</span><a class="ha" href="#附录-a44-页幻灯片逐页全文" title="复制本节链接">#</a></h2><span class="tg"></span></summary><div class="appx-body"><blockquote class="bq bq-note"><p>逐页转录自 <a href="https://jyywiki.cn/GSE/2026/slides1.html" target="_blank" rel="noopener"><code>slides1.html</code></a>（页面的 <code>slides-data</code> JSON），保留原始公式与列表结构。<br>标记约定：<strong>※</strong> = 幻灯片上标注为 <code>aigc</code> 的补充批注（由 Agent 根据讲义扩写）；页内插图已还原为原幻灯片图片。<br>幻灯片编号与课堂讲解顺序一致，可与正文各节对照阅读。</p></blockquote>
 <h4 id="slide-1" class="anchor"><span class="ht">Slide 1</span><a class="ha" href="#slide-1" title="复制本节链接">#</a></h4>
 <p><strong>我们站在一个重要的交叉路口</strong></p>
 <p><em>子标题：四次把昂贵能力变成日用品</em></p>
 <p>PC (1975, Altair 8800)、互联网 (1993, Mosaic)、移动互联网 (2007, iPhone)、AI (2022, ChatGPT)，在人类命运的交叉路口，需要一个非常实验性的课程。</p>
-<p>[图：从个人电脑、互联网、移动互联网到 AI 的技术拐点]</p>
+<figure class="fig"><img src="img/lect1-crossroads.webp" alt="从个人电脑、互联网、移动互联网到 AI 的技术拐点" loading="lazy"><figcaption>四个节点：PC (1975)、互联网 (1993)、移动互联网 (2007)、AI (2022)。<span class="src">图源：官方幻灯片 slides1</span></figcaption></figure>
 <p class="note">※ 真正的拐点，不是机器又强了一点；而是某种昂贵能力，突然变成了日用品。</p>
 <h4 id="slide-2" class="anchor"><span class="ht">Slide 2</span><a class="ha" href="#slide-2" title="复制本节链接">#</a></h4>
 <p><strong>Why? 狼来了</strong></p>
@@ -653,7 +660,7 @@ footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--line);
 <p><strong>课程 Policy：Token 自费</strong></p>
 <p><em>子标题：没有 token 的 CS 学生应该立即退学</em></p>
 <ul><li>个人观点</li><li>不需要 tokenmaxxing</li><li>课程课堂全程 deepseek-v4-flash</li><li class="note">※ Token 是 AI 时代的实验耗材：亲自使用，才能形成成本—质量—延迟意识</li><li class="note">※ 真正稀缺的不是 token，而是值得花 token 的问题、清晰约束和可靠验收</li></ul>
-<p>[图：Token 政策配图（疑为充值/价格或相关梗图）（原页无 alt 说明，据上下文推测）]</p>
+<figure class="fig"><img src="img/lect1-token-policy.webp" alt="Token 政策配图" loading="lazy"><figcaption>课程 Policy「Token 自费」配图。<span class="src">图源：官方幻灯片 slides1</span></figcaption></figure>
 <h4 id="slide-9" class="anchor"><span class="ht">Slide 9</span><a class="ha" href="#slide-9" title="复制本节链接">#</a></h4>
 <p><strong>课程 Policy：尽量“通过 / 不通过”</strong></p>
 <p><em>子标题：不验收作业，不评分</em></p>
@@ -689,7 +696,7 @@ footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--line);
 <p><em>子标题：从“回答问题”到“把事情推进”</em></p>
 <p>AI-native 的一代人，你真的应该用过。</p>
 <ul><li>课堂 demo：一个最小的 Pi</li><li>DeepSeek harness 会在某节课专门讲（首批内测，于是有了一个梗图）</li><li class="note">※ 最小跃迁：AI 不只给出答案，还会观察结果、采取动作、继续推进。</li></ul>
-<p>[图：课堂 demo 用的“最小的 Pi”（树莓派）设备图 / 梗图（原页无 alt 说明，据上下文推测）]</p>
+<figure class="fig"><img src="img/lect1-using-agents.webp" alt="课堂 demo 用的最小的 Pi（树莓派）设备图" loading="lazy" class="portrait"><figcaption>课堂 demo 用的「最小的 Pi」（树莓派）。<span class="src">图源：官方幻灯片 slides1</span></figcaption></figure>
 <h4 id="slide-15" class="anchor"><span class="ht">Slide 15</span><a class="ha" href="#slide-15" title="复制本节链接">#</a></h4>
 <p><strong>想象力是上限</strong></p>
 <p><em>子标题：你的想象力限制了 Agent 能完成的任务</em></p>
@@ -752,7 +759,7 @@ footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--line);
 <p><strong>Quiz：只进不出的机器</strong></p>
 <p><em>子标题：怎么偷出文件？</em></p>
 <ul><li>Model: 文件只进不出。不能执行不信任的程序、不能显示不信任的网页；可以远处悄悄摄屏，但复杂文件就有点麻烦。</li><li class="note">※ 安全边界限制了“文件”，却没有限制信息：只要像素仍可观察，出口容量就不为零。</li></ul>
-<p>[图：“只进不出的机器”Quiz 示意图（原页无 alt 说明，据上下文推测）]</p>
+<figure class="fig"><img src="img/lect1-quiz-leak.webp" alt="只进不出的机器 Quiz 示意图" loading="lazy"><figcaption>「只进不出的机器」Quiz 示意图。<span class="src">图源：官方幻灯片 slides1</span></figcaption></figure>
 <h4 id="slide-27" class="anchor"><span class="ht">Slide 27</span><a class="ha" href="#slide-27" title="复制本节链接">#</a></h4>
 <p><strong>把远程桌面变成内网</strong></p>
 <p><em>子标题：My Solution</em></p>
@@ -795,7 +802,7 @@ footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--line);
 <p><strong>Intent、Spec 与 Impl</strong></p>
 <p><em>子标题：三个空间</em></p>
 <ul><li>Intent Space：需求的提出者也不 100% 确定他想要什么，比如“给我弄一个国民级的应用”</li><li>Spec Space：从 Intent 到 Spec，已经曲解了很多</li><li>Impl Space：计算机程序只接受 100% 无歧义的指令</li></ul>
-<p>[图：Intent / Spec / Impl 三个空间的示意图（原页无 alt 说明，据上下文推测）]</p>
+<figure class="fig"><img src="img/lect1-intent-spec-impl.webp" alt="Intent / Spec / Impl 三个空间的示意图" loading="lazy"><figcaption>Intent / Spec / Impl 三个空间示意图。<span class="src">图源：官方幻灯片 slides1</span></figcaption></figure>
 <p><em>子标题：“正确”发生在哪一层？</em></p>
 <ul><li class="note">※ <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.999em;vertical-align:-0.249em;"></span><span class="mord"><span class="mord mathrm">Impl</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">⊨</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8778em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathrm">Spec</span></span></span></span></span> 只说明“按规格正确”，并不推出“满足意图”；测试可以证明前者，却无法替人决定后者。</li></ul>
 <h4 id="slide-34" class="anchor"><span class="ht">Slide 34</span><a class="ha" href="#slide-34" title="复制本节链接">#</a></h4>
@@ -808,7 +815,7 @@ footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--line);
 <p><strong>软件工程</strong></p>
 <p><em>子标题：“The Mythical Man-Month”</em></p>
 <p>大型动物一旦陷入焦油坑就很难逃脱，而濒死的动物又会引来各种掠食者。</p>
-<p>[图：《人月神话》焦油坑插画（原页无 alt 说明，据上下文推测）]</p>
+<figure class="fig"><img src="img/lect1-software-engineering.webp" alt="《人月神话》焦油坑插画" loading="lazy"><figcaption>《人月神话》焦油坑插画。<span class="src">图源：官方幻灯片 slides1</span></figcaption></figure>
 <ul><li>也是《死亡搁浅》中的原型</li><li>qrgen 已经进入焦油坑：增加一点功能，都需要消耗巨额的 token</li></ul>
 <p class="note">※ 焦油不是代码量，而是耦合、隐含知识和验证债：功能是局部的，约束却是全局的。</p>
 <h4 id="slide-36" class="anchor"><span class="ht">Slide 36</span><a class="ha" href="#slide-36" title="复制本节链接">#</a></h4>
@@ -843,7 +850,7 @@ footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--line);
 <h4 id="slide-42" class="anchor"><span class="ht">Slide 42</span><a class="ha" href="#slide-42" title="复制本节链接">#</a></h4>
 <p><strong>当 AI 连“品味”也学会以后？</strong></p>
 <p><em>子标题：人的稀缺性继续向上游迁移</em></p>
-<p>[图：“人的稀缺性继续向上游迁移”示意图（原页无 alt 说明，据上下文推测）]</p>
+<figure class="fig"><img src="img/lect1-ai-taste.webp" alt="人的稀缺性继续向上游迁移的示意图" loading="lazy"><figcaption>「当 AI 连‘品味’也学会以后？」配图。<span class="src">图源：官方幻灯片 slides1</span></figcaption></figure>
 <ul><li class="note">※ 从亲手生产，转向选择“什么值得存在”</li><li class="note">※ 能力可以迁移；正当性与问责不会自动迁移</li><li class="note">※ 真正困难的问题也许不再是“怎么做”，而是“为何做、为谁做、后果由谁承担”</li></ul>
 <h4 id="slide-43" class="anchor"><span class="ht">Slide 43</span><a class="ha" href="#slide-43" title="复制本节链接">#</a></h4>
 <p><strong>“古法编程” 死了</strong></p>

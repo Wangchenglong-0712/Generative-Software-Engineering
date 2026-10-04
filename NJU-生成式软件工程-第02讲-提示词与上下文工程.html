@@ -256,6 +256,13 @@ footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--line);
 .qa .aa{margin-top:.4rem;color:var(--fg2)}
 details.appx>summary h2 .sn{display:none}
 
+
+.fig{margin:1.3rem 0 1.4rem;text-align:center}
+.fig img{max-width:100%;height:auto;border:1px solid var(--line);border-radius:10px;background:#fff;box-shadow:var(--shadow)}
+.fig img.portrait{max-width:min(430px,100%)}
+.fig figcaption{font-size:.82rem;color:var(--fg2);margin-top:.5rem;line-height:1.75}
+.fig .src{display:inline-block;font-size:.72rem;color:var(--fg3);background:var(--bg3);border:1px solid var(--line);border-radius:999px;padding:.02rem .55rem;margin-left:.35rem;vertical-align:.12em}
+
 </style>
 </head>
 <body>
@@ -377,7 +384,7 @@ details.appx>summary h2 .sn{display:none}
 <h3 id="11-没有-token-的-cs-学生应该立即退学上了热搜" class="anchor"><span class="ht">1.1 「没有 token 的 CS 学生应该立即退学」上了热搜</span><a class="ha" href="#11-没有-token-的-cs-学生应该立即退学上了热搜" title="复制本节链接">#</a></h3>
 <p>第一讲里的一句话——「没有 token 的 CS 学生应该立即退学」——<strong>居然以一个非常意外的方式上了热搜</strong>，也引来了朋友们的问询。</p>
 <p>当然不会真的让同学们退学。课堂上这句话要推动的是<strong>立即实践</strong>：不要把等待完美工具、等待别人给出评价，变成一直不开始的理由。离开现场，截图只剩下一句狠话，这本身也提醒我们，<strong>同样的文字放进不同上下文，会被理解成很不一样的意思</strong>。</p>
-<p class="imgnote">📷 幻灯片 1：热搜与朋友们的问询（原幻灯片含插图）</p>
+<figure class="fig"><img src="img/lect2-hotsearch.webp" alt="热搜与朋友们的问询截图" loading="lazy"><figcaption>「没有 token 的 CS 学生应该立即退学」上了热搜，引来朋友们的问询。<span class="src">图源：官方幻灯片 slides2</span></figcaption></figure>
 <h3 id="12-现场成立截图只剩狠" class="anchor"><span class="ht">1.2 现场成立，截图只剩「狠」</span><a class="ha" href="#12-现场成立截图只剩狠" title="复制本节链接">#</a></h3>
 <blockquote><p>一句只对现场成立的狠话，被截图以后就只剩「狠」了。</p></blockquote>
 <p>这本身就是本讲第一个例子：<strong>同一段文字，放进不同上下文，会被理解成很不一样的意思。</strong>当一句为了课堂现场而说的话被抽离现场、只剩截图时，语气、对象和意图全部丢失，剩下的只是一个刺激性的判断。</p>
@@ -390,6 +397,7 @@ details.appx>summary h2 .sn{display:none}
 <li>退一百万步讲，还有 ¥40 的豆包（含 GLM、DeepSeek 等）。</li>
 </ul>
 <blockquote><p>贵模型用不起，就用 ¥40 的；<strong>再不开始，就不是预算问题了。</strong></p></blockquote>
+<figure class="fig"><img src="img/lect2-not-dropout.webp" alt="Anyway，你们懂我不会真的让你们退学的" loading="lazy" class="portrait"><figcaption>「Anyway，你们懂我不会真的让你们退学的」——幻灯片 2 配图。<span class="src">图源：官方幻灯片 slides2</span></figcaption></figure>
 </section>
 <section><h2 id="2-提示词从哪里来" class="anchor"><span class="ht">2. 「提示词」从哪里来</span><a class="ha" href="#2-提示词从哪里来" title="复制本节链接">#</a></h2>
 <p><strong>ChatGPT 普及了 Prompt，但没有发明它。</strong>（幻灯片 3）</p>
@@ -399,6 +407,7 @@ details.appx>summary h2 .sn{display:none}
 <li>2021 年，「prompt programming」和「prompt-based learning」成为研究对象。</li>
 </ul>
 <p>我们习惯把给模型的输入叫作 prompt，中文称「提示词」。从语言模型续写文本的角度看，前面的文字<strong>既是开头，也是控制后续生成的条件</strong>。进入聊天界面以后，用户更容易把 prompt 理解成对话框里的一条要求——但这是被界面简化过的理解。</p>
+<figure class="fig"><img src="img/lect2-prompt-origin.webp" alt="提示词从哪里来的配图" loading="lazy"><figcaption>「提示词」从哪里来？——ChatGPT 普及了 Prompt，但没有发明它。<span class="src">图源：官方幻灯片 slides2</span></figcaption></figure>
 </section>
 <section><h2 id="3-模型看到的远不止你刚输入的一句话" class="anchor"><span class="ht">3. 模型看到的，远不止你刚输入的一句话</span><a class="ha" href="#3-模型看到的远不止你刚输入的一句话" title="复制本节链接">#</a></h2>
 <h3 id="31-提示词不止在对话框" class="anchor"><span class="ht">3.1 提示词不止在对话框</span><a class="ha" href="#31-提示词不止在对话框" title="复制本节链接">#</a></h3>
@@ -464,6 +473,7 @@ details.appx>summary h2 .sn{display:none}
 </ul>
 <p>学习仍然需要自己的活动。一个可行的循环是：先借助 AI 弄清一个问题，然后合上资料，用自己的话重述；让它追问含糊之处，找出反例，再用推导、原文或程序结果核对，最后重新解释一遍。<strong>复述时卡住的地方，往往比读答案时觉得顺畅的地方更能暴露知识缺口。</strong></p>
 <p>这可以理解为让 AI 做一个随时在场的听众。它帮助你开始，也帮助你发现哪里还没讲明白。真正推动理解的，是这个循环里<strong>不断变得具体的问题</strong>和<strong>不断接受检验的解释</strong>。</p>
+<figure class="fig"><img src="img/lect2-feynman.webp" alt="费曼学习法：让 AI 当听众的配图" loading="lazy"><figcaption>费曼学习法：让 AI 当听众——不是让 AI 再讲一遍，而是主动暴露缺口。<span class="src">图源：官方幻灯片 slides2</span></figcaption></figure>
 </section>
 <section><h2 id="5-写清楚完成是什么" class="anchor"><span class="ht">5. 写清楚「完成」是什么</span><a class="ha" href="#5-写清楚完成是什么" title="复制本节链接">#</a></h2>
 <p>模型具有很强的指令遵循能力，<strong>但首先要有值得遵循的指令</strong>。上下文中的要求越明确、越容易验证，模型就越有机会判断自己距离目标还差什么；不明确的要求，则可能让它很早就认为已经完成。（幻灯片 10–15）</p>
@@ -750,6 +760,7 @@ details.appx>summary h2 .sn{display:none}
 <blockquote><p><strong>群体智能不要求每个人没有偏见；它只要求偏见不能只剩一种。交流也不是尽快共识，而是先让不同误差活下来。</strong></p></blockquote>
 <p>人类社会其实一直在通过类似方式扩展自己的视野。每个人的教育背景、生活圈和经历都有限，也都带着偏向。与舍友讨论，去会议上听别人怎样提出问题，价值往往来自<strong>发现自己的默认前提</strong>。交流之后，每个人仍有自己的偏向，但它已经被新的经验改变。</p>
 <p>课堂借「世界很大，人很小」的视角提醒我们，没有人能独自穷尽所有可能。群体的价值可以来自<strong>不同的局限相互补充</strong>。把这个思想带回 Agent：<strong>增加计算资源时，应当考虑怎样增加探索的差异，而不是只增加同一种思路的重复次数。</strong></p>
+<figure class="fig"><img src="img/lect2-multi-sampling.webp" alt="我们一直在多采样的配图" loading="lazy"><figcaption>「我们一直在多采样」：世界很大，人很小——群体的价值来自不同局限的互补。<span class="src">图源：官方幻灯片 slides2</span></figcaption></figure>
 <h3 id="135-墙内的超人" class="anchor"><span class="ht">13.5 墙内的超人</span><a class="ha" href="#135-墙内的超人" title="复制本节链接">#</a></h3>
 <p>如果计算资源能够持续转化为探索能力和判断能力，这也带来了一个令人不安的未来问题。</p>
 <blockquote><p>算力成为<strong>生产资料</strong>。这也是未来可能发生、非常残酷的现实：资本家可以获得无限的计算资源，获得无限的智力，「人」本身的价值在减弱——<strong>砌一堵墙，墙里面是超人，墙外面是动物世界。</strong></p></blockquote>
@@ -757,6 +768,7 @@ details.appx>summary h2 .sn{display:none}
 <li>Stanford AI Index 2025：2024 年<strong>近 90% 的 notable models 来自产业界</strong>；若干前沿模型的训练算力成本已经是<strong>数千万到近两亿美元</strong>。</li>
 </ul>
 <p>这是对未来可能性的追问，<strong>并非已经发生的终局</strong>。</p>
+<figure class="fig"><img src="img/lect2-walls-superman.webp" alt="墙内的超人配图" loading="lazy"><figcaption>「墙内的超人」：算力成为生产资料，墙里面是超人，墙外面是动物世界。<span class="src">图源：官方幻灯片 slides2</span></figcaption></figure>
 <p>对于正在学习的我们，可以从眼前开始改变做事方式：<strong>让模糊愿望获得可检查的表达，把有效经验沉淀成可复用的方法，在需要探索时主动扩展方向，又用证据筛选结果。</strong>提示词的价值，最终要落在这些行动如何改变任务的结果上。</p>
 </section>
 <section><h2 id="14-术语表" class="anchor"><span class="ht">14. 术语表</span><a class="ha" href="#14-术语表" title="复制本节链接">#</a></h2>
@@ -851,10 +863,10 @@ details.appx>summary h2 .sn{display:none}
 
 <details class="appx" id="appx-a"><summary><h2 id="附录-a37-页幻灯片逐页全文" class="anchor"><span class="ht">附录 A：37 页幻灯片逐页全文</span><span class="tg"></span></h2></summary>
 <div class="appx-body">
-<p class="note">以下按原幻灯片顺序逐页转录（共 37 页）。<span class="aigc">灰色文字</span>为课程在原片上补充的讲解旁注；<span class="imgnote">📷 原幻灯片含插图</span> 处为图片占位。</p>
+<p class="note">以下按原幻灯片顺序逐页转录（共 37 页）。<span class="aigc">灰色文字</span>为课程在原片上补充的讲解旁注；📷 处已还原为原幻灯片插图。</p>
 <h4 id="slide-1" class="slide-title"><span class="sn">Slide 1</span>居然以一个非常意外的方式上热搜了</h4>
 <p class="sub">受到了朋友们的问询 😂</p>
-<p><span class="imgnote">📷 原幻灯片含插图</span></p>
+<figure class="fig"><img src="img/lect2-hotsearch.webp" alt="热搜与朋友们的问询截图" loading="lazy"><figcaption>热搜与朋友们的问询截图。<span class="src">图源：官方幻灯片 slides2</span></figcaption></figure>
 <p><span class="aigc">一句只对现场成立的狠话，被截图以后就只剩“狠”了。</span></p>
 <h4 id="slide-2" class="slide-title"><span class="sn">Slide 2</span>Anyway，你们懂我不会真的让你们退学的</h4>
 <p class="sub">但如果不这么说，你们真的听不进</p>
@@ -865,11 +877,11 @@ details.appx>summary h2 .sn{display:none}
 </ul>
 </li>
 </ul>
-<p><span class="imgnote">📷 原幻灯片含插图</span></p>
+<figure class="fig"><img src="img/lect2-not-dropout.webp" alt="Anyway，你们懂我不会真的让你们退学的" loading="lazy" class="portrait"><figcaption>Anyway，你们懂我不会真的让你们退学的。<span class="src">图源：官方幻灯片 slides2</span></figcaption></figure>
 <p><span class="aigc">贵模型用不起，就用 ¥40 的；再不开始，就不是预算问题了。</span></p>
 <h4 id="slide-3" class="slide-title"><span class="sn">Slide 3</span>“提示词” 从哪里来？</h4>
 <p class="sub">ChatGPT 普及了 Prompt，但没有发明它</p>
-<p><span class="imgnote">📷 原幻灯片含插图</span></p>
+<figure class="fig"><img src="img/lect2-prompt-origin.webp" alt="提示词从哪里来的配图" loading="lazy"><figcaption>「提示词」从哪里来？<span class="src">图源：官方幻灯片 slides2</span></figcaption></figure>
 <ul>
 <li><span class="aigc">2019 年 GPT-2 的发布页面已经写下 “prompting the trained model”：输入文本从“开头”变成了控制模型续写的条件。<a href="https://openai.com/index/better-language-models/" target="_blank" rel="noopener">GPT-2, 2019</a></span></li>
 <li><span class="aigc">2020 年 GPT-3 把任务说明和 few-shot 示例都称为 prompt；2021 年，“<a href="https://arxiv.org/abs/2102.07350" target="_blank" rel="noopener">prompt programming</a>” 和 “<a href="https://arxiv.org/abs/2107.13586" target="_blank" rel="noopener">prompt-based learning</a>” 成为研究对象。</span></li>
@@ -912,7 +924,7 @@ details.appx>summary h2 .sn{display:none}
 </ul>
 <h4 id="slide-7" class="slide-title"><span class="sn">Slide 7</span>费曼学习法：让 AI 当听众</h4>
 <p class="sub">不是让 AI 再讲一遍，而是主动暴露缺口</p>
-<p><span class="imgnote">📷 原幻灯片含插图</span></p>
+<figure class="fig"><img src="img/lect2-feynman.webp" alt="费曼学习法：让 AI 当听众的配图" loading="lazy"><figcaption>费曼学习法：让 AI 当听众。<span class="src">图源：官方幻灯片 slides2</span></figcaption></figure>
 <ul>
 <li><span class="aigc">先合上资料，用自己的话讲；卡住的地方信息量最大。AI 的角色是追问、找反例和验算，查证后再讲一遍。</span></li>
 <li><span class="aigc">这套飞轮有实证支点：<a href="https://doi.org/10.1207/s15516709cog1302_1" target="_blank" rel="noopener">self-explanation</a> 与 <a href="https://www.psychologicalscience.org/journals/psychological-science/j.1467-9280.2006.01693.x/" target="_blank" rel="noopener">retrieval practice</a>。</span></li>
@@ -1268,10 +1280,10 @@ details.appx>summary h2 .sn{display:none}
 <li>人的品味来源于 diversity：不同的教育背景、生活圈、经历……Richard Sutton's <a href="http://incompleteideas.net/papers/The_Big_World_Hypothesis.pdf" target="_blank" rel="noopener">Big World Hypothesis</a></li>
 <li>人天生对所有问题都有 bias；但 1 + 1 &gt; 2：无论是和舍友菜鸡互啄，还是去开 conference，都是在理解对方的 bias，促进群体智能，然后每个人继续带着 bias 创新</li>
 </ul>
-<p><span class="imgnote">📷 原幻灯片含插图</span></p>
+<figure class="fig"><img src="img/lect2-multi-sampling.webp" alt="我们一直在多采样的配图" loading="lazy"><figcaption>「我们一直在多采样」：世界很大，人很小。<span class="src">图源：官方幻灯片 slides2</span></figcaption></figure>
 <p><span class="aigc">群体智能不要求每个人没有偏见；它只要求偏见不能只剩一种。交流也不是尽快共识，而是先让不同误差活下来。</span></p>
 <h4 id="slide-37" class="slide-title"><span class="sn">Slide 37</span>墙内的超人</h4>
-<p><span class="imgnote">📷 原幻灯片含插图</span></p>
+<figure class="fig"><img src="img/lect2-walls-superman.webp" alt="墙内的超人配图" loading="lazy"><figcaption>墙内的超人：算力成为生产资料。<span class="src">图源：官方幻灯片 slides2</span></figcaption></figure>
 <p class="sub">算力成为生产资料</p>
 <ul>
 <li>这也是未来可能发生、非常残酷的现实：资本家可以获得无限的计算资源，获得无限的智力，“人”本身的价值在减弱——砌一堵墙，墙里面是超人，墙外面是动物世界</li>
